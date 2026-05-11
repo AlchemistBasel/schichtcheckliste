@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schichtcheckliste Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --border: #e2e0d8;
+    --text: #1a1917;
+    --text-muted: #6b6860;
+    --green: #2d6a4f;
+    --green-bg: #d8f3dc;
+    --red: #9b2226;
+    --red-bg: #fde8e8;
+    --amber: #7d4e00;
+    --amber-bg: #fff3cd;
+    --accent: #1a1917;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; gap: 1rem; flex-wrap: wrap; }
+  .header-left h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1; }
+  .header-left p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.35rem; font-family: 'DM Mono', monospace; }
+  .header-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  select, button { font-family: 'DM Sans', sans-serif; font-size: 0.875rem; border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: 0.5rem 0.875rem; border-radius: 8px; cursor: pointer; outline: none; transition: border-color 0.15s; }
+  select:hover, button:hover { border-color: #aaa; }
+  button.refresh { background: var(--accent); color: white; border-color: var(--accent); display: flex; align-items: center; gap: 0.4rem; }
+  button.refresh:hover { opacity: 0.85; }
+  .tabs { display: flex; gap: 0.25rem; margin-bottom: 1.75rem; border-bottom: 1px solid var(--border); }
+  .tab { padding: 0.5rem 1.25rem; font-size: 0.875rem; font-weight: 500; background: none; border: none; border-bottom: 2px solid transparent; border-radius: 0; color: var(--text-muted); margin-bottom: -1px; transition: color 0.15s, border-color 0.15s; }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); }
+  .tab:hover { color: var(--text); }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .metric-num { font-size: 2rem; font-weight: 600; letter-spacing: -0.04em; font-family: 'DM Mono', monospace; line-height: 1; }
+  .metric-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; color: var(--text-muted); margin-bottom: 1rem; }
+  .row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .row:last-child { border-bottom: none; padding-bottom: 0; }
+  .row:first-child { padding-top: 0; }
+  .row-main { flex: 1; }
+  .row-task { line-height: 1.4; }
+  .row-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; font-family: 'DM Mono', monospace; }
+  .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 20px; font-size: 0.75rem; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+  .badge-ok { background: var(--green-bg); color: var(--green); }
+  .badge-nein { background: var(--red-bg); color: var(--red); }
+  .badge-warn { background: var(--amber-bg); color: var(--amber); }
+  .badge-ng { background: var(--red-bg); color: var(--red); }
+  .section-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; color: var(--text-muted); margin: 1.5rem 0 0.75rem; }
+  .section-title:first-child { margin-top: 0; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 0.5rem; }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 99px; }
+  .alert-box { display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem 1.25rem; background: var(--amber-bg); border: 1px solid #f0c040; border-radius: 10px; margin-bottom: 1rem; font-size: 0.875rem; color: var(--amber); }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 0.9rem; }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width: 600px) { .grid2 { grid-template-columns: 1fr; } body { padding: 1rem; } }
+  .loading { text-align: center; padding: 4rem; color: var(--text-muted); font-size: 0.9rem; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-box { background: var(--red-bg); border: 1px solid #f5c6c6; border-radius: 10px; padding: 1.25rem; color: var(--red); font-size: 0.875rem; margin: 1rem 0; }
+  .schicht-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border); gap: 1rem; }
+  .schicht-row:last-child { border-bottom: none; }
+  .schicht-name { font-size: 0.9rem; font-weight: 500; }
+  .schicht-stats { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <h1>Schichtcheckliste</h1>
+    <p id="lastUpdate">Wird geladen…</p>
+  </div>
+  <div class="header-right">
+    <select id="dateSelect" onchange="render()"></select>
+    <button class="refresh" onclick="loadData()">↻ Aktualisieren</button>
+  </div>
+</header>
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('uebersicht', this)">Übersicht</button>
+  <button class="tab" onclick="switchTab('nichtgemacht', this)">Nicht erledigt</button>
+  <button class="tab" onclick="switchTab('temperatur', this)">Temperatur</button>
+</div>
+<div id="content"><div class="loading"><div class="spinner"></div>Daten werden geladen…</div></div>
+<script>
+const SHEET_ID = '1y82FbD9LMeGyvr6A-qJn5cXWnd3en4K7zVQZTlkAaG8';
+const SHEET_NAME = 'Schichtcheckliste \u2013 Eintr\u00e4ge';
+let allData = [];
+let currentTab = 'uebersicht';
+
+async function loadData() {
+  document.getElementById('content').innerHTML = '<div class="loading"><div class="spinner"></div>Daten werden geladen\u2026</div>';
+  try {
+    const url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=' + encodeURIComponent(SHEET_NAME);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const csv = await res.text();
+    allData = parseCSV(csv);
+    buildDateSelect();
+    document.getElementById('lastUpdate').textContent = 'Zuletzt aktualisiert: ' + new Date().toLocaleTimeString('de-CH');
+    render();
+  } catch(e) {
+    document.getElementById('content').innerHTML = '<div class="error-box"><strong>Fehler beim Laden.</strong><br>Stelle sicher, dass das Google Sheet \u00f6ffentlich ist: Datei \u2192 Teilen \u2192 Jeder mit dem Link kann anzeigen.<br><br>' + e.message + '</div>';
+  }
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line.trim()) continue;
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let c = 0; c < line.length; c++) {
+      if (line[c] === '"') { inQ = !inQ; }
+      else if (line[c] === ',' && !inQ) { cols.push(cur); cur = ''; }
+      else { cur += line[c]; }
+    }
+    cols.push(cur);
+    const [datum, schicht, bereich, kuerzel, aufgabe, erledigt, notiz] = cols;
+    if (!datum || !datum.match(/\d+\.\d+\.\d+/)) continue;
+    rows.push({ datum: datum.trim(), schicht: schicht.trim(), bereich: bereich.trim(), kuerzel: kuerzel.trim(), aufgabe: aufgabe.trim(), erledigt: erledigt.trim(), notiz: (notiz||'').trim() });
+  }
+  return rows;
+}
+
+function buildDateSelect() {
+  const dates = [...new Set(allData.map(r => r.datum))].sort((a,b) => {
+    const p = s => { const [d,m,y] = s.split('.'); return new Date(+y,+m-1,+d); };
+    return p(a) - p(b);
+  });
+  const sel = document.getElementById('dateSelect');
+  sel.innerHTML = '';
+  const all = document.createElement('option'); all.value = 'all'; all.textContent = 'Alle Tage'; sel.appendChild(all);
+  dates.forEach(d => { const o = document.createElement('option'); o.value = d; o.textContent = d; sel.appendChild(o); });
+  sel.value = dates[dates.length - 1];
+}
+
+function getFiltered() {
+  const v = document.getElementById('dateSelect').value;
+  return v === 'all' ? allData : allData.filter(r => r.datum === v);
+}
+
+function switchTab(t, btn) {
+  currentTab = t;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const fd = getFiltered();
+  const pages = { uebersicht: renderUebersicht, nichtgemacht: renderNichtgemacht, temperatur: renderTemperatur };
+  document.getElementById('content').innerHTML = pages[currentTab](fd);
+}
+
+function renderUebersicht(fd) {
+  const tasks = fd.filter(r => r.schicht !== 'Temperaturkontrolle Bar');
+  const total = tasks.length;
+  const done = tasks.filter(r => r.erledigt === 'Ja').length;
+  const nein = tasks.filter(r => r.erledigt === 'Nein').length;
+  const pct = total > 0 ? Math.round(done/total*100) : 100;
+  const bySchicht = {};
+  tasks.forEach(r => {
+    if (!bySchicht[r.schicht]) bySchicht[r.schicht] = {ja:0,nein:0};
+    if (r.erledigt === 'Ja') bySchicht[r.schicht].ja++;
+    else if (r.erledigt === 'Nein') bySchicht[r.schicht].nein++;
+  });
+  const byBereich = {};
+  tasks.forEach(r => {
+    const k = r.schicht + ' \u203a ' + r.bereich;
+    if (!byBereich[k]) byBereich[k] = {ja:0,nein:0};
+    if (r.erledigt === 'Ja') byBereich[k].ja++;
+    else if (r.erledigt === 'Nein') byBereich[k].nein++;
+  });
+  const pctColor = pct >= 90 ? '#2d6a4f' : pct >= 70 ? '#7d4e00' : '#9b2226';
+  let html = '<div class="metrics"><div class="metric"><div class="metric-num">' + total + '</div><div class="metric-label">Aufgaben total</div></div><div class="metric"><div class="metric-num" style="color:var(--green)">' + done + '</div><div class="metric-label">Erledigt</div></div><div class="metric"><div class="metric-num" style="color:var(--red)">' + nein + '</div><div class="metric-label">Nicht erledigt</div></div><div class="metric"><div class="metric-num" style="color:' + pctColor + '">' + pct + '%</div><div class="metric-label">Erledigungsrate</div><div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;background:' + pctColor + '"></div></div></div></div>';
+  html += '<div class="grid2"><div class="card"><div class="card-title">Nach Schicht</div>';
+  Object.entries(bySchicht).forEach(([s, v]) => {
+    const t = v.ja + v.nein; const p = t > 0 ? Math.round(v.ja/t*100) : 100;
+    html += '<div class="schicht-row"><div class="schicht-name">' + s + '</div><div class="schicht-stats"><span class="badge badge-ok">' + v.ja + ' \u2713</span>' + (v.nein > 0 ? '<span class="badge badge-nein">' + v.nein + ' \u2717</span>' : '') + '<span style="font-size:0.78rem;color:var(--text-muted);font-family:\'DM Mono\',monospace">' + p + '%</span></div></div>';
+  });
+  html += '</div><div class="card"><div class="card-title">Nach Bereich</div>';
+  Object.entries(byBereich).forEach(([s, v]) => {
+    html += '<div class="schicht-row"><div class="schicht-name" style="font-size:0.82rem">' + s + '</div><div class="schicht-stats">' + (v.nein > 0 ? '<span class="badge badge-nein">' + v.nein + ' offen</span>' : '<span class="badge badge-ok">Alles OK</span>') + '</div></div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+
+function renderNichtgemacht(fd) {
+  const tasks = fd.filter(r => r.erledigt === 'Nein' && r.schicht !== 'Temperaturkontrolle Bar');
+  if (!tasks.length) return '<div class="empty-state"><div class="icon">\u2705</div>Alle Aufgaben wurden erledigt!</div>';
+  const groups = {};
+  tasks.forEach(r => {
+    const k = r.datum + '__' + r.schicht;
+    if (!groups[k]) groups[k] = { label: r.datum + ' \u2014 ' + r.schicht, rows: [] };
+    groups[k].rows.push(r);
+  });
+  let html = '';
+  Object.values(groups).forEach(g => {
+    html += '<div class="section-title">' + g.label + '</div><div class="card">';
+    g.rows.forEach(r => {
+      html += '<div class="row"><div class="row-main"><div class="row-task">' + r.aufgabe + '</div><div class="row-meta">' + r.bereich + ' \u00b7 ' + r.kuerzel + (r.notiz ? ' \u00b7 ' + r.notiz : '') + '</div></div><span class="badge badge-nein">Offen</span></div>';
+    });
+    html += '</div>';
+  });
+  return html;
+}
+
+function renderTemperatur(fd) {
+  const temps = fd.filter(r => r.schicht === 'Temperaturkontrolle Bar');
+  if (!temps.length) return '<div class="empty-state"><div class="icon">\uD83C\uDF21\uFE0F</div>Keine Temperaturmessungen.</div>';
+  const problems = temps.filter(r => r.erledigt === 'AUSSERHALB' || r.erledigt === 'Nicht gemessen');
+  let html = problems.length ? '<div class="alert-box">\u26A0\uFE0F <div><strong>' + problems.length + ' Temperaturproblem' + (problems.length>1?'e':'') + ' gefunden:</strong><br>' + problems.map(r => r.aufgabe.split(' Soll')[0] + ' (' + r.datum + ')').join(', ') + '</div></div>' : '';
+  const byDate = {};
+  temps.forEach(r => { if (!byDate[r.datum]) byDate[r.datum] = []; byDate[r.datum].push(r); });
+  Object.entries(byDate).forEach(([date, rows]) => {
+    html += '<div class="section-title">' + date + '</div><div class="card">';
+    rows.forEach(r => {
+      const s = r.erledigt;
+      const badge = s === 'OK' ? '<span class="badge badge-ok">OK</span>' : s === 'AUSSERHALB' ? '<span class="badge badge-ng">Ausserhalb</span>' : '<span class="badge badge-warn">Nicht gemessen</span>';
+      const notiz = r.notiz && r.notiz !== 'undefined\u00b0C' ? r.notiz : '';
+      html += '<div class="row"><div class="row-main"><div class="row-task">' + r.aufgabe + '</div><div class="row-meta">' + r.kuerzel + (notiz ? ' \u00b7 ' + notiz : '') + '</div></div>' + badge + '</div>';
+    });
+    html += '</div>';
+  });
+  return html;
+}
+
+loadData();
+</script>
+</body>
+</html>
