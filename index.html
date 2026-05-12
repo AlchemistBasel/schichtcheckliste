@@ -79,6 +79,31 @@ select option { background: #111110; }
 .hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; font-style: italic; }
 .saving-msg { font-size: 0.8rem; color: var(--muted); margin-top: 0.6rem; font-style: italic; text-align: center; min-height: 1em; }
 
+
+/* BAR ÜBERGABE */
+.ub-table { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
+.ub-section-head { padding: 0.6rem 1rem; background: var(--bg); border-bottom: 1px solid var(--border); font-family: var(--font); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
+.ub-row { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); gap: 0.5rem; }
+.ub-row:last-child { border-bottom: none; }
+.ub-name { font-size: 0.88rem; color: var(--text); }
+.ub-btn-group { display: flex; gap: 4px; }
+.ub-btn { padding: 4px 10px; border-radius: 2px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 0.7rem; font-family: var(--ui); color: var(--muted); transition: all 0.15s; white-space: nowrap; }
+.ub-btn:hover { border-color: var(--border2); color: var(--text); }
+.ub-btn.da { border-color: var(--success); color: var(--success); background: var(--success-dim); }
+.ub-btn.nachf { border-color: #c9a84c; color: #c9a84c; background: rgba(201,168,76,0.12); }
+.ub-btn.best { border-color: var(--warn); color: var(--warn); background: var(--warn-dim); }
+.ub-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 50%; background: var(--warn); color: white; font-size: 0.6rem; font-family: var(--ui); font-weight: 600; margin-left: 5px; padding: 0 4px; }
+.ub-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1rem; margin-bottom: 1rem; }
+.ub-sum-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.ub-sum-row:last-child { border-bottom: none; }
+.ub-sum-name { color: var(--text); }
+.ub-sum-status { font-size: 0.72rem; padding: 2px 8px; border-radius: 2px; }
+.ub-sum-nachf { background: rgba(201,168,76,0.15); color: #c9a84c; }
+.ub-sum-best { background: var(--warn-dim); color: var(--warn); }
+.notif-banner { background: rgba(192,74,74,0.12); border: 1px solid rgba(192,74,74,0.3); border-radius: 3px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+.notif-banner-text { font-size: 0.85rem; color: #d07070; }
+.notif-banner-count { font-family: var(--font); font-size: 0.7rem; color: var(--warn); }
+
 /* CHECKLISTE */
 .sess-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 0.8rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
 .sess-name { font-family: var(--font); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--gold); }
@@ -294,6 +319,7 @@ select option { background: #111110; }
             <option value="Spätdienst Service">Spätdienst Service</option>
             <option value="Abend Bar">Abend Bar</option>
             <option value="Temperaturkontrolle Bar">Temperaturkontrolle Bar</option>
+            <option value="Bar Übergabe">Bar Übergabe</option>
           </select>
         </div>
         <div class="field-group">
@@ -393,6 +419,34 @@ select option { background: #111110; }
     </div>
   </div>
 
+  <!-- BAR ÜBERGABE -->
+  <div id="view-ubergabe" style="display:none;">
+    <div class="wrap">
+      <div class="sess-bar">
+        <div>
+          <button class="back-btn" onclick="showCheckView('setup')">← Zurück</button>
+          <div class="sess-name" id="ub-sess-name"></div>
+          <div class="sess-info" id="ub-sess-info"></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="prog-text" id="ub-prog-text">0 Produkte kontrolliert</div>
+          <div class="prog-bar" style="width:90px;margin-left:auto;margin-top:5px;"><div class="prog-fill" id="ub-prog-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div id="ub-container"></div>
+
+      <div class="submit-area" style="margin-top:1.5rem;">
+        <p class="submit-note">Der Status wird für den nächsten Tag gespeichert. Bar-Team sieht offene Punkte beim Login.</p>
+        <button class="btn-green" onclick="submitUbergabe()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+          Übergabe abschliessen & speichern
+        </button>
+        <div class="saving-msg" id="ub-saving-msg"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- SUCCESS -->
   <div id="view-success" style="display:none;">
     <div class="success-wrap">
@@ -414,6 +468,7 @@ select option { background: #111110; }
           <option value="Spätdienst Service">Spätdienst Service</option>
           <option value="Abend Bar">Abend Bar</option>
           <option value="Temperaturkontrolle Bar">Temperaturkontrolle Bar</option>
+            <option value="Bar Übergabe">Bar Übergabe</option>
         </select>
         <input type="text" id="hist-date" placeholder="Datum / Kürzel…" oninput="renderHistory()">
       </div>
@@ -808,6 +863,181 @@ function logout() {
   initLogin();
 }
 
+
+// ─── BAR ÜBERGABE DATA ────────────────────────────────────────────────────────
+const UBERGABE_SECTIONS = [
+  { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn (Kräutersirup)','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
+  { title: 'Alkohol – Basis', items: ['Vodka','Gin','Rum','Whiskey','Absinth','Mezcal','Obstbrand','Sake','Grappa'] },
+  { title: 'Alkohol – Spezifische Flaschen', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus Elegance','Absinthe Bizzare','Graham's Port'] },
+  { title: 'Obstbrände', items: ['Apfel','Abricot','Williams','Kirsch'] },
+  { title: 'Schaumwein & Wein', items: ['Prosecco (Prösi)','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape','P1','Finca Los Hoyales','Opus One'] },
+  { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Alkoholfreier Rum','Alkoholfreies Bier','Milch','Eisbär'] },
+  { title: 'Tee', items: ['Jasmin','Darjeeling','Earl Grey','Berberteemischung','Indian Masala','Waldbeeren','Merlin Kräutertee'] },
+  { title: 'Garnitur', items: ['Rosmarin','Thymian','Minze','Basilikum','Früchte','Sojalecithin','Zuckerwatte'] },
+  { title: 'Sonstiges', items: ['Gewürzmischung Gin','Gewürzmischung Rum','Würfelzucker','Streichhölzer','Heisse Schoggi'] },
+];
+
+// Status: 'da' | 'nachf' | 'best' | null
+let ubStatus = {};
+
+function startUbergabe() {
+  document.getElementById('ub-sess-name').textContent = currentSession.kuerzel + ' – Bar Übergabe';
+  document.getElementById('ub-sess-info').textContent = currentSession.datum;
+
+  // Load existing state for today if any
+  const saved = localStorage.getItem('bar_ubergabe_state');
+  if (saved) {
+    try { const parsed = JSON.parse(saved); if (parsed.datum === currentSession.datum) { ubStatus = parsed.status; } else { ubStatus = {}; } } catch(e) { ubStatus = {}; }
+  } else { ubStatus = {}; }
+
+  renderUbergabe();
+  showCheckView('ubergabe');
+}
+
+function renderUbergabe() {
+  const container = document.getElementById('ub-container');
+  container.innerHTML = '';
+
+  UBERGABE_SECTIONS.forEach(sec => {
+    const table = document.createElement('div');
+    table.className = 'ub-table';
+    table.innerHTML = `<div class="ub-section-head">${sec.title}</div>`;
+
+    sec.items.forEach(item => {
+      const key = sec.title + '|' + item;
+      const status = ubStatus[key] || null;
+      const row = document.createElement('div');
+      row.className = 'ub-row';
+      row.innerHTML = `
+        <div class="ub-name">${item}</div>
+        <div class="ub-btn-group">
+          <button class="ub-btn ${status==='da'?'da':''}" onclick="setUbStatus('${key}','da',this)">✓ Da</button>
+          <button class="ub-btn ${status==='nachf'?'nachf':''}" onclick="setUbStatus('${key}','nachf',this)">⚠ Nachfüllen</button>
+          <button class="ub-btn ${status==='best'?'best':''}" onclick="setUbStatus('${key}','best',this)">🛒 Bestellen</button>
+        </div>`;
+      table.appendChild(row);
+    });
+    container.appendChild(table);
+  });
+  updateUbProgress();
+}
+
+function setUbStatus(key, status, btn) {
+  // Toggle off if already selected
+  if (ubStatus[key] === status) {
+    ubStatus[key] = null;
+  } else {
+    ubStatus[key] = status;
+  }
+  // Update button styles in this row
+  const row = btn.closest('.ub-row');
+  row.querySelectorAll('.ub-btn').forEach(b => b.classList.remove('da','nachf','best'));
+  if (ubStatus[key]) {
+    btn.classList.add(ubStatus[key]);
+  }
+  // Autosave
+  localStorage.setItem('bar_ubergabe_state', JSON.stringify({ datum: currentSession.datum, status: ubStatus, kuerzel: currentSession.kuerzel, zeitstempel: new Date().toLocaleString('de-CH') }));
+  updateUbProgress();
+}
+
+function updateUbProgress() {
+  const total = UBERGABE_SECTIONS.reduce((a, s) => a + s.items.length, 0);
+  const done = Object.values(ubStatus).filter(v => v !== null).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('ub-prog-fill').style.width = pct + '%';
+  document.getElementById('ub-prog-text').textContent = done + ' / ' + total + ' kontrolliert';
+  updateNavBadge();
+}
+
+function updateNavBadge() {
+  // Show badge on check nav if there are pending items
+  const saved = localStorage.getItem('bar_ubergabe_state');
+  const navBtn = document.getElementById('nav-check');
+  if (!navBtn) return;
+  const existing = navBtn.querySelector('.ub-badge');
+  if (existing) existing.remove();
+
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      const pending = Object.values(parsed.status || {}).filter(v => v === 'nachf' || v === 'best').length;
+      if (pending > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'ub-badge';
+        badge.textContent = pending;
+        navBtn.appendChild(badge);
+      }
+    } catch(e) {}
+  }
+}
+
+function checkUbergabeBanner() {
+  const saved = localStorage.getItem('bar_ubergabe_state');
+  if (!saved) return;
+  try {
+    const parsed = JSON.parse(saved);
+    const today = new Date().toLocaleDateString('de-CH', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+    if (parsed.datum !== today) return; // Old data
+    const nachf = [], best = [];
+    Object.entries(parsed.status || {}).forEach(([key, val]) => {
+      const name = key.split('|')[1];
+      if (val === 'nachf') nachf.push(name);
+      if (val === 'best') best.push(name);
+    });
+    if (nachf.length === 0 && best.length === 0) return;
+
+    // Show banner in setup view
+    const setupWrap = document.querySelector('#view-setup .wrap');
+    if (!setupWrap) return;
+    const existing = document.getElementById('ub-notif');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'ub-notif';
+    banner.className = 'notif-banner';
+    banner.style.marginTop = '1rem';
+    let html = `<div style="flex:1;">
+      <div class="notif-banner-count">⚠ Offene Bar-Übergabe von ${parsed.kuerzel} (${parsed.datum.split(',')[0]})</div>`;
+    if (nachf.length) html += `<div class="notif-banner-text" style="margin-top:4px;">Nachfüllen: ${nachf.join(', ')}</div>`;
+    if (best.length) html += `<div class="notif-banner-text" style="margin-top:2px;">Bestellen: ${best.join(', ')}</div>`;
+    html += `</div><button onclick="dismissUbNotif()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0;">×</button>`;
+    banner.innerHTML = html;
+    setupWrap.appendChild(banner);
+  } catch(e) {}
+}
+
+function dismissUbNotif() {
+  const el = document.getElementById('ub-notif');
+  if (el) el.remove();
+}
+
+async function submitUbergabe() {
+  const msg = document.getElementById('ub-saving-msg');
+  msg.textContent = 'Wird gespeichert…';
+  const now = new Date().toLocaleString('de-CH');
+
+  const rows = [];
+  UBERGABE_SECTIONS.forEach(sec => {
+    sec.items.forEach(item => {
+      const key = sec.title + '|' + item;
+      const status = ubStatus[key];
+      if (status) {
+        rows.push({ datum: currentSession.datum, schicht: 'Bar Übergabe', section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: item, erledigt: status === 'da' ? 'Da' : status === 'nachf' ? 'Nachfüllen' : 'Bestellen', notiz: '', zeitstempel: now });
+      }
+    });
+  });
+
+  try { await saveToSheets(rows); msg.textContent = '✓ Gespeichert'; } catch(e) { msg.textContent = 'Lokal gespeichert'; }
+
+  setTimeout(() => {
+    const bestCount = Object.values(ubStatus).filter(v => v === 'best').length;
+    const nachfCount = Object.values(ubStatus).filter(v => v === 'nachf').length;
+    document.getElementById('success-text').textContent = 
+      `Übergabe abgeschlossen — ${nachfCount} nachfüllen, ${bestCount} bestellen · ${currentSession.kuerzel}`;
+    showCheckView('success');
+  }, 700);
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
   initLogin();
@@ -819,6 +1049,8 @@ window.addEventListener('load', function() {
   document.getElementById('inp-schicht').addEventListener('change', validateSetup);
   validateSetup();
   checkResumeBanner();
+  checkUbergabeBanner();
+  updateNavBadge();
   renderRezepte();
   renderAllergene();
   renderGuidelines();
@@ -866,6 +1098,7 @@ function startChecklist() {
   currentSession = { kuerzel: k, schicht: s, datum, startTime: new Date().toISOString() };
   taskStates = {}; taskNotes = {}; tempValues = {};
   if (s === 'Temperaturkontrolle Bar') { startTempControl(); return; }
+  if (s === 'Bar Übergabe') { startUbergabe(); return; }
   document.getElementById('sess-name').textContent = k + ' – ' + s;
   document.getElementById('sess-info').textContent = datum;
   renderTasks();
