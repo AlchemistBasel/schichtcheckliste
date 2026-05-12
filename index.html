@@ -808,7 +808,7 @@ select option { background: #111110; }
 
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbygEf5j37s4dNKR1TMYRjlYfO_Zg-IkGFV-nSBIWle6VpxLU1_8lErkWZcZlboEniLc/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwTl6Ot7fUT1SUe5NqRpiqR-HdoBL1D3xfDPYmb7pe-qdYYK8rxTSx97XHAI0p8I7vE/exec';
 
 // ─── CHECKLISTEN DATA ─────────────────────────────────────────────────────────
 const CHECKLISTEN = {
@@ -1121,32 +1121,33 @@ async function loadHistoryFromSheet() {
   const list = document.getElementById('hist-list');
   if (list) list.innerHTML = '<div class="hist-empty">⏳ Lade Verlauf…</div>';
   try {
-    const res = await fetch(WEBHOOK_URL, { method: 'GET' });
-    if (!res.ok) throw new Error('fetch failed');
-    const json = await res.json();
-    if (!json.ok || !json.rows || !json.rows.length) { history = []; renderHistory(); return; }
-
-    // Group rows by Datum+Schicht+Kürzel+Zeitstempel
-    const groups = {};
-    json.rows.forEach(r => {
-      const key = `${r['Datum']}|${r['Schicht']}|${r['Kürzel']}|${r['Zeitstempel']}`;
-      if (!groups[key]) groups[key] = {
-        datum: r['Datum'] || '',
-        schicht: r['Schicht'] || '',
-        kuerzel: r['Kürzel'] || '',
-        zeitstempel: r['Zeitstempel'] || r['Datum'] || '',
-        rows: [], done: 0, total: 0
+    await new Promise((resolve, reject) => {
+      const cbName = 'gsCallback_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => { delete window[cbName]; script.remove(); reject(new Error('timeout')); }, 10000);
+      window[cbName] = (json) => {
+        clearTimeout(timeout);
+        delete window[cbName];
+        script.remove();
+        if (!json.ok || !json.rows || !json.rows.length) { history = []; renderHistory(); resolve(); return; }
+        const groups = {};
+        json.rows.forEach(r => {
+          const key = `${r['Datum']}|${r['Schicht']}|${r['Kürzel']}|${r['Zeitstempel']}`;
+          if (!groups[key]) groups[key] = { datum: r['Datum']||'', schicht: r['Schicht']||'', kuerzel: r['Kürzel']||'', zeitstempel: r['Zeitstempel']||r['Datum']||'', rows:[], done:0, total:0 };
+          const erledigt = r['Erledigt']||'';
+          groups[key].rows.push({ aufgabe: r['Aufgabe']||'', section: r['Bereich']||'', erledigt, notiz: r['Notiz']||'' });
+          groups[key].total++;
+          if (erledigt==='Ja'||erledigt==='OK') groups[key].done++;
+        });
+        history = Object.values(groups).sort((a,b) => b.zeitstempel.localeCompare(a.zeitstempel));
+        renderHistory();
+        resolve();
       };
-      const erledigt = r['Erledigt'] || '';
-      groups[key].rows.push({ aufgabe: r['Aufgabe'] || '', section: r['Bereich'] || '', erledigt, notiz: r['Notiz'] || '' });
-      groups[key].total++;
-      if (erledigt === 'Ja' || erledigt === 'OK') groups[key].done++;
+      script.src = WEBHOOK_URL + '?callback=' + cbName;
+      script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('script error')); };
+      document.head.appendChild(script);
     });
-
-    history = Object.values(groups).sort((a, b) => b.zeitstempel.localeCompare(a.zeitstempel));
-    renderHistory();
   } catch(e) {
-    // Fallback to localStorage
     history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
     renderHistory();
   }
