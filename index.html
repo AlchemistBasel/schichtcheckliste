@@ -134,6 +134,8 @@ select option { background: #111110; }
 .submit-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; font-style: italic; }
 .back-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 0.8rem; padding: 0; display: flex; align-items: center; gap: 4px; font-family: var(--ui); margin-bottom: 0.75rem; }
 .back-btn:hover { color: var(--gold); }
+.pause-btn { background: rgba(201,168,76,0.08); border: 1px solid var(--gold-dim); border-radius: 3px; cursor: pointer; color: var(--gold-dim); font-size: 0.7rem; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--ui); margin-bottom: 0.75rem; letter-spacing: 0.03em; transition: all 0.2s; white-space: nowrap; }
+.pause-btn:hover { background: rgba(201,168,76,0.18); color: var(--gold); border-color: var(--gold); }
 .resume-banner { margin-top: 1rem; padding: 0.8rem 1rem; border: 1px solid var(--gold-dim); border-radius: 2px; background: var(--gold-glow); }
 .resume-label { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.35rem; }
 .resume-info { font-size: 0.85rem; color: var(--text); margin-bottom: 0.6rem; }
@@ -175,7 +177,11 @@ select option { background: #111110; }
 .tag-beilage { border-color: #4a6a8a; color: #6a9aba; background: rgba(106,154,186,0.1); }
 .tag-sauce { border-color: #6a4a8a; color: #9a7aba; background: rgba(154,122,186,0.1); }
 .tag-backen { border-color: #8a6a2a; color: #ba9a4a; background: rgba(186,154,74,0.1); }
-.tag-haupgang { border-color: #4a4a8a; color: #7a7aba; background: rgba(122,122,186,0.1); }
+.tag-hauptgang { border-color: #4a4a8a; color: #7a7aba; background: rgba(122,122,186,0.1); }
+.tag-cocktail { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+.tag-alkoholfrei { border-color: #2d7a4a; color: #4a9a6a; background: rgba(74,154,106,0.1); }
+.tag-genesis { border-color: #7a4a9a; color: #aa7aca; background: rgba(170,122,202,0.1); }
+.tag-wallhala { border-color: #4a6a9a; color: #7a9aca; background: rgba(122,154,202,0.1); }
 .recipe-chevron { color: var(--muted); font-size: 1rem; transition: transform 0.2s; flex-shrink: 0; }
 .recipe-card.open .recipe-chevron { transform: rotate(180deg); }
 .recipe-body { display: none; padding: 0 1rem 1rem; border-top: 1px solid var(--border); }
@@ -457,7 +463,10 @@ select option { background: #111110; }
     <div class="wrap">
       <div class="sess-bar">
         <div>
-          <button class="back-btn" onclick="pauseChecklist()">← Pausieren & zurück</button>
+          <button class="pause-btn" onclick="pauseChecklist()">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            Pausieren & zurück
+          </button>
           <div class="sess-name" id="sess-name"></div>
           <div class="sess-info" id="sess-info"></div>
         </div>
@@ -618,6 +627,23 @@ select option { background: #111110; }
   </div>
 </div>
 
+<!-- ═══ PAGE: COCKTAILS ═══ -->
+<div class="page" id="page-cocktails">
+  <div class="wrap">
+    <div class="ornament">— ✦ —</div>
+    <p class="page-title">Cocktails</p>
+    <p class="page-sub">Signature Drinks & Karte — Rezepte für das Bar-Team</p>
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="cocktail-search" placeholder="Cocktail suchen…" oninput="filterCocktails()">
+    </div>
+    <div class="section-label">Signature Drinks</div>
+    <div id="cocktails-signature"></div>
+    <div class="section-label" style="margin-top:1.25rem;">Cocktailkarte</div>
+    <div id="cocktails-list"></div>
+  </div>
+</div>
+
 <!-- ═══ PAGE: ALLERGENE ═══ -->
 <div class="page" id="page-allergene">
   <div class="wrap">
@@ -735,6 +761,10 @@ select option { background: #111110; }
     <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2"/></svg>
     Rezepte
   </button>
+  <button class="nav-btn" id="nav-cocktails" onclick="showPage('cocktails')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+    Cocktails
+  </button>
   <button class="nav-btn" id="nav-allergene" onclick="showPage('allergene')">
     <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     Allergene
@@ -847,6 +877,97 @@ const REZEPTE = [
   { name: 'Cantucci', kat: 'backen', tags: [], zutaten: ['Zucker','Eier','Orangen Zesten','Mehl','Backpulver','Messerspitze Triebsalz','Salz','Haselnüsse und Pistazien'], zubereitung: 'Zucker, Eier und Orangenzesten aufschlagen bis schaumig. Mehl, Backpulver, Triebsalz, Salz und Nüsse zusammenmischen, alles vermengen. Lange Wurst formen (8 Teile), 10–15 min bei 180 Grad Umluft backen, mit geschmolzener Butter bestreichen, zuschneiden, 3–4 min fertig backen.' },
   { name: 'Ingwer Cookies (Gingerdoodles)', kat: 'backen', tags: [], zutaten: ['300g Weizenmehl (×4)','1 EL Speisestärke (Maizena)','2 Päckchen Back-Natron','1 TL Salz','2 TL Zimt gemahlen','1 TL Ingwer gemahlen','1 Prise Nelken gemahlen','1 Prise Muskatnuss gemahlen','170g Butter weich','125g brauner Zucker','65g feiner Zucker','75g Zuckerrübensirup','1 Ei (gross)','1 TL gemahlene Vanille'], zubereitung: '1. Ofen auf 175°C Umluft vorheizen. 2. Mehl, Stärke, Natron, Salz, 1 TL Zimt, Ingwer, Nelken und Muskat vermischen. 3. Die Hälfte des feinen Zuckers mit dem restlichen Zimt vermischen (Wälzmischung). 4. Butter, braunen Zucker und restlichen feinen Zucker schaumig aufschlagen. Zuckerrübensirup, Ei und Vanille dazugeben. 5. Mehlmischung unterrühren bis homogener Teig. 6. Ca. 1 EL Teig zu Kugel formen, in Zucker-Zimt-Mischung wenden, 12–14 Kugeln auf Blech, 10 Minuten backen. 7. Heisse Kekse mit Zucker-Zimt bestreuen, vollständig auskühlen lassen.', notiz: 'Ergibt 24–28 Cookies. Butter muss weich sein, nicht geschmolzen. Kekse werden beim Abkühlen fester — nicht zu lange backen!' },
 ];
+
+// ─── COCKTAIL REZEPTE ─────────────────────────────────────────────────────────
+const COCKTAIL_REZEPTE = [
+  {
+    name: 'Genesis',
+    gruppe: 'genesis',
+    tags: ['genesis'],
+    zutaten: ['Offen — Rezept folgt'],
+    zubereitung: 'Rezept wird ergänzt.',
+    notiz: 'Genesis ist ein separater Signature Drink des Alchemist.'
+  },
+  {
+    name: 'Wallhala',
+    gruppe: 'wallhala',
+    tags: ['wallhala'],
+    zutaten: ['Offen — Rezept folgt'],
+    zubereitung: 'Rezept wird ergänzt.',
+    notiz: 'Wallhala ist ein separater Signature Drink des Alchemist.'
+  },
+  {
+    name: 'Geisha',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl','Sezuan-Pfeffer Rande'],
+    zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen. Alkoholfreie Alternative: Alkfreier Vodka, Yuzu Tonic.',
+    notiz: 'Beschrieb: Harmonisch, sanft, exotisch, mit dem Gaumen spielend.'
+  },
+  {
+    name: 'Walpurgis-Nacht',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Randen-Gin 4 cl','Beeren 4 cl','Veg. Rahm 2 cl','Limette 2 cl','Berberitze'],
+    zubereitung: 'Ohne Eis mixen, mit Crash-Eis auffüllen. Deko mit Trockeneis. Alkoholfreie Alternative: Alkfreier Gin.',
+    notiz: 'Beschrieb: Im Morgentau gesammelt, fruchtig, beerig, vitalisierend.'
+  },
+  {
+    name: 'Van Gogh',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'],
+    zubereitung: 'Sirup immer mit Trockeneis. Wie Paracelsus, zusätzlich Zündhölzer und Absinth-Löffel. Zuckerwürfel im Mörser. Wermuthspirituose aus diversen Heilkräutern. Absinth nach Belieben mit Apfelmischung mazerieren, danach durch das Sieb über den Zucker giessen und vorsichtig anzünden. Der Zucker wird karamellisiert und mit Wasser gelöscht. Je nach Gusto mit Wasser verdünnen.',
+    notiz: 'Die Substanz für die betörende Wirkung ist Thujon.'
+  },
+  {
+    name: 'Oasis',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Rum 2–3 cl','Mezcal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'],
+    zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mezcal separat in Spritze servieren und nach Belieben dazugeben.',
+    notiz: ''
+  },
+  {
+    name: 'Mixtura',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Gin','Limette','Zitronenmelisse','Vincent (alkoholfrei)','Prosecco'],
+    zubereitung: 'Im Wasserglas mit Crush-Eis servieren. Reagenzgläser und Spritze bereitstellen. Prosecco im Erlenmeyer mit Eis. Alkoholfreie Alternative: Alkfreier Prosecco, Alkfreier Gin.',
+    notiz: 'Beschrieb: Mische wie im Labor deinen Drink, ob herb, süss, sauer — bestimme selbst. Momentan wie bisher (Reagenzglashalter bestellt).'
+  },
+  {
+    name: 'Taj Mahal',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Whiskey 4 cl','Chai 4 cl','Mandel 4 cl'],
+    zubereitung: 'Alle Zutaten mixen und servieren.',
+    notiz: ''
+  },
+];
+
+function renderCocktails() {
+  const search = (document.getElementById('cocktail-search')?.value || '').toLowerCase();
+  const sigList = document.getElementById('cocktails-signature');
+  const list = document.getElementById('cocktails-list');
+  if (!list || !sigList) return;
+
+  function makeCard(c, i, prefix) {
+    const tagHtml = c.tags.map(t => `<span class="tag tag-${t}">${t === 'genesis' ? '✦ Genesis' : t === 'wallhala' ? '✦ Wallhala' : '🍸 Cocktail'}</span>`).join('');
+    const ingList = c.zutaten.map(z => `<li>${z}</li>`).join('');
+    const notizHtml = c.notiz ? `<div class="recipe-note">${c.notiz}</div>` : '';
+    const isSignature = c.gruppe === 'genesis' || c.gruppe === 'wallhala';
+    const borderStyle = isSignature ? 'border-color: rgba(201,168,76,0.35);' : '';
+    return `<div class="recipe-card" id="${prefix}-${i}" style="${borderStyle}"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">${c.name}</div><div class="recipe-tags" style="margin-top:5px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${c.zubereitung}</p>${notizHtml}</div></div>`;
+  }
+
+  const signature = COCKTAIL_REZEPTE.filter(c => (c.gruppe === 'genesis' || c.gruppe === 'wallhala') && (!search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search)));
+  const others = COCKTAIL_REZEPTE.filter(c => c.gruppe === 'cocktail' && (!search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search)));
+
+  sigList.innerHTML = signature.length ? signature.map((c,i) => makeCard(c,i,'cs')).join('') : '<div class="hist-empty">Keine Signature Drinks gefunden.</div>';
+  list.innerHTML = others.length ? others.map((c,i) => makeCard(c,i,'cc')).join('') : '<div class="hist-empty">Keine Cocktails gefunden.</div>';
+}
+function filterCocktails() { renderCocktails(); }
 
 // ─── ALLERGENE DATA ────────────────────────────────────────────────────────────
 const ALLERGENE_FELDER = ['Vegan','Gluten','Sellerie','Laktose','Sesam','Soja','Zitrus','Knoblauch','Mandel','Erdnüsse'];
@@ -1299,6 +1420,7 @@ window.addEventListener('load', function() {
   renderRezepte();
   renderAllergene();
   renderGuidelines();
+  renderCocktails();
 });
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
@@ -1308,7 +1430,7 @@ function showPage(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navEl = document.getElementById('nav-' + name);
   if (navEl) navEl.classList.add('active');
-  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', allergene: 'Allergene', guidelines: 'Guidelines', reglement: 'Reglement' };
+  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', cocktails: 'Cocktails', allergene: 'Allergene', guidelines: 'Guidelines', reglement: 'Reglement' };
   document.getElementById('header-sub').textContent = subs[name] || '';
 }
 
@@ -1368,7 +1490,8 @@ function renderTasks() {
     container.appendChild(sl);
     sec.tasks.forEach(text => {
       const i = idx++;
-      taskStates[i] = false; taskNotes[i] = '';
+      if (taskStates[i] === undefined) taskStates[i] = false;
+      if (taskNotes[i] === undefined) taskNotes[i] = '';
       const card = document.createElement('div');
       card.className = 'task-card'; card.id = 'task-' + i;
       card.innerHTML = `<div class="task-main" onclick="toggleTask(${i})"><div class="task-check" id="chk-${i}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><span class="task-text">${text}</span><button class="note-btn" id="note-btn-${i}" onclick="event.stopPropagation();toggleNote(${i})">+ Notiz</button></div><div class="note-wrap" id="note-wrap-${i}"><textarea class="note-input" id="note-inp-${i}" placeholder="Notiz…" rows="2" oninput="saveNote(${i},this.value)"></textarea></div>`;
