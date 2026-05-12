@@ -637,9 +637,6 @@ select option { background: #111110; }
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="cocktail-search" placeholder="Cocktail suchen…" oninput="filterCocktails()">
     </div>
-    <div class="section-label">Signature Drinks — Genesis & Walhalla</div>
-    <div id="cocktails-signature"></div>
-    <div class="section-label" style="margin-top:1.25rem;">Cocktailkarte — alle weiteren Drinks</div>
     <div id="cocktails-list"></div>
   </div>
 </div>
@@ -882,16 +879,16 @@ const REZEPTE = [
 const COCKTAIL_REZEPTE = [
   {
     name: 'Genesis',
-    gruppe: 'genesis',
-    tags: ['genesis'],
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
     zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'],
     zubereitung: 'Alle Zutaten mixen und servieren.',
     notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–'
   },
   {
     name: 'Walhalla',
-    gruppe: 'wallhala',
-    tags: ['wallhala'],
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
     zutaten: ['3 cl Mescal (wenig)','3 cl Lavendel-Honig Sirup','2 cl Evelyne (Kräutersirup)','3 cl Limette','Alchemist-Bier zum Auffüllen'],
     zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.',
     notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–'
@@ -980,24 +977,15 @@ const COCKTAIL_REZEPTE = [
 
 function renderCocktails() {
   const search = (document.getElementById('cocktail-search')?.value || '').toLowerCase();
-  const sigList = document.getElementById('cocktails-signature');
   const list = document.getElementById('cocktails-list');
-  if (!list || !sigList) return;
-
-  function makeCard(c, i, prefix) {
-    const tagHtml = c.tags.map(t => `<span class="tag tag-${t}">${t === 'genesis' ? '✦ Genesis' : t === 'wallhala' ? '✦ Wallhala' : '🍸 Cocktail'}</span>`).join('');
+  if (!list) return;
+  const filtered = COCKTAIL_REZEPTE.filter(c => !search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search));
+  if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Kein Cocktail gefunden.</div>'; return; }
+  list.innerHTML = filtered.map((c, i) => {
     const ingList = c.zutaten.map(z => `<li>${z}</li>`).join('');
     const notizHtml = c.notiz ? `<div class="recipe-note">${c.notiz}</div>` : '';
-    const isSignature = c.gruppe === 'genesis' || c.gruppe === 'wallhala';
-    const borderStyle = isSignature ? 'border-color: rgba(201,168,76,0.35);' : '';
-    return `<div class="recipe-card" id="${prefix}-${i}" style="${borderStyle}"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">${c.name}</div><div class="recipe-tags" style="margin-top:5px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${c.zubereitung}</p>${notizHtml}</div></div>`;
-  }
-
-  const signature = COCKTAIL_REZEPTE.filter(c => (c.gruppe === 'genesis' || c.gruppe === 'wallhala') && (!search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search)));
-  const others = COCKTAIL_REZEPTE.filter(c => c.gruppe === 'cocktail' && (!search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search)));
-
-  sigList.innerHTML = signature.length ? signature.map((c,i) => makeCard(c,i,'cs')).join('') : '<div class="hist-empty">Keine Signature Drinks gefunden.</div>';
-  list.innerHTML = others.length ? others.map((c,i) => makeCard(c,i,'cc')).join('') : '<div class="hist-empty">Keine Cocktails gefunden.</div>';
+    return `<div class="recipe-card" id="cc-${i}"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">${c.name}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${c.zubereitung}</p>${notizHtml}</div></div>`;
+  }).join('');
 }
 function filterCocktails() { renderCocktails(); }
 
