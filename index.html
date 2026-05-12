@@ -606,7 +606,13 @@ select option { background: #111110; }
   <div id="view-history" style="display:none;">
     <div class="wrap">
       <button class="back-btn" onclick="showCheckView('setup')">← Zurück</button>
-      <p class="page-title" style="margin-bottom:1rem;">Verlauf</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <p class="page-title" style="margin:0;">Verlauf</p>
+        <button onclick="loadHistoryFromSheet()" style="background:none;border:1px solid var(--border);border-radius:2px;padding:4px 10px;color:var(--muted);font-size:0.72rem;font-family:var(--ui);cursor:pointer;display:flex;align-items:center;gap:5px;" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Aktualisieren
+        </button>
+      </div>
       <div class="hist-filters">
         <select id="hist-schicht" onchange="renderHistory()">
           <option value="">Alle Schichten</option>
@@ -1108,6 +1114,65 @@ const GUIDELINES = [
 let currentSession = null;
 let taskStates = {}, taskNotes = {}, tempValues = {};
 let history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
+const SHEET_ID = '1y82FbD9LMeGyvr6A-qJn5cXWnd3en4K7zVQZTlkAaG8';
+const SHEET_TAB = 'Eintr%C3%A4ge'; // "Einträge" URL-encoded
+
+async function loadHistoryFromSheet() {
+  const list = document.getElementById('hist-list');
+  if (list) list.innerHTML = '<div class="hist-empty" id="hist-loading">⏳ Lade Verlauf aus Google Sheets…</div>';
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_TAB}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('fetch failed');
+    const csv = await res.text();
+    const rows = parseCSV(csv);
+    if (rows.length < 2) { renderHistory(); return; }
+    const headers = rows[0].map(h => h.toLowerCase().trim());
+    const iDatum = headers.indexOf('datum');
+    const iSchicht = headers.indexOf('schicht');
+    const iSection = headers.indexOf('bereich');
+    const iKuerzel = headers.indexOf('kürzel') !== -1 ? headers.indexOf('kürzel') : headers.indexOf('kuerzel');
+    const iAufgabe = headers.indexOf('aufgabe');
+    const iErledigt = headers.indexOf('erledigt');
+    const iNotiz = headers.indexOf('notiz');
+    const iZeit = headers.findIndex(h => h.includes('zeit') || h.includes('timestamp'));
+
+    // Group rows by datum+schicht+kuerzel+zeitstempel
+    const groups = {};
+    for (let i = 1; i < rows.length; i++) {
+      const r = rows[i];
+      if (!r[iAufgabe]) continue;
+      const key = `${r[iDatum]}|${r[iSchicht]}|${r[iKuerzel]}|${r[iZeit] || ''}`;
+      if (!groups[key]) groups[key] = { datum: r[iDatum], schicht: r[iSchicht], kuerzel: r[iKuerzel], zeitstempel: r[iZeit] || r[iDatum], rows: [], done: 0, total: 0 };
+      const erledigt = r[iErledigt] || '';
+      groups[key].rows.push({ aufgabe: r[iAufgabe], section: r[iSection] || '', erledigt, notiz: r[iNotiz] || '' });
+      groups[key].total++;
+      if (erledigt === 'Ja' || erledigt === 'OK') groups[key].done++;
+    }
+    // Sort newest first
+    history = Object.values(groups).sort((a, b) => b.zeitstempel.localeCompare(a.zeitstempel));
+    renderHistory();
+  } catch(e) {
+    // Fallback to localStorage
+    history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
+    renderHistory();
+  }
+}
+
+function parseCSV(text) {
+  const rows = []; let row = []; let cell = ''; let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQ) { if (c === '"' && text[i+1] === '"') { cell += '"'; i++; } else if (c === '"') { inQ = false; } else { cell += c; } }
+    else if (c === '"') { inQ = true; }
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c === '\r') {}
+    else { cell += c; }
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
 let activeFilter = 'alle';
 
 
@@ -1482,7 +1547,7 @@ function showCheckView(name) {
   });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
-  if (name === 'history') renderHistory();
+  if (name === 'history') loadHistoryFromSheet();
   window.scrollTo(0, 0);
 }
 
