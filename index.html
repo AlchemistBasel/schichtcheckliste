@@ -1700,12 +1700,57 @@ async function submitTemp() {
 }
 
 // ─── HISTORY ──────────────────────────────────────────────────────────────────
+function formatDatum(raw) {
+  if (!raw) return '';
+  // Handle ISO date strings
+  const iso = String(raw);
+  if (iso.includes('T')) {
+    const d = new Date(iso);
+    if (!isNaN(d)) return d.toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+  }
+  // Handle "4.5.2026" or "2026-05-04"
+  if (iso.includes('-') && !iso.includes('T')) {
+    const [y,m,d] = iso.split('-');
+    return new Date(y,m-1,d).toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+  }
+  return iso;
+}
+
 function renderHistory() {
-  const fs=document.getElementById('hist-schicht').value; const fd=document.getElementById('hist-date').value.toLowerCase();
-  const list=document.getElementById('hist-list');
-  const filtered=history.filter(h=>{if(fs&&h.schicht!==fs)return false;if(fd&&!h.datum.toLowerCase().includes(fd)&&!h.kuerzel.toLowerCase().includes(fd))return false;return true;});
-  if(!filtered.length){list.innerHTML='<div class="hist-empty">Noch keine Einträge vorhanden.</div>';return;}
-  list.innerHTML=filtered.map((e,i)=>{const bc=e.schicht.includes('Bar')&&!e.schicht.includes('Temp')?'badge-bar':e.schicht.includes('Temp')?'badge-temp':'badge-service';const tasks=e.rows.map(r=>`<div class="hist-task-row"><span class="${r.erledigt==='Ja'||r.erledigt==='OK'?'ht-done':'ht-skip'}">${r.erledigt==='Ja'||r.erledigt==='OK'?'●':'○'}</span><span>${r.aufgabe}</span>${r.notiz?'<span class="ht-note">↳ '+r.notiz+'</span>':''}</div>`).join('');return`<div class="hist-entry"><div class="hist-head" onclick="document.getElementById('ht-${i}').classList.toggle('open')"><div><div class="hist-who">${e.kuerzel} — ${e.done}/${e.total}</div><div class="hist-meta">${e.datum} · ${e.zeitstempel.split(',')[1]||''}</div></div><span class="hist-badge ${bc}">${e.schicht}</span></div><div class="hist-tasks" id="ht-${i}">${tasks}</div></div>`;}).join('');
+  const fs = document.getElementById('hist-schicht').value;
+  const fd = document.getElementById('hist-date').value.toLowerCase();
+  const list = document.getElementById('hist-list');
+  const filtered = history.filter(h => {
+    if (fs && h.schicht !== fs) return false;
+    if (fd && !String(h.datum).toLowerCase().includes(fd) && !h.kuerzel.toLowerCase().includes(fd)) return false;
+    return true;
+  });
+  if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Noch keine Einträge vorhanden.</div>'; return; }
+  list.innerHTML = filtered.map((e, i) => {
+    const bc = e.schicht.includes('Bar') && !e.schicht.includes('Temp') ? 'badge-bar' : e.schicht.includes('Temp') ? 'badge-temp' : 'badge-service';
+    const datum = formatDatum(e.datum);
+    const zeit = e.zeitstempel ? String(e.zeitstempel).replace('T',' ').substring(0,16).replace(/-/g,'.') : '';
+    const done = e.rows.filter(r => r.erledigt==='Ja'||r.erledigt==='OK').length;
+    const total = e.rows.length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    const tasks = e.rows.map(r => {
+      const ok = r.erledigt==='Ja'||r.erledigt==='OK';
+      return `<div class="hist-task-row"><span class="${ok?'ht-done':'ht-skip'}">${ok?'●':'○'}</span><span>${r.aufgabe}</span>${r.notiz?'<span class="ht-note">↳ '+r.notiz+'</span>':''}</div>`;
+    }).join('');
+    return `<div class="hist-entry">
+      <div class="hist-head" onclick="document.getElementById('ht-${i}').classList.toggle('open')">
+        <div>
+          <div class="hist-who">${e.kuerzel} — ${done}/${total} <span style="color:var(--muted);font-size:0.65rem;">(${pct}%)</span></div>
+          <div class="hist-meta">${datum}${zeit?' · '+zeit.split(' ')[1]:''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <span class="hist-badge ${bc}">${e.schicht}</span>
+          <span style="color:var(--muted);font-size:0.75rem;">▾</span>
+        </div>
+      </div>
+      <div class="hist-tasks" id="ht-${i}">${tasks}</div>
+    </div>`;
+  }).join('');
 }
 
 // ─── REZEPTE ──────────────────────────────────────────────────────────────────
