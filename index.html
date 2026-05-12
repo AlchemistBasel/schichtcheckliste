@@ -254,6 +254,11 @@ select option { background: #111110; }
   .temp-head, .temp-row { grid-template-columns: 1.2fr 0.9fr 0.8fr 1fr; }
   .allergen-grid { grid-template-columns: 1fr 1fr; }
 }
+.schicht-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.schicht-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 0.6rem 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); transition: all 0.15s; text-align: center; width: 100%; }
+.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: var(--gold-glow); }
+.schicht-btn.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+.schicht-name { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -314,17 +319,29 @@ select option { background: #111110; }
         </div>
         <div class="field-group">
           <label>Schicht</label>
-          <select id="inp-schicht">
-            <option value="">— Schicht wählen —</option>
-            <option value="Spätdienst Service">Spätdienst Service</option>
-            <option value="Abend Bar">Abend Bar</option>
-            <option value="Temperaturkontrolle Bar">Temperaturkontrolle Bar</option>
-            <option value="Bar Übergabe">Bar Übergabe</option>
-          </select>
+          <div class="schicht-grid">
+            <button class="schicht-btn" data-value="Spätdienst Service" onclick="selectSchicht(this)">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              <span class="schicht-name">Spätdienst Service</span>
+            </button>
+            <button class="schicht-btn" data-value="Abend Bar" onclick="selectSchicht(this)">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+              <span class="schicht-name">Abend Bar</span>
+            </button>
+            <button class="schicht-btn" data-value="Temperaturkontrolle Bar" onclick="selectSchicht(this)">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+              <span class="schicht-name">Temperatur&shy;kontrolle</span>
+            </button>
+            <button class="schicht-btn" data-value="Bar Übergabe" onclick="selectSchicht(this)">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              <span class="schicht-name">Bar Übergabe</span>
+            </button>
+          </div>
+          <input type="hidden" id="inp-schicht" value="">
         </div>
         <div class="field-group">
           <label>Datum</label>
-          <input type="date" id="inp-datum" style="color:var(--text);">
+          <input type="date" id="inp-datum" style="color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0.7rem 0.9rem;width:100%;font-size:0.95rem;font-family:var(--body);appearance:none;-webkit-appearance:none;color-scheme:dark;">
           <p class="hint">Nach Mitternacht: Datum auf den Vortag setzen (Schichtbeginn zählt)</p>
         </div>
         <button class="btn-gold" id="btn-start" onclick="startChecklist()">Checkliste starten</button>
@@ -913,7 +930,12 @@ function initLogin() {
 }
 
 // *** NEW: Select user by index to avoid any string-escaping issues ***
-function selectUserByIdx(idx) {
+function selectSchicht(btn) {
+  document.querySelectorAll('.schicht-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('inp-schicht').value = btn.dataset.value;
+  validateSetup();
+}
   const m = MITARBEITER[parseInt(idx)];
   if (!m) return;
   const cls = ROLLE_STYLE[m.rolle] || 'av-service';
@@ -951,8 +973,13 @@ function applyLogin() {
   // Pre-select schicht based on rolle
   const schichtField = document.getElementById('inp-schicht');
   if (schichtField && !schichtField.value) {
-    if (currentUser.rolle === 'Service') schichtField.value = 'Spätdienst Service';
-    else if (currentUser.rolle === 'Bar') schichtField.value = 'Abend Bar';
+    let autoVal = '';
+    if (currentUser.rolle === 'Service') autoVal = 'Spätdienst Service';
+    else if (currentUser.rolle === 'Bar') autoVal = 'Abend Bar';
+    if (autoVal) {
+      const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`);
+      if (btn) selectSchicht(btn);
+    }
   }
   validateSetup();
 }
@@ -1156,7 +1183,6 @@ window.addEventListener('load', function() {
     datum.value = y+'-'+m+'-'+d;
   }
   document.getElementById('inp-kuerzel').addEventListener('input', validateSetup);
-  document.getElementById('inp-schicht').addEventListener('change', validateSetup);
   validateSetup();
   checkResumeBanner();
   checkUbergabeBanner();
