@@ -1702,18 +1702,25 @@ async function submitTemp() {
 // ─── HISTORY ──────────────────────────────────────────────────────────────────
 function formatDatum(raw) {
   if (!raw) return '';
-  // Handle ISO date strings
   const iso = String(raw);
   if (iso.includes('T')) {
     const d = new Date(iso);
     if (!isNaN(d)) return d.toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
   }
-  // Handle "4.5.2026" or "2026-05-04"
   if (iso.includes('-') && !iso.includes('T')) {
     const [y,m,d] = iso.split('-');
     return new Date(y,m-1,d).toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
   }
   return iso;
+}
+
+function toggleHistEntry(i) {
+  const detail = document.getElementById('hd-'+i);
+  const chevron = document.getElementById('hc-'+i);
+  if (!detail) return;
+  const isOpen = detail.style.display !== 'none';
+  detail.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
 }
 
 function renderHistory() {
@@ -1726,29 +1733,59 @@ function renderHistory() {
     return true;
   });
   if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Noch keine Einträge vorhanden.</div>'; return; }
+
   list.innerHTML = filtered.map((e, i) => {
-    const bc = e.schicht.includes('Bar') && !e.schicht.includes('Temp') ? 'badge-bar' : e.schicht.includes('Temp') ? 'badge-temp' : 'badge-service';
     const datum = formatDatum(e.datum);
-    const zeit = e.zeitstempel ? String(e.zeitstempel).replace('T',' ').substring(0,16).replace(/-/g,'.') : '';
     const done = e.rows.filter(r => r.erledigt==='Ja'||r.erledigt==='OK').length;
     const total = e.rows.length;
     const pct = total ? Math.round(done/total*100) : 0;
-    const tasks = e.rows.map(r => {
-      const ok = r.erledigt==='Ja'||r.erledigt==='OK';
-      return `<div class="hist-task-row"><span class="${ok?'ht-done':'ht-skip'}">${ok?'●':'○'}</span><span>${r.aufgabe}</span>${r.notiz?'<span class="ht-note">↳ '+r.notiz+'</span>':''}</div>`;
+    const pctColor = pct===100 ? 'var(--success)' : pct>=70 ? 'var(--gold)' : 'var(--warn)';
+
+    // Group tasks by section
+    const sections = {};
+    e.rows.forEach(r => {
+      const sec = r.section || 'Aufgaben';
+      if (!sections[sec]) sections[sec] = [];
+      sections[sec].push(r);
+    });
+
+    const sectionHtml = Object.entries(sections).map(([sec, tasks]) => {
+      const taskRows = tasks.map(r => {
+        const ok = r.erledigt==='Ja'||r.erledigt==='OK';
+        return `<div style="display:flex;align-items:baseline;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+          <span style="color:${ok?'var(--success)':'var(--dim)'};font-size:0.62rem;flex-shrink:0;">${ok?'●':'○'}</span>
+          <span style="color:${ok?'var(--text)':'var(--muted)'};${ok?'':'text-decoration:line-through;text-decoration-color:var(--dim)'}">${r.aufgabe}</span>
+          ${r.notiz?`<span style="color:var(--muted);font-size:0.72rem;font-style:italic;">↳ ${r.notiz}</span>`:''}
+        </div>`;
+      }).join('');
+      return `<div style="margin-bottom:0.75rem;">
+        <div style="font-family:var(--font);font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);padding:0.5rem 0 0.35rem;border-bottom:1px solid var(--border);">${sec}</div>
+        ${taskRows}
+      </div>`;
     }).join('');
-    return `<div class="hist-entry">
-      <div class="hist-head" onclick="document.getElementById('ht-${i}').classList.toggle('open')">
-        <div>
-          <div class="hist-who">${e.kuerzel} — ${done}/${total} <span style="color:var(--muted);font-size:0.65rem;">(${pct}%)</span></div>
-          <div class="hist-meta">${datum}${zeit?' · '+zeit.split(' ')[1]:''}</div>
+
+    const schichtLabel = e.schicht === 'Spätdienst Service' ? 'Service' : e.schicht;
+
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;margin-bottom:0.5rem;overflow:hidden;">
+      <div onclick="toggleHistEntry(${i})" style="padding:0.8rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:0.75rem;">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+            <span style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.06em;color:var(--gold);">${e.kuerzel}</span>
+            <span style="font-size:0.7rem;color:var(--muted);">·</span>
+            <span style="font-size:0.78rem;color:var(--text);">${schichtLabel}</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;font-style:italic;">${datum}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <span class="hist-badge ${bc}">${e.schicht}</span>
-          <span style="color:var(--muted);font-size:0.75rem;">▾</span>
+        <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0;">
+          <span style="font-size:0.72rem;color:${pctColor};font-family:var(--ui);">${done}/${total}</span>
+          <span id="hc-${i}" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
         </div>
       </div>
-      <div class="hist-tasks" id="ht-${i}">${tasks}</div>
+      <div id="hd-${i}" style="display:none;padding:0 1rem 0.75rem;border-top:1px solid var(--border);">
+        <div style="margin-top:0.75rem;">
+          ${sectionHtml}
+        </div>
+      </div>
     </div>`;
   }).join('');
 }
