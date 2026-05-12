@@ -1675,10 +1675,10 @@ function renderAllergene() {
   list.innerHTML = filtered.map((d, i) => {
     const aktiv = ALLERGENE_FELDER.filter(f => d[f.toLowerCase()] === 1);
     const pillsHtml = aktiv.slice(0, 4).map(f => `<span class="a-pill yes">${f}</span>`).join('') + (aktiv.length > 4 ? `<span class="a-pill yes">+${aktiv.length - 4}</span>` : '');
-    const gridHtml = ALLERGENE_FELDER.map(f => { const has = d[f.toLowerCase()] === 1; return `<div class="ag-item ${has?'yes':'no'}"><div class="ag-dot"></div>${f}</div>`; }).join('');
+    const gridHtml = ALLERGENE_FELDER.filter(f => d[f.toLowerCase()] === 1).map(f => `<div class="ag-item yes"><div class="ag-dot"></div>${f}</div>`).join('');
     const notizHtml = d.notiz ? `<div class="dish-notiz">${d.notiz}</div>` : '';
     const veganBadge = d.vegan ? '<div class="dish-vegan">🌱 Vegan</div>' : '';
-    return `<div class="dish-card" id="dc-${i}"><div class="dish-head" onclick="toggleDish(${i})"><div><div class="dish-name">${d.name}</div>${veganBadge}</div><div class="allergen-pills">${pillsHtml || '<span style="font-size:0.72rem;color:var(--muted)">Keine</span>'}</div></div><div class="dish-detail"><div class="allergen-grid">${gridHtml}</div>${notizHtml}</div></div>`;
+    return `<div class="dish-card" id="dc-${i}"><div class="dish-head" onclick="toggleDish(${i})"><div><div class="dish-name">${d.name}</div>${veganBadge}</div><div class="allergen-pills">${pillsHtml || '<span style="font-size:0.72rem;color:var(--muted)">Keine</span>'}</div></div><div class="dish-detail"><div class="allergen-grid">${gridHtml || '<span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Keine Allergene vorhanden</span>'}</div>${notizHtml}</div></div>`;
   }).join('');
 }
 
