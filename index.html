@@ -808,7 +808,7 @@ select option { background: #111110; }
 
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwA6F4tGQnJFYj8mpM0r2v-IPsIf3DsLpqgyFp5nJB6h5KclEQIPpf5kyMHUS4hs99K/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbygEf5j37s4dNKR1TMYRjlYfO_Zg-IkGFV-nSBIWle6VpxLU1_8lErkWZcZlboEniLc/exec';
 
 // ─── CHECKLISTEN DATA ─────────────────────────────────────────────────────────
 const CHECKLISTEN = {
@@ -1115,41 +1115,34 @@ let currentSession = null;
 let taskStates = {}, taskNotes = {}, tempValues = {};
 let history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
 const SHEET_ID = '1y82FbD9LMeGyvr6A-qJn5cXWnd3en4K7zVQZTlkAaG8';
-const SHEET_TAB = 'Eintr%C3%A4ge'; // "Einträge" URL-encoded
+const SHEET_TAB = 'Schichtcheckliste \u2014 Eintr\u00e4ge';
 
 async function loadHistoryFromSheet() {
   const list = document.getElementById('hist-list');
-  if (list) list.innerHTML = '<div class="hist-empty" id="hist-loading">⏳ Lade Verlauf aus Google Sheets…</div>';
+  if (list) list.innerHTML = '<div class="hist-empty">⏳ Lade Verlauf…</div>';
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_TAB}`;
-    const res = await fetch(url);
+    const res = await fetch(WEBHOOK_URL, { method: 'GET' });
     if (!res.ok) throw new Error('fetch failed');
-    const csv = await res.text();
-    const rows = parseCSV(csv);
-    if (rows.length < 2) { renderHistory(); return; }
-    const headers = rows[0].map(h => h.toLowerCase().trim());
-    const iDatum = headers.indexOf('datum');
-    const iSchicht = headers.indexOf('schicht');
-    const iSection = headers.indexOf('bereich');
-    const iKuerzel = headers.indexOf('kürzel') !== -1 ? headers.indexOf('kürzel') : headers.indexOf('kuerzel');
-    const iAufgabe = headers.indexOf('aufgabe');
-    const iErledigt = headers.indexOf('erledigt');
-    const iNotiz = headers.indexOf('notiz');
-    const iZeit = headers.findIndex(h => h.includes('zeit') || h.includes('timestamp'));
+    const json = await res.json();
+    if (!json.ok || !json.rows || !json.rows.length) { history = []; renderHistory(); return; }
 
-    // Group rows by datum+schicht+kuerzel+zeitstempel
+    // Group rows by Datum+Schicht+Kürzel+Zeitstempel
     const groups = {};
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i];
-      if (!r[iAufgabe]) continue;
-      const key = `${r[iDatum]}|${r[iSchicht]}|${r[iKuerzel]}|${r[iZeit] || ''}`;
-      if (!groups[key]) groups[key] = { datum: r[iDatum], schicht: r[iSchicht], kuerzel: r[iKuerzel], zeitstempel: r[iZeit] || r[iDatum], rows: [], done: 0, total: 0 };
-      const erledigt = r[iErledigt] || '';
-      groups[key].rows.push({ aufgabe: r[iAufgabe], section: r[iSection] || '', erledigt, notiz: r[iNotiz] || '' });
+    json.rows.forEach(r => {
+      const key = `${r['Datum']}|${r['Schicht']}|${r['Kürzel']}|${r['Zeitstempel']}`;
+      if (!groups[key]) groups[key] = {
+        datum: r['Datum'] || '',
+        schicht: r['Schicht'] || '',
+        kuerzel: r['Kürzel'] || '',
+        zeitstempel: r['Zeitstempel'] || r['Datum'] || '',
+        rows: [], done: 0, total: 0
+      };
+      const erledigt = r['Erledigt'] || '';
+      groups[key].rows.push({ aufgabe: r['Aufgabe'] || '', section: r['Bereich'] || '', erledigt, notiz: r['Notiz'] || '' });
       groups[key].total++;
       if (erledigt === 'Ja' || erledigt === 'OK') groups[key].done++;
-    }
-    // Sort newest first
+    });
+
     history = Object.values(groups).sort((a, b) => b.zeitstempel.localeCompare(a.zeitstempel));
     renderHistory();
   } catch(e) {
@@ -1157,21 +1150,6 @@ async function loadHistoryFromSheet() {
     history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
     renderHistory();
   }
-}
-
-function parseCSV(text) {
-  const rows = []; let row = []; let cell = ''; let inQ = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQ) { if (c === '"' && text[i+1] === '"') { cell += '"'; i++; } else if (c === '"') { inQ = false; } else { cell += c; } }
-    else if (c === '"') { inQ = true; }
-    else if (c === ',') { row.push(cell); cell = ''; }
-    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
-    else if (c === '\r') {}
-    else { cell += c; }
-  }
-  if (cell || row.length) { row.push(cell); rows.push(row); }
-  return rows;
 }
 let activeFilter = 'alle';
 
