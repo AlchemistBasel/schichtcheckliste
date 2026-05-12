@@ -477,9 +477,59 @@ select option { background: #111110; }
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="margin-left:auto;flex-shrink:0;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </div>
       </a>
+
+      <div class="section-label" style="margin-top:1.5rem;">Abrechnung</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:0.5rem;">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'" style="padding:1rem 1.25rem;display:flex;align-items:center;gap:0.9rem;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <div style="flex:1;">
+            <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Abrechnung</div>
+            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;font-style:italic;">Schritt für Schritt</div>
+          </div>
+          <span class="abr-chevron" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
+        </div>
+        <div style="display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.9rem;">
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
+              <span style="color:var(--text);">Warte bis wirklich alle Tische abgeschlossen sind. Erst dann starten.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
+              <span style="color:var(--text);">Am iPad: POS öffnen und zum Tagesabschluss navigieren.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span>
+              <span style="color:var(--text);">Prüfe nochmals alle Tische. Kein einziger darf noch offen sein.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span>
+              <span style="color:var(--text);">Tagesabschluss auslösen, den Beleg ausdrucken und abheften.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span>
+              <span style="color:var(--text);">Am Kartenterminal ebenfalls den Tagesabschluss machen: Menü, Abschluss, bestätigen.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">6</span>
+              <span style="color:var(--text);">Bargeld zählen und mit dem Systembeleg vergleichen. Differenzen immer notieren.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">7</span>
+              <span style="color:var(--text);">Kassenbericht ausfüllen und in der vorgesehenen Box deponieren.</span>
+            </div>
+            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">8</span>
+              <span style="color:var(--text);">iPads und Terminals einstecken und aufladen.</span>
+            </div>
+            <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:2px;font-size:0.82rem;color:var(--muted);font-style:italic;">
+              💡 Bei Fragen oder Differenzen bitte immer zuerst den Verantwortlichen fragen. Nie einfach schätzen.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div id="view-checklist" style="display:none;">
     <div class="wrap">
       <div class="sess-bar">
         <div>
@@ -680,16 +730,6 @@ select option { background: #111110; }
   </div>
 </div>
 
-<!-- ═══ PAGE: GUIDELINES ═══ -->
-<div class="page" id="page-guidelines">
-  <div class="wrap">
-    <div class="ornament">— ✦ —</div>
-    <p class="page-title">Guidelines</p>
-    <p class="page-sub">Abläufe & Hilfestellungen für das Team</p>
-    <div id="guidelines-list"></div>
-  </div>
-</div>
-
 <!-- ═══ PAGE: REGLEMENT ═══ -->
 <div class="page" id="page-reglement">
   <div class="wrap">
@@ -791,10 +831,6 @@ select option { background: #111110; }
   <button class="nav-btn" id="nav-allergene" onclick="showPage('allergene')">
     <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     Allergene
-  </button>
-  <button class="nav-btn" id="nav-guidelines" onclick="showPage('guidelines')">
-    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-    Guidelines
   </button>
   <button class="nav-btn" id="nav-verlauf" onclick="showPage('check');showCheckView('history')">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -1043,73 +1079,6 @@ const ALLERGENE_DATA = [
   { name: 'Endorphin', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Glutenfrei, laktosefrei, Nussfrei' },
 ];
 
-// ─── GUIDELINES DATA ──────────────────────────────────────────────────────────
-const GUIDELINES = [
-  {
-    title: 'Abrechnung',
-    steps: [
-      { n:'1', t:'Warte bis wirklich alle Tische abgeschlossen sind. Erst dann starten.' },
-      { n:'2', t:'Am iPad: POS öffnen und zum Tagesabschluss navigieren.' },
-      { n:'3', t:'Prüfe nochmals alle Tische. Kein einziger darf noch offen sein.' },
-      { n:'4', t:'Tagesabschluss auslösen, den Beleg ausdrucken und abheften.' },
-      { n:'5', t:'Am Kartenterminal ebenfalls den Tagesabschluss machen: Menü, Abschluss, bestätigen.' },
-      { n:'6', t:'Bargeld zählen und mit dem Systembeleg vergleichen. Differenzen immer notieren.' },
-      { n:'7', t:'Kassenbericht ausfüllen und in der vorgesehenen Box deponieren.' },
-      { n:'8', t:'iPads und Terminals einstecken und aufladen.' },
-    ],
-    tip: 'Bei Fragen oder Differenzen bitte immer zuerst den Verantwortlichen fragen. Nie einfach schätzen oder runden.',
-    warn: ''
-  },
-  {
-    title: 'Schichtübergabe',
-    steps: [
-      { n:'1', t:'Schau kurz die Reservationen für den nächsten Tag durch und notiere Besonderheiten.' },
-      { n:'2', t:'Offene Aufgaben oder Probleme per Gruppenchat weitergeben.' },
-      { n:'3', t:'Mise en Place prüfen: Was wurde aufgebraucht? Was muss nachbestellt werden?' },
-      { n:'4', t:'Küche informieren falls etwas fehlt oder aufgefüllt werden muss.' },
-      { n:'5', t:'Checkliste vollständig abschliessen bevor du gehst.' },
-    ],
-    tip: 'Eine kurze Nachricht im Chat reicht völlig. Wichtig ist nur, dass nichts vergessen geht.',
-    warn: ''
-  },
-  {
-    title: 'Gästereklamationen',
-    steps: [
-      { n:'1', t:'Ruhig bleiben und dem Gast zuhören. Lass ihn ausreden, unterbreche nicht.' },
-      { n:'2', t:'Zeige echtes Verständnis. Ein einfaches "Das tut mir leid, ich kümmere mich sofort darum" reicht.' },
-      { n:'3', t:'Handle sofort: Gericht zurück in die Küche, neues vorbereiten lassen.' },
-      { n:'4', t:'Den Verantwortlichen informieren, auch wenn der Gast sich schon beruhigt hat.' },
-      { n:'5', t:'Nicht streiten, nicht rechtfertigen. Lösung anbieten, Punkt.' },
-    ],
-    tip: 'Ein gut gelöster Konflikt hinterlässt oft mehr Eindruck als ein problemloser Abend.',
-    warn: 'Keine Gratisgänge oder Rabatte ohne Rücksprache mit der Leitung.'
-  },
-  {
-    title: 'Neueinstieg im Alchemist',
-    steps: [
-      { n:'1', t:'QR-Code scannen und die Schichtcheckliste für deine Schicht öffnen.' },
-      { n:'2', t:'Unter dem Rezepte-Tab findest du alle Gerichte mit Zutaten und Zubereitung.' },
-      { n:'3', t:'Beim Thema Allergene immer beim Gast nachfragen und im Allergen-Tab nachschauen.' },
-      { n:'4', t:'Unsicher? Frag lieber einmal zu viel beim Teamlead nach.' },
-      { n:'5', t:'Checkliste am Ende jeder Schicht vollständig ausfüllen und speichern.' },
-    ],
-    tip: 'Dieses Portal ist dein digitales Handbuch. Nutze es, es ist für dich gemacht.',
-    warn: ''
-  },
-  {
-    title: 'Hygiene & Lebensmittelsicherheit',
-    steps: [
-      { n:'1', t:'Hände waschen vor der Schicht, nach jedem WC-Besuch und nach Kontakt mit rohem Fleisch.' },
-      { n:'2', t:'Kühltemperaturen täglich messen und in der Temperaturkontrolle eintragen.' },
-      { n:'3', t:'Alle Behälter mit Datum beschriften. Älteres immer zuerst verbrauchen.' },
-      { n:'4', t:'Abgelaufene oder verdächtige Lebensmittel sofort aussondern und melden.' },
-      { n:'5', t:'Arbeitsflächen nach jeder Nutzung reinigen und desinfizieren.' },
-    ],
-    tip: '',
-    warn: 'Temperaturen ausserhalb des Sollbereichs sofort melden. Tiefkühler: -18°C, Bar: +6 bis +10°C.'
-  },
-];
-
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let currentSession = null;
 let taskStates = {}, taskNotes = {}, tempValues = {};
@@ -1141,7 +1110,20 @@ async function loadHistoryFromSheet() {
         });
         history = Object.values(groups)
           .filter(e => e.kuerzel && e.kuerzel.trim() !== '' && e.schicht && e.schicht.trim() !== '' && e.rows.length > 0)
-          .sort((a,b) => b.zeitstempel.localeCompare(a.zeitstempel));
+          .sort((a,b) => {
+            // Parse timestamp to comparable value — handles "12.5.2026, 22:30:05" and ISO formats
+            const parseTs = ts => {
+              if (!ts) return 0;
+              const s = String(ts);
+              // "12.5.2026, 22:30:05" → parse manually
+              const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{2}):(\d{2})/);
+              if (m) return new Date(m[3], m[2]-1, m[1], m[4], m[5]).getTime();
+              // ISO or other
+              const d = new Date(s);
+              return isNaN(d) ? 0 : d.getTime();
+            };
+            return parseTs(b.zeitstempel) - parseTs(a.zeitstempel);
+          });
         renderHistory();
         resolve();
       };
@@ -1505,7 +1487,6 @@ window.addEventListener('load', function() {
   updateNavBadge();
   renderRezepte();
   renderAllergene();
-  renderGuidelines();
   renderCocktails();
 });
 
@@ -1834,16 +1815,6 @@ function toggleDish(i) { const c = document.getElementById('dc-' + i); c.classLi
 function filterAllergene() { renderAllergene(); }
 
 // ─── GUIDELINES ───────────────────────────────────────────────────────────────
-function renderGuidelines() {
-  const list = document.getElementById('guidelines-list');
-  list.innerHTML = GUIDELINES.map((g, i) => {
-    const steps = g.steps.map(s => `<div class="guide-step"><span class="guide-step-num">${s.n}</span><span class="guide-step-text">${s.t}</span></div>`).join('');
-    const tip = g.tip ? `<div class="guide-tip">💡 ${g.tip}</div>` : '';
-    const warn = g.warn ? `<div class="guide-warn">⚠ ${g.warn}</div>` : '';
-    return `<div class="guide-card" id="gc-${i}"><div class="guide-head" onclick="toggleGuide(${i})"><div class="guide-num">${i+1}</div><span class="guide-title">${g.title}</span><span class="recipe-chevron" style="margin-left:auto;">▾</span></div><div class="guide-body">${steps}${tip}${warn}</div></div>`;
-  }).join('');
-}
-function toggleGuide(i) { document.getElementById('gc-' + i).classList.toggle('open'); }
 </script>
 </body>
 </html>
