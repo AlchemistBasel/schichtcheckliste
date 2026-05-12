@@ -1139,7 +1139,9 @@ async function loadHistoryFromSheet() {
           groups[key].total++;
           if (erledigt==='Ja'||erledigt==='OK') groups[key].done++;
         });
-        history = Object.values(groups).sort((a,b) => b.zeitstempel.localeCompare(a.zeitstempel));
+        history = Object.values(groups)
+          .filter(e => e.kuerzel && e.kuerzel.trim() !== '' && e.schicht && e.schicht.trim() !== '' && e.rows.length > 0)
+          .sort((a,b) => b.zeitstempel.localeCompare(a.zeitstempel));
         renderHistory();
         resolve();
       };
