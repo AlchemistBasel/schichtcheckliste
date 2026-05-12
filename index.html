@@ -468,7 +468,7 @@ select option { background: #111110; }
           <option value="Spätdienst Service">Spätdienst Service</option>
           <option value="Abend Bar">Abend Bar</option>
           <option value="Temperaturkontrolle Bar">Temperaturkontrolle Bar</option>
-            <option value="Bar Übergabe">Bar Übergabe</option>
+          <option value="Bar Übergabe">Bar Übergabe</option>
         </select>
         <input type="text" id="hist-date" placeholder="Datum / Kürzel…" oninput="renderHistory()">
       </div>
@@ -747,9 +747,10 @@ let activeFilter = 'alle';
 
 // ─── MITARBEITER & LOGIN ──────────────────────────────────────────────────────
 const MITARBEITER = [
+  { name: 'Mark', rolle: 'Leitung', kuerzel: 'MS' },
   { name: 'Julian Renggli', rolle: 'Leitung', kuerzel: 'JR' },
   { name: 'Marc Fiechter', rolle: 'Küche', kuerzel: 'MF' },
-  { name: 'Mame N'Diaye', rolle: 'Küche', kuerzel: 'MN' },
+  { name: 'Mame N\u2019Diaye', rolle: 'Küche', kuerzel: 'MN' },
   { name: 'Meret Sarasin', rolle: 'Küche', kuerzel: 'MS' },
   { name: 'Elena Lippi', rolle: 'Service', kuerzel: 'EL' },
   { name: 'Malvina Ferro', rolle: 'Bar', kuerzel: 'MF2' },
@@ -762,12 +763,12 @@ const MITARBEITER = [
   { name: 'Katalin Koedmoenne', rolle: 'Reinigung', kuerzel: 'KK' },
   { name: 'Thien Thoung Le', rolle: 'Küche', kuerzel: 'TL' },
   { name: 'Laura Hauser', rolle: 'Service', kuerzel: 'LH' },
-  { name: 'Céline Bernet', rolle: 'Bar', kuerzel: 'CB' },
-  { name: 'Grace Wälle', rolle: 'Service', kuerzel: 'GW' },
+  { name: 'C\u00e9line Bernet', rolle: 'Bar', kuerzel: 'CB' },
+  { name: 'Grace W\u00e4lle', rolle: 'Service', kuerzel: 'GW' },
   { name: 'Lisa Pozgainer', rolle: 'Service', kuerzel: 'LP2' },
   { name: 'Federica Duca', rolle: 'Service', kuerzel: 'FD' },
   { name: 'Lucca Alt', rolle: 'Bar', kuerzel: 'LA' },
-  { name: 'Julia Wagner', rolle: 'Küche', kuerzel: 'JW' },
+  { name: 'Julia Wagner', rolle: 'K\u00fcche', kuerzel: 'JW' },
 ];
 
 const ROLLE_STYLE = {
@@ -794,27 +795,40 @@ function initLogin() {
   if (saved) { try { currentUser = JSON.parse(saved); applyLogin(); return; } catch(e) {} }
 
   // Render avatar grids
-  const groups = { Leitung: [], Service: [], Bar: [], Küche: [], Reinigung: [] };
-  MITARBEITER.forEach(m => { if (groups[m.rolle]) groups[m.rolle].push(m); });
+  const groups = { Leitung: [], Service: [], Bar: [], 'Küche': [], Reinigung: [] };
+  MITARBEITER.forEach(m => { if (groups[m.rolle] !== undefined) groups[m.rolle].push(m); });
 
-  const gridMap = { Leitung:'grid-leitung', Service:'grid-service', Bar:'grid-bar', Küche:'grid-kueche', Reinigung:'grid-reinigung' };
+  const gridMap = { 'Leitung':'grid-leitung', 'Service':'grid-service', 'Bar':'grid-bar', 'Küche':'grid-kueche', 'Reinigung':'grid-reinigung' };
 
   Object.entries(groups).forEach(([rolle, members]) => {
     const grid = document.getElementById(gridMap[rolle]);
-    if (!grid || members.length === 0) {
-      if (grid) grid.parentElement && (grid.previousElementSibling.style.display = 'none') && (grid.style.display = 'none');
+    if (!grid) return;
+    if (members.length === 0) {
+      // Hide section header too
+      const prev = grid.previousElementSibling;
+      if (prev) prev.style.display = 'none';
+      grid.style.display = 'none';
       return;
     }
-    grid.innerHTML = members.map(m => {
+    // *** FIX: Use data attributes instead of inline onclick strings to avoid apostrophe bug ***
+    grid.innerHTML = members.map((m, idx) => {
       const initials = m.name.split(' ').map(n => n[0]).slice(0,2).join('');
       const cls = ROLLE_STYLE[m.rolle] || 'av-service';
-      return `<button class="avatar-btn" onclick="selectUser('${m.name}','${m.rolle}','${m.kuerzel}','${cls}')">
+      return `<button class="avatar-btn" data-idx="${MITARBEITER.indexOf(m)}" onclick="selectUserByIdx(this.dataset.idx)">
         <div class="av-circle ${cls}">${initials}</div>
         <div class="av-name">${m.name.split(' ')[0]}</div>
-        <div class="av-role">${ROLLE_LABEL[m.rolle]}</div>
+        <div class="av-role">${ROLLE_LABEL[m.rolle] || m.rolle}</div>
       </button>`;
     }).join('');
   });
+}
+
+// *** NEW: Select user by index to avoid any string-escaping issues ***
+function selectUserByIdx(idx) {
+  const m = MITARBEITER[parseInt(idx)];
+  if (!m) return;
+  const cls = ROLLE_STYLE[m.rolle] || 'av-service';
+  selectUser(m.name, m.rolle, m.kuerzel, cls);
 }
 
 function selectUser(name, rolle, kuerzel, cls) {
@@ -868,7 +882,7 @@ function logout() {
 const UBERGABE_SECTIONS = [
   { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn (Kräutersirup)','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
   { title: 'Alkohol – Basis', items: ['Vodka','Gin','Rum','Whiskey','Absinth','Mezcal','Obstbrand','Sake','Grappa'] },
-  { title: 'Alkohol – Spezifische Flaschen', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus Elegance','Absinthe Bizzare','Graham's Port'] },
+  { title: 'Alkohol – Spezifische Flaschen', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus Elegance','Absinthe Bizzare','Graham\'s Port'] },
   { title: 'Obstbrände', items: ['Apfel','Abricot','Williams','Kirsch'] },
   { title: 'Schaumwein & Wein', items: ['Prosecco (Prösi)','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape','P1','Finca Los Hoyales','Opus One'] },
   { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Alkoholfreier Rum','Alkoholfreies Bier','Milch','Eisbär'] },
@@ -908,12 +922,13 @@ function renderUbergabe() {
       const status = ubStatus[key] || null;
       const row = document.createElement('div');
       row.className = 'ub-row';
+      // Use data attributes to avoid any quote/apostrophe issues in item names
       row.innerHTML = `
         <div class="ub-name">${item}</div>
         <div class="ub-btn-group">
-          <button class="ub-btn ${status==='da'?'da':''}" onclick="setUbStatus('${key}','da',this)">✓ Da</button>
-          <button class="ub-btn ${status==='nachf'?'nachf':''}" onclick="setUbStatus('${key}','nachf',this)">⚠ Nachfüllen</button>
-          <button class="ub-btn ${status==='best'?'best':''}" onclick="setUbStatus('${key}','best',this)">🛒 Bestellen</button>
+          <button class="ub-btn ${status==='da'?'da':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="da" onclick="setUbStatus(this.dataset.key,'da',this)">✓ Da</button>
+          <button class="ub-btn ${status==='nachf'?'nachf':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="nachf" onclick="setUbStatus(this.dataset.key,'nachf',this)">⚠ Nachfüllen</button>
+          <button class="ub-btn ${status==='best'?'best':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="best" onclick="setUbStatus(this.dataset.key,'best',this)">🛒 Bestellen</button>
         </div>`;
       table.appendChild(row);
     });
@@ -1066,14 +1081,15 @@ function showPage(name) {
   document.getElementById('header-sub').textContent = subs[name] || '';
 }
 
+// *** FIX: Added 'ubergabe' to the list of views that get hidden ***
 function showCheckView(name) {
-  ['setup','checklist','temp','success','history'].forEach(v => {
+  ['setup','checklist','temp','ubergabe','success','history'].forEach(v => {
     const el = document.getElementById('view-' + v);
     if (el) el.style.display = 'none';
   });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
-  document.getElementById('hist-fab').style.display = (name === 'history' || name === 'temp') ? 'none' : 'flex';
+  document.getElementById('hist-fab').style.display = (name === 'history' || name === 'temp' || name === 'ubergabe') ? 'none' : 'flex';
   if (name === 'history') renderHistory();
   window.scrollTo(0, 0);
 }
