@@ -41,17 +41,19 @@ body { font-family: var(--body); background: var(--bg); color: var(--text); min-
 
 
 /* HEADER */
-.header { background: #000; border-bottom: 1px solid var(--border); padding: 1rem 1.25rem; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; }
-.header-word { font-family: var(--font); font-size: 1rem; letter-spacing: 0.18em; color: var(--gold); }
-.header-div { width: 1px; height: 16px; background: var(--border2); }
-.header-sub { font-size: 0.82rem; color: var(--muted); font-style: italic; }
-.header-date { margin-left: auto; font-size: 0.75rem; color: var(--muted); font-family: var(--ui); }
+.header { background: #000; border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
+.header-word { font-family: var(--font); font-size: 0.95rem; letter-spacing: 0.2em; color: var(--gold); }
+.header-div { width: 1px; height: 14px; background: var(--border2); }
+.header-sub { font-size: 0.8rem; color: var(--muted); font-style: italic; }
+.header-date { margin-left: auto; font-size: 0.72rem; color: var(--muted); font-family: var(--ui); letter-spacing: 0.03em; }
 
 /* BOTTOM NAV */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #000; border-top: 1px solid var(--border); display: flex; z-index: 100; }
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 4px 12px; background: none; border: none; cursor: pointer; font-family: var(--font); font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
-.nav-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.97); border-top: 1px solid var(--border); display: flex; z-index: 100; backdrop-filter: blur(8px); }
+.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 2px 13px; background: none; border: none; cursor: pointer; font-family: var(--font); font-size: 0.44rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); transition: color 0.2s; }
+.nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; transition: opacity 0.2s; }
 .nav-btn.active { color: var(--gold); }
+.nav-btn.active svg { opacity: 1; }
+.nav-btn.active::after { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); margin-top: 1px; opacity: 0.6; }
 
 /* PAGES */
 .page { display: none; } .page.active { display: block; }
@@ -255,22 +257,99 @@ select option { background: #111110; }
   .allergen-grid { grid-template-columns: 1fr 1fr; }
 }
 .schicht-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.schicht-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 0.6rem 0.75rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); transition: all 0.15s; text-align: center; width: 100%; }
-.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: var(--gold-glow); }
-.schicht-btn.selected { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
-.schicht-name { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; }
+.schicht-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1rem 0.6rem 0.85rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); transition: all 0.18s; text-align: center; width: 100%; position: relative; }
+.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: rgba(201,168,76,0.06); }
+.schicht-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: inset 0 0 20px rgba(201,168,76,0.07); }
+.schicht-btn.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: 0.6rem; color: var(--gold); font-family: var(--ui); opacity: 0.8; }
+.schicht-name { font-family: var(--font); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; }
+@media (max-width: 400px) { .schicht-grid { grid-template-columns: 1fr; } }
+.ika line { stroke:#c9a84c; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.ika polygon { fill:#c9a84c; fill-opacity:0.05; stroke:none; }
+.ika .dim { stroke:#8a6e28 !important; stroke-width:0.5; }
 </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash" style="position:fixed;inset:0;background:#0a0a08;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity 0.8s;">
+  <svg class="ika" width="90" height="90" viewBox="-110 -120 220 240">
+    <polygon points="0,-108 -62,-52 62,-52" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+    <polygon points="-62,-52 -95,18 -38,70" fill="#c9a84c" fill-opacity="0.05" stroke="none"/>
+    <polygon points="62,-52 95,18 38,70" fill="#c9a84c" fill-opacity="0.05" stroke="none"/>
+    <polygon points="-38,70 38,70 0,108" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+    <line class="ika" x1="0" y1="-108" x2="-62" y2="-52" stroke-width="1"/>
+    <line class="ika" x1="0" y1="-108" x2="62" y2="-52" stroke-width="1"/>
+    <line class="ika" x1="0" y1="-108" x2="-95" y2="18" stroke-width="1"/>
+    <line class="ika" x1="0" y1="-108" x2="95" y2="18" stroke-width="1"/>
+    <line class="ika" x1="-62" y1="-52" x2="62" y2="-52" stroke-width="1"/>
+    <line class="ika" x1="-62" y1="-52" x2="-95" y2="18" stroke-width="1"/>
+    <line class="ika" x1="62" y1="-52" x2="95" y2="18" stroke-width="1"/>
+    <line class="ika" x1="-95" y1="18" x2="95" y2="18" stroke-width="1"/>
+    <line class="ika" x1="-95" y1="18" x2="-38" y2="70" stroke-width="1"/>
+    <line class="ika" x1="95" y1="18" x2="38" y2="70" stroke-width="1"/>
+    <line class="ika" x1="-62" y1="-52" x2="38" y2="70" stroke-width="1"/>
+    <line class="ika" x1="62" y1="-52" x2="-38" y2="70" stroke-width="1"/>
+    <line class="ika" x1="-95" y1="18" x2="38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
+    <line class="ika" x1="95" y1="18" x2="-38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
+    <line class="ika" x1="-38" y1="70" x2="38" y2="70" stroke-width="1"/>
+    <line class="ika" x1="-38" y1="70" x2="0" y2="108" stroke-width="1"/>
+    <line class="ika" x1="38" y1="70" x2="0" y2="108" stroke-width="1"/>
+    <line class="ika" x1="-95" y1="18" x2="0" y2="108" stroke-width="1"/>
+    <line class="ika" x1="95" y1="18" x2="0" y2="108" stroke-width="1"/>
+  </svg>
+  <div style="font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:0.28em;color:#c9a84c;opacity:0.9;">ALCHEMIST</div>
+  <div style="font-size:0.72rem;color:#6a6860;letter-spacing:0.2em;font-family:system-ui;">PORTAL</div>
+</div>
+
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div style="background:#000;border-bottom:1px solid var(--border);padding:1.1rem 1.25rem;display:flex;align-items:center;gap:10px;">
-    <span style="font-family:var(--font);font-size:1rem;letter-spacing:0.18em;color:var(--gold);">ALCHEMIST</span>
-    <div style="width:1px;height:16px;background:var(--border2);"></div>
-    <span style="font-size:0.82rem;color:var(--muted);font-style:italic;">Wer bist du?</span>
+  <div style="background:#000;border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;gap:10px;">
+    <svg class="ika" width="22" height="22" viewBox="-110 -120 220 240">
+      <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="62" y1="-52" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="-38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="95" y1="18" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <line x1="62" y1="-52" x2="-38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <line x1="-38" y1="70" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <span style="font-family:var(--font);font-size:0.95rem;letter-spacing:0.2em;color:var(--gold);">ALCHEMIST</span>
+    <div style="width:1px;height:14px;background:var(--border2);"></div>
+    <span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Wer bist du?</span>
   </div>
   <div class="login-body">
     <div style="text-align:center;margin-bottom:1.5rem;">
+      <svg width="64" height="64" viewBox="-110 -120 220 240" style="margin-bottom:0.75rem;">
+        <polygon points="0,-108 -62,-52 62,-52" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+        <polygon points="-38,70 38,70 0,108" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+        <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="0" y1="-108" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="0" y1="-108" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="0" y1="-108" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-62" y1="-52" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-62" y1="-52" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="62" y1="-52" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-95" y1="18" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-95" y1="18" x2="-38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="95" y1="18" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-62" y1="-52" x2="38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <line x1="62" y1="-52" x2="-38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+        <line x1="-38" y1="70" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
       <div style="color:var(--gold-dim);font-size:0.9rem;letter-spacing:0.3em;margin-bottom:0.5rem;">— ✦ —</div>
       <p style="font-family:var(--font);font-size:1.25rem;font-weight:400;letter-spacing:0.1em;margin-bottom:0.3rem;">Guten Tag</p>
       <p style="font-size:0.85rem;color:var(--muted);font-style:italic;">Wähle deinen Namen um zu beginnen</p>
@@ -296,6 +375,25 @@ select option { background: #111110; }
 </div>
 
 <div class="header">
+  <svg width="20" height="20" viewBox="-110 -120 220 240" style="flex-shrink:0;">
+    <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="0" y1="-108" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="0" y1="-108" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="0" y1="-108" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-62" y1="-52" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-62" y1="-52" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="62" y1="-52" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-95" y1="18" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-95" y1="18" x2="-38" y2="70" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="95" y1="18" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-62" y1="-52" x2="38" y2="70" stroke="#8a6e28" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <line x1="62" y1="-52" x2="-38" y2="70" stroke="#8a6e28" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <line x1="-38" y1="70" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  </svg>
   <span class="header-word">ALCHEMIST</span>
   <div class="header-div"></div>
   <span class="header-sub" id="header-sub">Schichtcheckliste</span>
@@ -321,19 +419,19 @@ select option { background: #111110; }
           <label>Schicht</label>
           <div class="schicht-grid">
             <button class="schicht-btn" data-value="Spätdienst Service" onclick="selectSchicht(this)">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-              <span class="schicht-name">Spätdienst Service</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L8 6H4l2 4-3 3 4 1 1 4 3-3 4 2-1-4 4-1-3-3 2-4h-4z"/><circle cx="12" cy="12" r="2"/></svg>
+              <span class="schicht-name">Service</span>
             </button>
             <button class="schicht-btn" data-value="Abend Bar" onclick="selectSchicht(this)">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
               <span class="schicht-name">Abend Bar</span>
             </button>
             <button class="schicht-btn" data-value="Temperaturkontrolle Bar" onclick="selectSchicht(this)">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>
               <span class="schicht-name">Temperatur&shy;kontrolle</span>
             </button>
             <button class="schicht-btn" data-value="Bar Übergabe" onclick="selectSchicht(this)">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
               <span class="schicht-name">Bar Übergabe</span>
             </button>
           </div>
@@ -494,10 +592,7 @@ select option { background: #111110; }
     </div>
   </div>
 
-  <button class="hist-fab" id="hist-fab" onclick="showCheckView('history')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Verlauf
-  </button>
+
 </div>
 
 <!-- ═══ PAGE: REZEPTE ═══ -->
@@ -633,7 +728,7 @@ select option { background: #111110; }
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-check" onclick="showPage('check')">
-    <svg viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2h-2"/><path d="M9 12l2 2 4-4"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     Schicht
   </button>
   <button class="nav-btn" id="nav-rezepte" onclick="showPage('rezepte')">
@@ -648,8 +743,12 @@ select option { background: #111110; }
     <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
     Guidelines
   </button>
+  <button class="nav-btn" id="nav-verlauf" onclick="showPage('check');showCheckView('history')">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Verlauf
+  </button>
   <button class="nav-btn" id="nav-reglement" onclick="showPage('reglement')">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     Reglement
   </button>
 </nav>
@@ -936,6 +1035,8 @@ function selectSchicht(btn) {
   document.getElementById('inp-schicht').value = btn.dataset.value;
   validateSetup();
 }
+
+function selectUserByIdx(idx) {
   const m = MITARBEITER[parseInt(idx)];
   if (!m) return;
   const cls = ROLLE_STYLE[m.rolle] || 'av-service';
@@ -1171,9 +1272,17 @@ async function submitUbergabe() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
+  // Splash screen
+  const splash = document.getElementById('splash');
+  if (splash) {
+    setTimeout(() => {
+      splash.style.opacity = '0';
+      setTimeout(() => splash.style.display = 'none', 800);
+    }, 1400);
+  }
   initLogin();
   const now = new Date();
-  document.getElementById('header-date').textContent = now.toLocaleDateString('de-CH', {weekday:'short', day:'numeric', month:'short'});
+  document.getElementById('header-date').textContent = now.toLocaleDateString('de-CH', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
   const datum = document.getElementById('inp-datum');
   if (datum) {
     // Set today as default in YYYY-MM-DD format for date input
@@ -1197,10 +1306,10 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('nav-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
   const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', allergene: 'Allergene', guidelines: 'Guidelines', reglement: 'Reglement' };
   document.getElementById('header-sub').textContent = subs[name] || '';
-  if (name === 'reglement') return;
 }
 
 // *** FIX: Added 'ubergabe' to the list of views that get hidden ***
@@ -1211,7 +1320,6 @@ function showCheckView(name) {
   });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
-  document.getElementById('hist-fab').style.display = (name === 'history' || name === 'temp' || name === 'ubergabe') ? 'none' : 'flex';
   if (name === 'history') renderHistory();
   window.scrollTo(0, 0);
 }
