@@ -632,14 +632,14 @@ select option { background: #111110; }
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Cocktails</p>
-    <p class="page-sub">Signature Drinks & Karte — Rezepte für das Bar-Team</p>
+    <p class="page-sub">REBIS — von uns kreiert, mit oder ohne Alkohol · CHF 19.–</p>
     <div class="search-box">
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="cocktail-search" placeholder="Cocktail suchen…" oninput="filterCocktails()">
     </div>
-    <div class="section-label">Signature Drinks</div>
+    <div class="section-label">Signature Drinks — Genesis & Walhalla</div>
     <div id="cocktails-signature"></div>
-    <div class="section-label" style="margin-top:1.25rem;">Cocktailkarte</div>
+    <div class="section-label" style="margin-top:1.25rem;">Cocktailkarte — alle weiteren Drinks</div>
     <div id="cocktails-list"></div>
   </div>
 </div>
@@ -884,49 +884,81 @@ const COCKTAIL_REZEPTE = [
     name: 'Genesis',
     gruppe: 'genesis',
     tags: ['genesis'],
-    zutaten: ['Offen — Rezept folgt'],
-    zubereitung: 'Rezept wird ergänzt.',
-    notiz: 'Genesis ist ein separater Signature Drink des Alchemist.'
+    zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'],
+    zubereitung: 'Alle Zutaten mixen und servieren.',
+    notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–'
   },
   {
-    name: 'Wallhala',
+    name: 'Walhalla',
     gruppe: 'wallhala',
     tags: ['wallhala'],
-    zutaten: ['Offen — Rezept folgt'],
-    zubereitung: 'Rezept wird ergänzt.',
-    notiz: 'Wallhala ist ein separater Signature Drink des Alchemist.'
+    zutaten: ['3 cl Mescal (wenig)','3 cl Lavendel-Honig Sirup','2 cl Evelyne (Kräutersirup)','3 cl Limette','Alchemist-Bier zum Auffüllen'],
+    zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.',
+    notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–'
   },
   {
-    name: 'Geisha',
+    name: 'Das Elixir der Aphrodite',
     gruppe: 'cocktail',
     tags: ['cocktail'],
-    zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl','Sezuan-Pfeffer Rande'],
-    zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen. Alkoholfreie Alternative: Alkfreier Vodka, Yuzu Tonic.',
-    notiz: 'Beschrieb: Harmonisch, sanft, exotisch, mit dem Gaumen spielend.'
+    zutaten: ['Rosé','Wassermelone-Granatapfel Sirup','Kräuter'],
+    zubereitung: 'Zutaten mixen und servieren.',
+    notiz: 'Leicht, fruchtig, betörend. CHF 19.–'
   },
   {
-    name: 'Walpurgis-Nacht',
+    name: 'Eine Rast an einer Oase',
     gruppe: 'cocktail',
     tags: ['cocktail'],
-    zutaten: ['Randen-Gin 4 cl','Beeren 4 cl','Veg. Rahm 2 cl','Limette 2 cl','Berberitze'],
+    zutaten: ['Zimt-Rum 2–3 cl','Mescal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'],
+    zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mescal separat in Spritze servieren und nach Belieben dazugeben.',
+    notiz: 'Kräftig, exotisch, rauchig. CHF 19.–'
+  },
+  {
+    name: 'Das geheimnisvolle Shangri-La',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Sake','Basilikum','Kräuter'],
+    zubereitung: 'Zutaten mixen und servieren.',
+    notiz: 'Mild, frisch, ausgewogen. CHF 19.–'
+  },
+  {
+    name: 'RUBEDO — Die letzte Stufe der Alchemie',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Kräuter-Gin','Erdbeere','Ingwer'],
+    zubereitung: 'Zutaten mixen und servieren.',
+    notiz: 'Fruchtig, süss, scharf. CHF 19.–'
+  },
+  {
+    name: 'Ein Tanz in der Walpurgisnacht',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Kräuter-Gin (Randen-Gin) 4 cl','Waldbeeren 4 cl','Zitronenmelisse 2 cl','Veg. Rahm 2 cl','Limette','Berberitze'],
     zubereitung: 'Ohne Eis mixen, mit Crash-Eis auffüllen. Deko mit Trockeneis. Alkoholfreie Alternative: Alkfreier Gin.',
-    notiz: 'Beschrieb: Im Morgentau gesammelt, fruchtig, beerig, vitalisierend.'
+    notiz: 'Herb, vollmundig, ausgewogen — Im Morgentau gesammelt, fruchtig, beerig, vitalisierend. CHF 19.–'
   },
   {
-    name: 'Van Gogh',
+    name: 'Die Kunst einer Geisha',
     gruppe: 'cocktail',
     tags: ['cocktail'],
-    zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'],
-    zubereitung: 'Sirup immer mit Trockeneis. Wie Paracelsus, zusätzlich Zündhölzer und Absinth-Löffel. Zuckerwürfel im Mörser. Wermuthspirituose aus diversen Heilkräutern. Absinth nach Belieben mit Apfelmischung mazerieren, danach durch das Sieb über den Zucker giessen und vorsichtig anzünden. Der Zucker wird karamellisiert und mit Wasser gelöscht. Je nach Gusto mit Wasser verdünnen.',
-    notiz: 'Die Substanz für die betörende Wirkung ist Thujon.'
+    zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl','Szechuanpfeffer Rande'],
+    zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen. Alkoholfreie Alternative: Alkfreier Vodka, Yuzu Tonic.',
+    notiz: 'Harmonisch, sanft, exotisch. CHF 19.–'
   },
   {
-    name: 'Oasis',
+    name: 'Der Garten Eden',
     gruppe: 'cocktail',
     tags: ['cocktail'],
-    zutaten: ['Rum 2–3 cl','Mezcal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'],
-    zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mezcal separat in Spritze servieren und nach Belieben dazugeben.',
-    notiz: ''
+    zutaten: ['Zimt-Rum','Passionsfrucht','Kräuter','Rosa Pfeffer'],
+    zubereitung: 'Zutaten mixen und servieren.',
+    notiz: 'Lustvoll, intensiv, fruchtig. CHF 19.–'
+  },
+  {
+    name: 'Eine Nacht im Taj Mahal',
+    gruppe: 'cocktail',
+    tags: ['cocktail'],
+    zutaten: ['Tonka-Whiskey 4 cl','Chai 4 cl','Weisse Schokolade / Mandel 4 cl'],
+    zubereitung: 'Alle Zutaten mixen und servieren.',
+    notiz: 'Kräftig, süss, vollmundig. CHF 19.–'
   },
   {
     name: 'Mixtura',
@@ -934,15 +966,15 @@ const COCKTAIL_REZEPTE = [
     tags: ['cocktail'],
     zutaten: ['Gin','Limette','Zitronenmelisse','Vincent (alkoholfrei)','Prosecco'],
     zubereitung: 'Im Wasserglas mit Crush-Eis servieren. Reagenzgläser und Spritze bereitstellen. Prosecco im Erlenmeyer mit Eis. Alkoholfreie Alternative: Alkfreier Prosecco, Alkfreier Gin.',
-    notiz: 'Beschrieb: Mische wie im Labor deinen Drink, ob herb, süss, sauer — bestimme selbst. Momentan wie bisher (Reagenzglashalter bestellt).'
+    notiz: 'Mische wie im Labor deinen Drink, ob herb, süss, sauer — bestimme selbst. CHF 19.–'
   },
   {
-    name: 'Taj Mahal',
+    name: 'Van Gogh',
     gruppe: 'cocktail',
     tags: ['cocktail'],
-    zutaten: ['Whiskey 4 cl','Chai 4 cl','Mandel 4 cl'],
-    zubereitung: 'Alle Zutaten mixen und servieren.',
-    notiz: ''
+    zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'],
+    zubereitung: 'Sirup immer mit Trockeneis servieren. Zündhölzer und Absinth-Löffel bereitstellen. Zuckerwürfel im Mörser. Wermuthspirituose mit Apfelmischung mazerieren, durch das Sieb über den Zucker giessen, vorsichtig anzünden. Zucker karamellisiert — mit Wasser löschen. Je nach Gusto mit Wasser verdünnen.',
+    notiz: 'Die Substanz für die betörende Wirkung ist Thujon. CHF 19.–'
   },
 ];
 
