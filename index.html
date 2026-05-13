@@ -1272,7 +1272,16 @@ select option { background: #111110; }
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Gästefeedback</p>
-    <p class="page-sub">Foratable · 803 Bewertungen · Ø 4.64 / 5.0</p>
+    <p class="page-sub">Foratable & Google · 1257 Bewertungen total</p>
+
+    <!-- Source Tabs -->
+    <div style="display:flex;gap:6px;margin-bottom:var(--sp-3);">
+      <button id="fb-tab-foratable" onclick="switchFeedbackSource('foratable')" style="flex:1;padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold);border-radius:var(--r-md);font-family:var(--font);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);cursor:pointer;">Foratable · 803</button>
+      <button id="fb-tab-google" onclick="switchFeedbackSource('google')" style="flex:1;padding:var(--sp-1) var(--sp-2);background:transparent;border:1px solid var(--border);border-radius:var(--r-md);font-family:var(--font);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;">Google · 454</button>
+    </div>
+
+    <!-- Foratable Stats -->
+    <div id="stats-foratable">
 
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3);margin-bottom:var(--sp-3);">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
@@ -1305,7 +1314,36 @@ select option { background: #111110; }
       </div>
     </div>
 
-    <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap;margin-bottom:var(--sp-2);">
+    </div><!-- end stats-foratable -->
+
+    <!-- Google Stats -->
+    <div id="stats-google" style="display:none;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3);margin-bottom:var(--sp-3);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);">
+          <div>
+            <div style="font-size:2.4rem;font-family:var(--font);color:var(--gold);line-height:1;">4.27</div>
+            <div style="font-size:1rem;color:var(--gold);letter-spacing:2px;margin-top:3px;">★★★★☆</div>
+            <div style="font-size:0.72rem;color:var(--muted);font-family:var(--ui);margin-top:4px;">454 Google-Rezensionen</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;justify-content:center;">
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-family:var(--body);"><span style="color:var(--gold);font-size:0.9rem;">★★★★★</span><div style="flex:1;height:6px;background:var(--border);border-radius:3px;"><div style="width:60%;height:100%;background:var(--success);border-radius:3px;"></div></div><span style="font-size:0.7rem;color:var(--muted);font-family:var(--ui);">274</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-family:var(--body);"><span style="color:var(--gold);font-size:0.9rem;">★★★★☆</span><div style="flex:1;height:6px;background:var(--border);border-radius:3px;"><div style="width:20%;height:100%;background:var(--gold);border-radius:3px;"></div></div><span style="font-size:0.7rem;color:var(--muted);font-family:var(--ui);">91</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-family:var(--body);"><span style="color:var(--gold);font-size:0.9rem;">★★★☆☆</span><div style="flex:1;height:6px;background:var(--border);border-radius:3px;"><div style="width:10%;height:100%;background:var(--gold-dim);border-radius:3px;"></div></div><span style="font-size:0.7rem;color:var(--muted);font-family:var(--ui);">47</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:0.78rem;font-family:var(--body);"><span style="color:var(--muted);font-size:0.9rem;">★★☆☆☆</span><div style="flex:1;height:6px;background:var(--border);border-radius:3px;"><div style="width:9%;height:100%;background:var(--crimson-text);border-radius:3px;"></div></div><span style="font-size:0.7rem;color:var(--muted);font-family:var(--ui);">42</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap;margin-bottom:var(--sp-2);">
+        <button class="filter-btn active" onclick="filterGoogle('all',this)">Alle (454)</button>
+        <button class="filter-btn" onclick="filterGoogle('5',this)">★★★★★ (274)</button>
+        <button class="filter-btn" onclick="filterGoogle('4',this)">★★★★ (91)</button>
+        <button class="filter-btn" onclick="filterGoogle('low',this)">★★★ oder weniger (89)</button>
+        <button class="filter-btn" onclick="filterGoogle('comment',this)">Mit Kommentar</button>
+      </div>
+      <div id="google-list"></div>
+    </div><!-- end stats-google -->
+
+    <div style="display:flex;gap:var(--sp-1);flex-wrap:wrap;margin-bottom:var(--sp-2);" id="foratable-filters">
       <button class="filter-btn active" onclick="filterFeedback('all',this)">Alle (803)</button>
       <button class="filter-btn" onclick="filterFeedback('good',this)">★ 4.5+ (620)</button>
       <button class="filter-btn" onclick="filterFeedback('mid',this)">★ 3.5–4.4 (147)</button>
@@ -3091,6 +3129,541 @@ function toggleGuide(id) {
   body.style.display = isOpen ? 'none' : 'block';
   chev.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
 }
+
+
+// ─── GOOGLE REVIEWS ───────────────────────────────────────────────────────────
+const GOOGLE_REVIEWS = [
+{name:`marcel bauer`,stars:5,text:`Sehr beeindruckend was da geboten wird. Hier zu Essen ist jeden Franken wert. Bitte weiter so😀`},
+{name:`Dimitri G.`,stars:5,text:``},
+{name:`Ana Rita`,stars:4,text:`A funny place to go get some drinks ! You can make you own drink ! Kind staff!`},
+{name:`Alexis Mougin`,stars:5,text:`Visite ce jeudi soir, première pour moi et je vous recommande à 100% cet endroit ! Très bonne découverte, les saveurs, le lieu, le service ! C’était génial`},
+{name:`alfio rapisarda`,stars:5,text:`Spezielles Ambiente. Alle Speisen gut zum teilen.`},
+{name:`Olivier Kirchhoffer`,stars:5,text:`Gonna be critical on the food but it's still 5* because the concept (outstanding decoration!) and the drinks are really amazing (the taste is also very refined, beyond the stunning presentation) so I wanna see this place succeed over time!  Now about the food I was less convinced there, we had the 5-course menu for two. Generally the food was bland (except for the vegetable friers & soup). I struggled to grasp the concept (curry, tajin, duck, christmas market desert), was a bit all over the place and you don't really work out the touch of a Chef behind it.  From that perspective the food was somewhat overpriced, the quantities were generous but I would rather have traded some of that quantity for more quality. I would revisit the menu, either specialize in something that the Chef can do well, or drop the x-course meal concepts and just serve food as extra snacks next to the drinks.  Will definitely be back to taste some more of those drinks though!!`},
+{name:`Chloé`,stars:5,text:`Les plats étaient incroyablement bons, Le personnel était sympathique et l'ambiance du restaurant est top!!`},
+{name:`Belkıs Işık`,stars:5,text:``},
+{name:`Sidra H.`,stars:5,text:`Wir haben einen tollen Abend im Alchemisten verbracht. Das Fantasy-angehauchte-Konzept mit den speziellen Cocktails, der Deko, der Pinzette und Lupe auf dem Tisch, dem &quot;verwunschenen Brunnen&quot; im Badezimmer und dem leckeren Essen hat uns sehr angetan. Es gab immer wieder etwas zu bestaunen und zu entdecken. So macht es Freude, auszugehen. Der Abend war sehr stimmig. Wir kommen gerne wieder.  Als einziges, man könnte die Cocktails ohne Alkohol etwas günstiger machen, da sie gleich viel kosten wie Getränke mit Alkohol.`},
+{name:`Raphael Gastpar (Groove)`,stars:3,text:`Das Essen war meist raffiniert kombiniert aber für unseren Geschmack zu süss über alle Gänge. Der Service ist leider als ungenügend zu bewerten. Der Service hat weder einer vertiefte Ahnung der Speisen und insbesondere konnte sie keinen Auskunft über den Wein geben - Cocktails ok. Ein durchzogenes Erlebnis!`},
+{name:`Yvan A. Ruetsch`,stars:3,text:`Sehr schöne offene verglaste Küche.  Jedoch fällt auf, dass die Fettauffangbehälter der Abluftventilation über den Kochfeldern vollständig gefüllt sind, was auf den möglich schlechte Zustand der Filter schließen lässt.  Auf Nachfrage wurde mitgeteilt, dass die Auffangbehälter lediglich einmal wöchentlich geleert werden und dies ausreichend sei.  Die Fülle der Behälter an einem Dienstag lässt jedoch an der Einhaltung dieser angegebenen Reinigungsfrequenz zweifeln.  Dies ist bedauerlich, da alle Gerichte ansonsten als außerordentlich gut beurteilt wurden.`},
+{name:`Brian Jäger`,stars:4,text:``},
+{name:`Rojhat Torun`,stars:5,text:`Tolle Bar mit sehr speziell zubereiteten Getränken. Die Cocktails waren außergewöhnlich und haben richtig Spaß gemacht zu probieren. Perfekt für alle, die mal etwas anderes trinken wollen.`},
+{name:`Ricardo Kanitz`,stars:4,text:``},
+{name:`Kristina Atanasov`,stars:5,text:``},
+{name:`Patrick`,stars:2,text:``},
+{name:`swissnordic`,stars:5,text:`Ich war heute im The Alchemist und bin wirklich beeindruckt. Das Essen ist extrem sauber gedacht, frisch, leicht und trotzdem voller Geschmack. Man merkt bei jedem Gang, dass hier nichts zufällig passiert.  Das Konzept funktioniert, weil es echt ist. Marc, der Besitzer, kommt aus der Chemie und genau dieses Wissen spürt man. Die Aromen sind präzise aufgebaut, die Schärfe sitzt punktgenau, nichts erschlägt dich. Es fühlt sich eher an wie ein bewusst komponiertes Erlebnis als wie klassisches Fine Dining.  Auch die Präsentation passt dazu. Glas, Dampf, Reduktion, aber nie als Show. Alles dient dem Geschmack und dem Körper. Man geht raus und fühlt sich gut, klar im Kopf, nicht schwer oder müde.  Für mich ganz klar ein Restaurant, das man nicht nur einmal besucht. Wer neugierig ist, gerne bewusst isst und Lust auf etwas Eigenständiges hat, sollte hier unbedingt vorbeigehen.`},
+{name:`Patrick Dällenbach`,stars:1,text:`Leider gab es bereits vorgängig bei der Reservation Probleme. Das Essen war geschmackslos. Wir hatten das 3-Gang Menü für 70.- pro Person und es war den Preis nicht wert. Weder geschmacklich noch von der Menge. Ich lief leider mit einem grossen Hunger aus dem Restaurant. Das Ambiente ist cool. Allerdings könnte man bei der Apparatur die Schläuche mal ersetzen oder reinigen, da haben sich ordentlich Algen gebildet.`},
+{name:`Christine`,stars:1,text:`Freundin und ich haben 5 Gänge Menü bestellt  mit Getränke Begleitung für insgesamt 238.- CHF. Pure Enttäuschung… wir haben uns so auf diesen Abend gefreut aber leider wurde uns die Freude sehr schnell genommen. Von der Vorspeise bis zum Dessert wurde alles falsch gemacht. Nicht mal Reis können sie kochen. Es war trocken und kalt. Curry hat nach nichts geschmeckt. Wildragout war trocken und komisch. Alles andere hat auch nach nichts geschmeckt. Unsere Erwartungen sind mit jedem Gang immer weiter runter gegangen dass wir uns beim 3 Gang gefreut haben als das Hühnchen ok geschmeckt hat und sie das nicht verkackt haben. Zufällige Gewürze haben sie glaub ich ausgelost für das jeweilige Essen. Genauso wie die Getränke… Service? Naja…. Ich würde euch davon abraten. ✌️`},
+{name:`JC`,stars:1,text:`The food is ok if a little bland at times, we liked the atmosphere.  However, since we ordered the 5 course surprise menu, we ended up taking a returnable container (they charge a deposit for this). We went to return it on a Saturday morning and a rude employee seemed annoyed we showed up and said that they don't have money (5 CHF) and that we should return later. Does he think we work for them? Quite rude and unexpected from a place in which you pay 100 CHF+ per person each time. Horrible customer service.`},
+{name:`Thilo Kurtz`,stars:5,text:`Mega tollen kleinen  Workshop erlebt wo man viel Infos bekam aber vor allem seinen eigenen Drunk herstellen konnte mit Kräutern usw. Und das Essen war ein Geschmack Erlebnis und ich kann das drei Gängen surprise Menũ empfehlen. Auch Vegetarier kommen auf ihre Kosten. Sehr gerne werde ich wieder kommen.`},
+{name:`Julia`,stars:5,text:`Grossartiges Ambiente und fantastische Cocktails. Ich freue mich auch besonders, dass es sehr viele vegane Speisen gibt.`},
+{name:`karsten`,stars:4,text:`Das Ambiente war sehr nett und die Cocktails toll. Das Konzept überzeugte uns. Warum ich trotzdem einen Stern abziehe ist die Portionsgrösse der Speisen. Wir waren eine gemischte Gruppe und sind einfach nicht satt geworden. Für den Preis sehr schade.`},
+{name:`Ralf Greiner`,stars:5,text:``},
+{name:`Niggi Thüring`,stars:5,text:`Freundlicher Empfang und tolles Konzept, dass Alchemist ist mal was anderes. Obwohl im Restaurant alle Tische besetzt waren, wurden wir sehr Nett bedient. Die Getränke und Speisen sind ohne grosse Wartezeit serviert worden. Die Cocktails zum Start waren zauberhaft . Wir hatten für zwei Personen sieben verschiedene Komponenten, von Vegi bis Fleisch haben alle überzeugt. Beim Ambiebte gibt es einzig einen Stern weniger da der Geräuschepegel etwas hoch war.`},
+{name:`PFR`,stars:5,text:``},
+{name:`Paolo Mognol`,stars:5,text:`Wow. We got the 5 course menu with drinks. Totally worth it. Will come back`},
+{name:`To G.`,stars:2,text:`Der Abend im Alchemist blieb uns leider nicht in guter Erinnerung. Besonders der Service fiel negativ auf. Obwohl wir gerne noch etwas bestellt haetten, wurden wir mehrmals ignoriert. Das Team wirkte mit internen Themen beschaeftigt, statt sich um die Gaeste zu kuemmern. Selbst beim Verlassen des Lokals gab es keine Verabschiedung.  Auch die Qualitaet der Speisen konnte uns nicht ueberzeugen. Das Fleisch war bei allen Gerichten entweder kaum gewuerzt oder deutlich zu salzig und die experimentellen Kombinationen wirkten unausgereift. Flexibilitaet bei Wuenschen fehlte ebenfalls.  Zusaetzlich kam ein Ambiente dazu, das wir als wenig gemuetlich empfanden und das das Gesamterlebnis weiter truebte. Wenn man sich fuer ein kreatives Konzept entscheidet, sollte zumindest die Basis stimmen, sowohl beim Essen als auch im Service.`},
+{name:`Gerry Weber`,stars:1,text:`Unser Besuch im Restaurant &quot;Alchemist&quot; als grössere Gruppe war leider eine große Enttäuschung und wird unser erster und definitiv letzter Besuch bleiben. Die Qualität des Essens war durchweg unterdurchschnittlich, wobei das Fleisch bei allen Gerichten entweder überhaupt nicht gewürzt oder komplett übersalzen war. Die angestrebten experimentellen Kombinationen wirkten unüberlegt und misslungen. Hinzu kam ein Mangel an Flexibilität. Auch das Ambiente empfanden wir als sehr ungemütlich, was das Erlebnis zusätzlich trübte. Ebenso mangelhaft war der Service: Wir wurden grösstenteils ignoriert, obwohl wir noch weitere Getränke oder Speisen bestellen wollten, da alle am Tisch Durst hatten. Das Personal schien zu sehr mit internen Gesprächen beschäftigt zu sein, statt sich um die Gäste zu kümmern, und liess uns beim Verlassen des Lokals ohne Verabschiedung. Der Fokus des Teams lag an diesem Abend offensichtlich nicht auf Gastfreundschaft oder der Küchenqualität. Wenn man sich schon für experimentelle Konzepte entscheidet, sollte zumindest die Basis stimmen. Wir hoffen, dass das Management in Zukunft mehr Fokus auf guten Service und die Qualität der Speisen legt. Ein sehr enttäuschender Abend.`},
+{name:`carlotta albini`,stars:5,text:``},
+{name:`Best`,stars:4,text:`Tolle Cocktails & Location. Negativ: keine Mülleimer auf den Damentoiletten ist ein NO GO!`},
+{name:`Soun Liekens`,stars:2,text:`Tapa's / sharing food style. Absolutely toooo expensive ! 2 chicken drumsticks = 14€ + ofcourse all the extra's. If you want a real meal.  Poor price-quality ratio.`},
+{name:`Margaret S`,stars:5,text:`Really cool restaurant and cocktail bar! We had a lovely night — great food, great drinks, and a nice atmosphere. Like many good places, it’s a bit on the expensive side, but worth it for the experience. 🍸✨`},
+{name:`Jochen Seidel`,stars:5,text:`Wir haben das 5-Gänge-Menü ohne Weinbegleitung gewählt. Absolut empfehlenswert, da fast alle Gerichte der Speisekarte mit eingebaut sind. Und es ist seeehr reichlich und mega-lecker. Trotz der Menge war alles extrem leicht verdaulich, was wir am nächsten Morgen sehr positiv wahrgenommen haben. Ohne frühzeitige Reservierung geht hier gar nichts. Aber es ist ein absolutes Must Have, wenn man in Basel ist. Das liebevolle und extravagante Ambiente setzt gemeinsam mit dem freundlichen Personal allem die Krone 👑 auf.`},
+{name:`Max`,stars:5,text:``},
+{name:`Jay Furler`,stars:3,text:`Das Ambiente war sehr schön und der Service freundlich. Leider konnten uns die Speisen nicht ganz überzeugen. Fleischgerichte wurden erst beim dritten und vierten Gang serviert, was wir etwas unglücklich fanden. Eine ausgewogenere Verteilung der Fleischgerichte über die einzelnen Gänge wäre wünschenswert gewesen. Zudem waren sowohl das Rind als auch das Reh leider sehr trocken und kaum geniessbar. Insgesamt empfanden wir den Preis daher als nicht angemessen, schade.. Denn wir hatten uns auf ein rundum positives Erlebnis gefreut.`},
+{name:`Lea`,stars:5,text:`Sehr tolle Ambiente, Essen war lecker, es ist schon teuer aber sehr fein. Cocktails werden ganz besobders serviert, gefällt recht gut. Sehr nette Bedienung.`},
+{name:`Paul Gibula`,stars:5,text:`Great experience with tasting menu and drink pairing`},
+{name:`Alyssa Habib`,stars:4,text:`J’ai adorée mon expérience au restaurant. Rien à dire ! Nous étions 3 et avons pris le menu à partager, les quantités étaient suffisantes ! Les cocktails sont très bons aussi. Le seul bémol était la difficulté à avoir l’attention des serveurs et l’attente derrière. Cependant je reviendrais avec plaisir`},
+{name:`Helena`,stars:4,text:``},
+{name:`Pascal`,stars:4,text:``},
+{name:`Tierdish`,stars:5,text:`cool concept and really delicious drinks and bao buns :) i do recommend to reserve as getting a table was difficult`},
+{name:`Michael Laemmermann`,stars:5,text:`Gutes Bier. Schönes Ambiente und tolle Lage.`},
+{name:`susanne egloff`,stars:5,text:`Perfekt für Mittagessen, das Menu ist reichhaltig, gut und preiswert. Kein Zeitraubendes Aussuchen und Warten.`},
+{name:`Mark Gasparini`,stars:4,text:`The general concept of this restaurant was very unique and interesting; test tubes, beakers and dry ice. A great restaurant for dinner and cocktails if you want to try something different.`},
+{name:`Roger- Philipp Rickli`,stars:4,text:``},
+{name:`Birra Birra`,stars:1,text:`Sono stato 2 volte dentro una volta per andare su wc e per correttezza io ho preso un birra 3 cl 5.- e erra una weizen Io lo vedo della densità e del colore della birra La seconda volta sono  entrato ho chiesto alla cammeriera vorrei per cortesia una weizen da mezzo si subito le mi dice e la cammeriera e mi porta una reverenz bier da 3 cl e io come cliente lo ripresa dicendola scusa le si e spaliata ho chiesto una birra da mezzo litro e poi questa non e una weizen a cammeriera mi risponde e una reverenz poi sé le volte un altra io della porta visto che erra da 3cl io ho risposto per poi pagare il doppio poi lei e andata del capo cammeriere dicendo il fatto e il capo cammeriere venuto da me dicendomi anche 2 giorni fa erra una reverenz bier io ho detto di no e lui rimaneva sula sua idea c'è erra una reverenz bier io dentro di me dicevomi sé lui mi volevo vendermi per scemo ci e riuscito quasi a metà questo a me non mi andava giù perché lo vedo della densità e colore sé una weizen o no e sono stato zitto e lo bevuto per non perdere 5.- per 3cl di birra poi lo bevuto e volevo pagare  ma la cammeriera dice a me sé voi un un un'altra io ho risposto di no ho pagato e sono uscito con una faccia deludente qui io non ci metterò mai più piedi dentro e una vera delusione prima erra meglio peccato che ha chuso`},
+{name:`Natalie Stalder`,stars:5,text:`Der Alchemist Basel ist ein echtes Highlight! Wundervolle Atmosphäre, kreative Drinks und ein herzliches Team machen jeden Besuch zu einem besonderen Erlebnis. Perfekt für einen gemütlichen Abend.`},
+{name:`Andrii Boretskyi`,stars:5,text:``},
+{name:`Davy Cash`,stars:3,text:`Ok food, nice ambiente. Interesting flavour combinations. Fair prices. Definitly worth a visit. I wouldn't recommend it for nice, quiet dinners. Perfect place for first dates or Business lunches. one thing really bothered me and it's an easy fix: There are no bins for menstrual products. You have to walk out off the stall with your bloody waste, it's really embarassing (i checked all the stalls in case it was just missing in mine). And the stalls are way too dark.`},
+{name:`Michael Struchen`,stars:4,text:`Nicht für jeden Tag aber eine super tolle kulinarische Erfahrung und Abwechslung.`},
+{name:`Hoel Lanoe`,stars:5,text:`Nous avons manger Mardi soir à deux et nous sommes ravis du moment que nous avons passé la bas ! Restaurant avec une ambiance super cool, personnelle super gentil ! Cocktail au top avec une des mise en scène très jolie ! Et cuisine au top , super bien assaisonné et surtout très copieux . Le service c’est super bien passé, Nous n’avons pas réussi à finir notre menu 5 plats . Félicitations à l’équipe continuez comme sa nous reviendrons avec grand plaisir !`},
+{name:`Minka Balagan`,stars:5,text:`enorm freundlicher Service, der geduldig alles erklärt und Empfehlungen gibt. aussergewöhnliches Ambiente mit passendem Konzept, in dem Gastronomie auf einer neuen Ebene erlebt und gestaltet werden kann. Bitzli tüür, aber gönnt euch!`},
+{name:`Jessica Le`,stars:5,text:``},
+{name:`Anna Cenzuales`,stars:2,text:`Small portion and pricey but my main problem was the kimchi… it was impossible to be eaten extremely spicy (and we love spicy) to the point that it killed our mouth and everything else we ate and gave us stomach pain two minutes after we left… nothing was written in the menu or the nothing was mentioned to us about how spicy it was… the food with meat were good and the drinks have a very interesting concept, the place is cute and service pretty fast, too bad the kimchi made us sick`},
+{name:`Jona`,stars:5,text:``},
+{name:`Ch. H.`,stars:5,text:``},
+{name:`Petra P`,stars:3,text:`Die Trinkbegleitung wurde vergessen. Die sehr jungen und unmotivierten Serviertöchter wollten so schnell wie möglich nach Hause gehen. Ihre Freunde waren alle schon da und haben auf sie gewartet. Unsere Rechnung wurde um 22:40 auf den Tisch geschmissen, obwohl wir noch nicht fertig gegessen hatten. Und das bei einer hohen Rechnung….Sehr sehr schade, dass man so aus einem Restaurant „geschmissen“ wird….Ich habe schon viele Freunde und Bekannte mitgebracht, werde aber so schnell nicht mehr kommen.`},
+{name:`Dawn`,stars:5,text:`Since I only had cocktails that’s all I can rate on but what fun!  Unique cocktails in great environment! Definitely worth the stop!`},
+{name:`Kristina Stanic`,stars:5,text:`Wer ein einzigartiges Dinner erleben will und dabei in den besten Händen sein möchte, sollte unbedingt ins Alchemist – und hoffen, dass Julian an diesem Abend da ist! Getränke und das Essen top!`},
+{name:`Миледия Ворошилова`,stars:5,text:`Der Abend war einfach wundervoll – in bester Gesellschaft und mit einer großartigen Atmosphäre. Neue Freundschaften sind entstanden, und dieser Ort hat mich wirklich begeistert. Ich bin mir sicher, dass ich noch viele Male hierher zurückkehren werde.❤️👍🏻`},
+{name:`Nataliia Frossard`,stars:5,text:`Sehr gemütlicher Ort mit toller Atmosphäre! Das Personal ist super freundlich und aufmerksam – besonders Julian war sehr aufmerksam und zuvorkommend. Die Cocktails sind kreativ und richtig lecker. Besonders gut hat mir die entspannte Musik und das stilvolle Ambiente gefallen. Ideal für einen schönen Abend mit Freunden oder zu zweit. Ich komme gerne wieder – absolute Empfehlung!`},
+{name:`Anja Nehring`,stars:5,text:`Cocktailbar mal anders. Verrückter Chemiker an der Bar. Einfach lecker, dafür zahlt man mal gern ein paar Franken mehr.`},
+{name:`Tobias Dürrig`,stars:5,text:``},
+{name:`Oguz Basol`,stars:3,text:`Portions were quite small and the taste was average. The table, glasses, and overall decor were noticeably dusty, which affected the overall experience. On the positive side, the location was central and the restroom was clean. Still, I wouldn’t choose to return.`},
+{name:`mifftiosan bajrix`,stars:5,text:`Freundliches und zuvorkommendes Personal, feine und spezielle Cocktails mit Trockeneisshow, was Alchemist von den üblichen Bars abhebt und dazu passende Snacks.`},
+{name:`Karel`,stars:3,text:`not trying to be harsh just honest fried veg were insanely salty like barely edible cocktails were great curry was watery and had no flavor pork belly was good mushrooms bland and forgettable bao buns solid fries oily and bland spätzle pretty lifeless meatballs overcooked and dry Great service though overall food was just ok not what you expect given how nice the place looks kitchen should seriously take a look at flavor and freshness`},
+{name:`Georg Keller`,stars:1,text:`Made a reservation for 4 people, and as requested in the booking system, indicated that we are primarily interested in drinks. I did not specify that one member of the party was interested in also having food for dinner. On arrival we were then informed that &quot;it is our policy that people who reserve for drinks cannot order food&quot; - after a bit of confusion - as I thought surely this is a joke - we left. The kitchen was still open (we asked), there were plenty of free dining tables (we asked), I was considering briefly walking out and coming back in, and just asking for a table without a reservation. This was so Dada-esque, I don't even know what to say - a shining example of swiss hospitality - I will not be back.`},
+{name:`Franco Martelletti`,stars:5,text:`Ein etwas spezielles Lokal. Die Mitarbeiter im Service sind sehr freundlich. Das Essen wie auch die Getrünke waren sehr fein. Gerne wieder einmal.`},
+{name:`James Scott`,stars:5,text:``},
+{name:`Karin Blum`,stars:5,text:`Sehr coole Bar mit ausserordentlich interessanten Drinks. Wir - 4 Drogistinnen - waren zusammen dort, der ideale Ort für uns!`},
+{name:`Michael Wenger`,stars:5,text:`Eine der ungewöhnlichsten Restaurants, denn hier wird man zum Alchemisten, nicht nur weil die alte Uni gleich um die Ecke liegt. Man mischt sich seine Drinks selbst zusammen und auch das Essen kann selbst zusammengestellt werden aus zahlreichen Gängen, allesamt frisch und rafiniert gewürzt. Insgesamt ein grandioses Restaurant im Herzen von Basel.`},
+{name:`Thomas Hack`,stars:5,text:``},
+{name:`Boris Miscevic`,stars:5,text:``},
+{name:`Pierre-Yves Tanghe`,stars:5,text:``},
+{name:`Martin`,stars:4,text:`Sehr schön eingerichtet und aufwendig zum Thema gestaltet. Wirklich schön, wie auch die Cocktails präsentiert werden. Als einziger Grund für 4 Sterne kann ich den vergleichbar hohen Preis angeben. Wir waren auch in anderen Baseler Cocktailbars und dort waren komplexere Cocktails generell günstiger zu haben. Wen das nicht stört, der findet hier um einiges spannender inszenierte Getränke.`},
+{name:`Evalois Ocando`,stars:4,text:``},
+{name:`Heidi Borer`,stars:3,text:`Leider nicht das kulinarische Erlebnis, das wir uns erhofft hatten  Wir waren zu viert im Restaurant und hatten hohe Erwartungen – der Rahmen und das Ambiente sind wirklich sehr gelungen, stilvoll und durchdacht. Auch das Personal war freundlich und aufmerksam, was wir sehr geschätzt haben.  Allerdings blieb das kulinarische Erlebnis deutlich hinter dem Anspruch zurück. Wir entschieden uns für das 5-Gänge-Menü, das preislich im oberen Segment liegt. Zwar war in unserem Fall die Menge ausreichend, aber geschmacklich war das Menü eher durchschnittlich – solide, aber nicht aussergewöhnlich. Bei diesem Preisniveau hätten wir uns mehr Raffinesse und kreative Höhepunkte gewünscht.  Positiv hervorheben möchten wir die Cocktails, die optisch wie geschmacklich ein echtes Highlight waren. Dennoch waren 19 CHF für einen alkoholfreien Cocktail selbst in diesem Rahmen schwer zu rechtfertigen.  Insgesamt war der Abend okay, aber das Preis-Leistungs-Verhältnis stimmt für uns nicht. Schade – wir hatten uns mehr erhofft.`},
+{name:`Moritz`,stars:2,text:``},
+{name:`jimmy begaj`,stars:5,text:``},
+{name:`Robert Rieder`,stars:5,text:`Cooles Ambiente mit chemischen Utensilien zum Mischen der Drinks, unbedingt probieren! Auch die Menüs sind spezielle Kreationen. Hat sehr viel Spass gemacht und geschmeckt.`},
+{name:`serenabaldissera`,stars:5,text:``},
+{name:`Ben Brunink`,stars:5,text:``},
+{name:`Jerzy Zaborowski`,stars:5,text:`Świetna profesjonalna, miła obsługa. Profesjonalni kelnerzy, świetny kierownik sali, doskonała lokalizacja i doskonałe nieoczywiste jedzenie, rozsądne ceny`},
+{name:`Szilvia Bujdoso`,stars:5,text:``},
+{name:`pierre marcel`,stars:5,text:`Menu pour le midi: vraiment très bien.`},
+{name:`Luca Sofocci`,stars:1,text:`Hatten per Mail, telefonisch so wie persönlich vor Ort ohne Koriander bestellt um schlussendlich dennoch Falafel mit Koriander zu bekommen, auch haben wir die Getränkebgleitung einmal mit und einmal ohne Alkohol bestellt dennoch zweimal mit Alkohol bekommen, bitte das Servicepersonal schulen denn 270 CHF liegen zu lassen und dennoch etwas zu bekommen das man mehrmals erwähnt hat das man es nicht will.  Auch beim zahlen haben wir es nochmals erwähnt aber leider wieder keine nennenswerte Reaktion, haben zum Glück keine Allergie aber dennoch geht das so nicht.  Sehrr schade den das Konzept an sich ist toll aber der Service unterirdisch.  Waren am 12.02 da.`},
+{name:`Liz Khatri`,stars:5,text:`A perfect way to celebrate my 50th. We booked the flying dinner for a group of 30 and had half of the restaurant as our private area. Julian was amazing and helped us to plan the party. They created 2 signature cocktail for us for the night with a welcome candyfloss prosecco with syrup in test tubes. We had a flying dinner giving everyone the chance to mingle and then sit down later if we wanted to. The food was superb and plentiful with many small dishes which could be eaten with fingers or with tweezers.  The food, cocktails and the venue were superb. All of my guests have been in touch today to say how much they enjoyed the evening. The ambience was cosy and comfortable with amazing decor and lots of fun to be had with the theatre of the drinks and food.  Thank you to all at the Alchemist for making it such a special night for us.`},
+{name:`cedric spycher`,stars:5,text:`Cocktail de fou`},
+{name:`Rainer Prang`,stars:5,text:`Interessantes Ambiente, Tische am Fenster mit Blick auf die Rheinbrücke, nettes Personal und guter Kaffee 😊`},
+{name:`Lisa Fund`,stars:5,text:``},
+{name:`Natália Guimarães`,stars:5,text:`Beautiful place! The service was very good and the drinks are amazing!`},
+{name:`Tanya Rogers`,stars:4,text:``},
+{name:`Mary Ko`,stars:5,text:`2ème expérience dans ce restaurant, toujours aussi surprenant et délicieux. Si tu aimes expérimenter, il faut venir tester 😋`},
+{name:`Katie Guzzetta`,stars:5,text:`Great food, fun ambience, and very neat cocktails! Would absolutely recommend!`},
+{name:`S B`,stars:5,text:`Preis-/Leistung für den Mittagstisch ist überragend - und das sage ich als Deutscher. 3 Gänge Menü für 22 CHF, inkl. Mineralwasser. Das Menü ist so aufgebaut, dass man es vegan, vegetarisch oder mit Fleisch essen kann. Alle Bestandteile des Menüs können bei Bedarf nachbestellt werden. Die einzelnen Gänge waren super lecker und sehr schön angerichtet. Das Lokal an sich hat sowieso ein superschönes Ambiente und ist liebevoll eingerichtet. Das nächste Mal muss ich unbedingt Abend kommen und die tollen Cocktails probieren :)`},
+{name:`Kathrin Maretsch`,stars:5,text:`Was für eine tolle Location und großartiges Konzept! Wir hatten einen wundervollen Abend und kommen auf jeden Fall wieder. Danke an das Team!`},
+{name:`Robert Stoecklin`,stars:2,text:`Das Konzept ist grundsätzlich gut, und die Atmosphäre ist aussergewöhnlich. Leider entsprach die Qualität des Essens nicht den Erwartungen. Es war geschmacklich unauffällig und kalt, die Saucen waren geschmacklos, die Portionen waren klein, und sowohl die Speisen als auch die Getränke waren überteuert. Insgesamt war es eine interessante Erfahrung, jedoch werde ich dieses Restaurant nicht erneut besuchen.`},
+{name:`Manfred Horn`,stars:5,text:`Die Cocktails hier muss man gesehen haben.`},
+{name:`Keith Parker`,stars:1,text:``},
+{name:`Peter Wyss`,stars:5,text:``},
+{name:`Najuraas`,stars:3,text:`The drinks were good, unique, and had a cool experimental vibe. However, the food was just okay, with very small portions and extremely overpriced for what we got. Unfortunately, despite spending a lot of money, we left feeling unsatisfied. I would recommend coming here for the drinks but not for the food.`},
+{name:`Schärer Priska`,stars:4,text:`Das Restaurant ist wirklich originell. Getränke mit Trockeneis ein richtiger Hingucker. Das essen selbst war dann eher enttäuschend, sehr fettig, geschmacklich durchschnittlich und trocken. Personal war aufmerksam und freundlich.`},
+{name:`Franz Hafner`,stars:3,text:``},
+{name:`Maria Oa`,stars:3,text:`Went there for a drink, the atmosphere is nice. The cocktail I had not so much, it was a sugary concoction, it felt like liquid candy, I could not even finish it.`},
+{name:`Laure Chappuis`,stars:2,text:`Toute l’enveloppe du restaurant est très bien fait et très sympa, mais l’expérience s’arrête malheureusement là. Nous avons pris le menu à 5 plats extrêmement cher pour recevoir des quantités infimes, à partager sois-même (parfois il n’y avait pas suffisamment pour tous). La cuisine n’est pas mauvaise mais rien d’exceptionnel. Une déception malheureusement.`},
+{name:`Bebbi Bolle`,stars:4,text:`Interessantes Konzept. Essen nicht wirklich gut. Zu dunkel.`},
+{name:`Srna Todorovic`,stars:5,text:``},
+{name:`Christian Schaeuble`,stars:5,text:`Ambiente: Viel Platz, meiner Meinung nach eine tolle Raumaufteilung, sehr angenehmes Licht und entsprechend dem Namen des Restaurants mit diversen &quot;Labor&quot;-Eyecatchers ausgestattet. Ist natürlich immer Geschmackssache, aber mir gefällt sowas unheimlich gut!  Service: Wir wurden sehr freundlich, schnell und zuvorkommend bedient. Da da Restaurant eher im höhern Preissegment angesiedelt ist, ein kleiner Kritikpunkt: Die eine Schüssel war noch halb voll, als der Service diese bereits wieder abräumen wollte. Die mussten wir dann zurück halten, sonst wäre sie einfach weg gewesen.  Essen: Tolle Präsentation. Was auf den ersten Blick nach etwas wenig Volumen aussieht, sättigt dann auf Dauer extrem gut! Der &quot;Gruss aus der Küche&quot; war dabei ein kleiner Kritikpunkt: Die frittierten Speisen waren überdurschnittlich fettig - dafür war dann das 5-Gang-Menü geprägt von viel Abwechslung und einer Mischung aus tollen, unterschiedlichen Geschmackserlebnissen. Der Schnaps zum Ende des Essens war (sorry :-/) leider nicht der Renner. Der entpuppte sich als beinahe reines Zuckerwasser.  Fazit: Cool! Ich werde wieder kommen. Es dürfte dort an Kulinarik noch einiges zu entdecken geben - und das gönne ich mir gerne.`},
+{name:`Christian Gstöttmayr`,stars:3,text:``},
+{name:`Jean-louis Fraudin`,stars:5,text:``},
+{name:`Fátima Maria Pereira`,stars:5,text:``},
+{name:`Mattia Romaneschi`,stars:4,text:`Die Bar Alchemist bietet ein kreatives Erlebnis, bei dem man eigene Cocktails zusammenstellen kann – ein echtes Highlight! Die Atmosphäre ist lebhaft, allerdings manchmal recht laut, was Gespräche erschwert. Der Service war mittelmäßig in der Geschwindigkeit, aber freundlich. Perfekt für alle, die Spaß am Experimentieren mit Drinks haben und eine dynamische Umgebung mögen.`},
+{name:`Michael Meier`,stars:5,text:`Nette und Originelle Bar mit Restaurant. Knüpft an die Tradition dieser Stadt an.`},
+{name:`Christine Mathers`,stars:5,text:``},
+{name:`Christin J`,stars:5,text:`Einfach nur TOP! Die Drinks sind ein wahres Geschmackserlebnis und auch das Essen super super lecker. Wer mal Lust auf etwas spezielleres hat in unglaublich coolem Ambiente ist hier genau richtig. Ich komme bestimmt wieder.`},
+{name:`Kim Kim`,stars:1,text:`The Worst beer I ever had.`},
+{name:`Olga Bunina`,stars:1,text:`Очень странный ресторан, который абсолютно не стоит своих денег. Изначально интересная задумка - зал в виде научной лаборатории, соответствуюшая подача и сервировка  блюд. Но в ресторане прежде всего должно быть ВКУСНО! Тут такое ощущение, что готовил ребёнок. Учитывая ценник, ожидаешь, что как минимум будут какие-то качественные продукты, но были сплошные овощи, куриная ножка, свинина, где один сплошной жир и совершенно невкусные тефтели. Даже мороженое умудрились подать невкусным, с кучей взбитых сливок из растительных жиров.`},
+{name:`Da Va`,stars:4,text:`Muss man mal besucht haben! Absolut geniales Restaurant.`},
+{name:`Gregory Wilson`,stars:5,text:`Clever and outstanding menu for lunch.  Robust flavors with a fun presentation.`},
+{name:`Alena Swiss`,stars:5,text:`Очень вкусно, неординарно, интересная атмосфера, рекомендую`},
+{name:`Walter Sutter`,stars:4,text:`Unique atmosphere and great service. Drinks are a delight, but food is just all right. Overall, it was a great experience.`},
+{name:`Marco Clerici`,stars:4,text:``},
+{name:`Moritz Dau`,stars:5,text:`Immer wieder super gut. Spannende exotische Geschmackskombinationen.`},
+{name:`Delilah C`,stars:5,text:``},
+{name:`Alexandra *`,stars:1,text:`The atmosphere is nice, the service is awful. Our visit to this &quot;international&quot; restaurant was disappointing. When asked about fish options, the asian waiter joked inappropriately that Switzerland isn't a &quot;fish country&quot;, offering no alternatives for non-meat eaters, didn’t even bother to talk more about vegetarian options. This comment was unprofessional and inaccurate. Frustrated by the poor service we left without dining.`},
+{name:`Anna`,stars:5,text:`The outstanding ambience as well as the main idea of old chemist cooking is here fine-tuned to the smallest detail. Very kind, caring and helpful staff. We took full vegan menu and the portions were very big, dishes creative and ultra tasty. We are definitely coming back the upcoming season for the next cooking inspirations.`},
+{name:`Terry Witter`,stars:5,text:`Interesting experience`},
+{name:`Luka Brankovic`,stars:5,text:`Great cocktails and you can also grab a snack to eat. All of the cocktails are 19chf each and my suggestion is Graden of Eden.`},
+{name:`Gözde -`,stars:4,text:`Das Essen an sich war super lecker. Nur das aufteilen untereinander in einer Gruppe war etwas unpassend, sowie der Ablauf vom 3 Gänge-Menü hat gefehlt…`},
+{name:`uDhAY Mystic`,stars:5,text:`We just randomly came across this wonderful place .. the manager, bartender and other staff  were wonderful, and juliian is just a magician who involves people around and brings them together .. stayed there till late night, would definitely recommend you go to this place if you are a traveller in Basel ... Definitely meet juliian and people hanging around.. the place is welcoming and nice place to hangout`},
+{name:`Casey Suter`,stars:4,text:`Essen: Es wird nicht wie in anderen Restaurants bestellt, sondern man bekommt, abhängig davon was gerade das Wochenmenü ist, mehrere kleine Schüsselchen mit verschiedenen Speisen, die man nach seinen eigenen Vorlieben misch und Essen kann. Es ist immer wieder toll hier zu essen, da man Speisen serviert bekommt, die ein wenig exotisch oder experimentell sind und so neue Dinge ausprobieren kann. Service: Der Inhaber ist sehr freundlich und zuvorkommend und man merkt, dass er für sein Restaurant brennt. Ambiente: Das Restaurant ist sehr schön im Stile des Alchemismus eingerichtet.`},
+{name:`Raffaela S`,stars:5,text:``},
+{name:`Marco Civino`,stars:3,text:`Der Geschmack des Essens ist unterdurchschnittlich. Der Preis für die sehr kleinen Gerichte überdurchschnittlich! Gesamthaft ein enttäuschendes Erlebnis!`},
+{name:`Regula Edelmann`,stars:5,text:`Gerne treffe ich während den Wochentagen Freunde im Alchemist zum Mittagessen. Die Mahlzeiten sind ein kulinarisches Erlebnis. Das Personal ist sehr aufmerksam und freundlich. Mir gefällt das etwas andere Ambiente, das einen aus dem Alltag trägt. Die Dekoration passt perfekt zum Alchemist. Ich kann dieses Restaurant wärmstens empfehlen.`},
+{name:`Hannah B`,stars:3,text:``},
+{name:`Ma Jo`,stars:4,text:`Sehr nice Atmosphäre. Kreativ eingerichtet und tolles Konzept ⚗️🧪`},
+{name:`Laurent Schenkel`,stars:5,text:`Cocktails originaux, bonne bière, personnel sympathique.`},
+{name:`Samuel Staeuble`,stars:5,text:`Muss man unbedingt Besuchen! Was für ein tolles Erlebnis. Menu mit Getränkebegleitung! So eine passende Begleitung von Getränk zum Essen haben wir noch nie erhalten! Die Getränke haben den Geschmack des Essens noch mehr hervorgehoben! Barista und Service war auch mega professionell und freundlich. TOP!!`},
+{name:`Laura Picariello`,stars:5,text:`Una cena diversa con Workshop Gin. Ci siamo fatti un Gin da soli con spegazioni dell'origine del Gin. Bella espenrienza e ci siamo divertite`},
+{name:`Maik Schär`,stars:5,text:``},
+{name:`Jozsef Hevesi`,stars:5,text:``},
+{name:`Mesiba`,stars:5,text:`Tolle Bar, das Personal ist sehr freundlich und die Drinks ausgefallen und gut. Schönes Ambiente, kann ich jedem nur empfehlen.`},
+{name:`paolo giannerini`,stars:4,text:`Cercavamo un posto per uno spuntino,  lo abbiamo vissuto. Abbiamo preso alcune tapas e della birra. Locale carino frequentato da giovani principalmente. Cibo buono per il tipo di locale. Servizio buono.`},
+{name:`Elke Tschudin`,stars:4,text:``},
+{name:`Ibra him`,stars:5,text:``},
+{name:`Rick H.`,stars:5,text:`Wir haben das Lunchmenu probiert und wurden vollends überzeugt. Schöne Variation an „Tapas“ zu einem mehr als fairen Pauschalpreis (inkl. Wasser), geschmacklich sehr fein und abwechslungsreich. Dazu ein herzlicher, kompetenter Service in einem liebevoll dekorierten Lokal. Sehr stimmig, eine „neue“ Perle in der Basler Gastronomieszene und definitiv ein Ort, den wir fortan regelmässig aufsuchen werden, auch zum Abendessen!`},
+{name:`Nicola Beetschen`,stars:5,text:`Statt aus einer Speisekarte zu wählen, erhält man eine Auswahl verschiedener Gerichte, die man am Tisch nach Belieben kombinieren und mischen kann. Dieses interaktive Element macht das Essen zu einem einzigartigen Erlebnis.  Das Gleiche gilt auch für die Drinks: Es gibt eine Vielzahl an Getränken, die auf Trockeneis serviert werden und dadurch einen besonders eindrucksvollen Effekt haben. Die Präsentation ist wirklich spektakulär und verleiht dem gesamten Abend eine besondere Note.  Das Restaurant befindet sich in einer Top-Lage in Basel, was es noch attraktiver macht. Trotz des außergewöhnlichen Konzepts und der erstklassigen Lage sind die Preise überraschend moderat. Das Preis-Leistungs-Verhältnis ist somit hervorragend.  Insgesamt kann ich dieses Restaurant nur wärmstens empfehlen. Das innovative Konzept, die tolle Präsentation der Drinks und die großartige Lage machen es zu einem Muss für alle, die auf der Suche nach einem besonderen kulinarischen Erlebnis sind.`},
+{name:`Iris Cartier`,stars:5,text:``},
+{name:`Cedric Landwerth`,stars:2,text:`Leider war unser Aufenthalt alles andere als erwartet. Zu Beginn haben wir uns eine. Drink bestellt. Geschmacklich ganz OK. Der Preis im Verhältnis zur Menge total ungerechtfertigt. Danach haben wir uns Essen bestellt. Wir haben zweimal das Diamond Steak gewählt, einmal die gegrillten Pilze und einmal die frittirten Kartoffelstäbchen. Das Steak war total übergart und als es ankam, war es kalt. Die Pilze waren ganz in Ordnung, der Preis völlig übertrieben. Die Kartoffelstäbchen waren geschmacklich gut, jedoch ein wenig ölig. Wir wollten uns an das Personal wenden, um mitzuteilen, dass die Speisen kalt sind. Leider hat uns keiner Beachtung geschenkt und aufgrund des Hungers haben wirs gegessen. Als wir die Rechnung bestellt hanen, haben wir einen provisorischen Beleg erhalten. Nach der bezahlung haben wir den definitiv Beleg bestellt, damit wir für unseren Treuhänder alles korrekt abrechnen können. Diesen haben wir nicht erhalten und als wir uns am Empfang/Kasse meldeten, war dieser auch nicht mehr zu holen.  Ich bin enttäuscht vom mässigen Service und dem schlechten Preis-Leistungsverhältnis. Wir haben uns auf einen tollen Abend gefreut und gingen mit der gedämpfter Stimmung nachhause.`},
+{name:`Peter Gmünder`,stars:4,text:`Ich habe es im Internet gesehen. Bin extra von Zürich mi dem Zug dahin gefahren und habe bekannt getroffen die aus der Region kommen. Die kannten es auch nicht.Wir waren alle positiv überrascht. Danke.`},
+{name:`Marlene Atlas`,stars:4,text:``},
+{name:`Peter Tilson`,stars:5,text:`Really recommend the 3 Gang Surprise. Tremendous flavours. Food beautifully presented. Service excellent with English speaker. P & J Northumberland England 27 May 2024. Thank you so much.`},
+{name:`Hans-Joerg Dellenbach`,stars:4,text:``},
+{name:`Anita Voigt`,stars:5,text:``},
+{name:`Kevin Kron`,stars:1,text:`Jetzt war ich schon das zweite mal um 23:00 dort und wollte nur etwas trinken. Dennoch wurde ich abgewiesen da angeblich schon die letzte runde gemacht wurde, obwohl sie bis 24:00 geöffnet haben. Auf die frage, um welche Zeit man denn eintreffen sollte um noch etwas zu trinken, bekam ich nur die antwort, dass sie das nicht weiss und die Zeiten immer variiren. Soll das mal jemand verstehen.`},
+{name:`Agnese Pisano`,stars:5,text:`Great place, the drinks were fun, the food was tasty, the staff friendly!`},
+{name:`Michaela Lentz`,stars:5,text:`Wir haben schon lange nicht mehr so einen aussergewöhnlichen Abend in einem Restaurant verbracht. Die Atmosphäre ist besonders, der Service zuvorkommend und das Essen, das ist wirklich der Wahnsinn. Wir hatten das 5-Gänge-Menü mit Getränkebegleitung und es war einfach grossartig. Die vegane Option liess wirklich keinen Wunsch offen und das Geschmackserlebnis war genau das: ein Erlebnis.`},
+{name:`Max Mustermann`,stars:3,text:`Ist eher ein ‚Erlebnis‘ als kulinarischer Höhenflug. Überteuerte Tapas, die geschmacklich gut, aber nicht dem Preis angemessen sind.  15 Franken für irgendwie 8 Stückchen marinierter Tofu. 9 Franken für eine kleine Schalte Fritten oder 15 Franken für ein paar Spätzli. Die Hälfte oder 2/3 des Preises wäre angemessen.  Ambiente und Service jedoch absolut top!`},
+{name:`Mihai`,stars:2,text:`Amazing cocktail, nice atmosphere, subpar food`},
+{name:`Anetta Płatek`,stars:5,text:`Amazing atmosphere and very good food and drinks :) worth to come and I will definitely come more than once. The best for all „chemistry”, „alchemy” lovers !`},
+{name:`Olivier Lamotte`,stars:5,text:``},
+{name:`C Montoro`,stars:4,text:`Very nice environment, attentive service & surprising food & drinks !  It is a great option for a fine dinner as well as for lunch with their weekly changing menu.`},
+{name:`Dilán Rivera`,stars:4,text:`This place had wacky vibes and I was down with it`},
+{name:`angie ruefer`,stars:3,text:``},
+{name:`Pauline Currat`,stars:5,text:``},
+{name:`Patrick Vögelin`,stars:5,text:``},
+{name:`Dylan`,stars:5,text:``},
+{name:`Juerg Geiser`,stars:5,text:`Eindrückliches Nachtessen mit sehr abwechselnden Speisen. Großartig arrangiert. Besonders die Drinks sind unvergesslich gestaltet.`},
+{name:`Christian Thüring`,stars:5,text:`Absolut zu empfehlen, es passt alles, wir freuen uns jedesmal auf ein neues.`},
+{name:`Ines Z`,stars:4,text:``},
+{name:`Patrik Scheidegger`,stars:4,text:`Wir waren nur auf einen Apero dort. Das Ambiente ist ganz schön. Die Drinks werden toll präsentiert.`},
+{name:`Tomás Correia Sousa`,stars:5,text:`It was so good I forgot to take a photo. Nice playlist.`},
+{name:`Pascal Lang`,stars:3,text:`Essen/Getränke: Meiner Meinung nach originelle und geschmacklich sehr gute Getränke. Ich gatte einen Garten Eden (besonders empfehlenswert). Beim Essen war ich teils geschmacklich begeistert (Poulet Lollies, Lammchops), teils etwas enttäuscht (Gemüse im Bierteig für mich nichts besonderes, ist aber Geschmacksache). Wirklich gestört hat mich lediglich, dass das Fleisch (Lammchops, Diamant Steak der Kollegin) beinahe kalt serviert wurde. Die Preise fand ich am oberen Limit insbesondere die eher kleinen Lammchops für CHF 25.-.  Service: Ich empfand das Service Personal freundlich wenn auch etwas distanziert und gestresst. Ein bisschen mehr Kommunikation hätte ich begrüsst, aber die beiden Servicemitarbeitenden, waren stark ausgelastet.  Location: In dunkel gehaltene, gemütliche Location mit offener Küche (hinter Glas). Tolle Eyecatcher (tolle Lichter, Deko, usw). Meine Parkplatzempfehlung: Storchen Parking  Fazit: Ich finde das Konzept gelungen, würde mir aber wünschen, dass das Essen immer heiss am Tisch ankommt. Ich würde etwas weniger Trockeneis verarbeiten, da meiner Meinung nach der Showeffekt etwas verpufft (kommt für mich etwas oft vor). Dennoch tolle Location an bester Lage mit gutem Essen.`},
+{name:`paris lyberis`,stars:5,text:`Perfect`},
+{name:`Stetter Helen`,stars:5,text:`Du suchst eine nette Location mit gutem Essen, Getränken und einem super netten Team? Dann bist du beim Alchemist richtig. Besonders danke an Julian: du hast den Aufenthalt für uns besonders gemacht.. Nicole & Helen`},
+{name:`C H`,stars:1,text:``},
+{name:`Be Jannik`,stars:5,text:``},
+{name:`Mona Bam`,stars:1,text:`Preis-Leistungs-Verhältnis stimmt überhaupt nicht. In London ist das Ambiente viel atemberaubender, das Essen/ Getränke viel kreativer und wir hätten dort  min. 100 Franken weniger bezahlt.`},
+{name:`Graziano von Allmen`,stars:5,text:``},
+{name:`Alexandra Abrahamsson`,stars:3,text:`A place for fancy and good tasting drinks, but not for dining. The food didn't match the same experience as the drinks.`},
+{name:`Manuel`,stars:3,text:``},
+{name:`Lars Neidhart`,stars:5,text:`Zwingend den Workshop buchen.`},
+{name:`Adriano Fruttiger`,stars:4,text:`Service, Ambiente und vor allem die Drinks sind wirklich super, echt ein Erlebnis. Das Essen hat uns meistens gut geschmeckt, für den Preis haben wir aber auch schon besser gegessen. Aber auf jeden Fall ist der Alchemist einen Besuch wert.`},
+{name:`John Martinussen`,stars:5,text:`Ich habe einen sehr schönen Abend verbracht. Das Essen war sehr gut zubereitet und die einzelnen Gerichte und Getränke haben alle gut und unterschiedlich geschmeckt. Ich hatte den 5 Gang Menü mit Getränke Begleitung. Das 'Chemie'-Konzept macht echt Spaß. Ich komme gerne wieder.`},
+{name:`Iva M`,stars:5,text:`Overall very nice experience! Must go place in Basel. It brings out that pharma feeling and all about mysterious cocktails 🍸 and food is quite good.`},
+{name:`Schmitt`,stars:5,text:`Friendly staff Nice interior Interesting cocktail specials`},
+{name:`Clement M.`,stars:4,text:``},
+{name:`Vanessa Bühler`,stars:5,text:`War gestern Abend da 😉 Absolut Erlebenswert 😍 ausgefallen, tolles Personal gutes Essen coole Getränke ich werd wider kommen! 🥰`},
+{name:`Thierry Leyva`,stars:5,text:`Special experience, share the food in the group, small different dishes, like tapas. You order once then eat then order again. At first we though we would never be full, but there is a time where almost everybody had enough. The quality of the food is really really good! From salad to steak and dessert! Drinks are ok. Did noz try all the fancy ones on the card.`},
+{name:`Marc`,stars:3,text:`We had the big surprise menu with cocktails. The food is good, the cocktails are a match. But it's very expensive and I don't think the price matches what you're getting.`},
+{name:`Adrian Baumgartner`,stars:5,text:`Wir haben mit 20 Personen unser Weihnachtsessen im Alchemist durchgeführt und wir waren alle begeistert. Das Essen war sehr gut und ist originell serviert worden, der Service war freundlich, speditiv und unkompliziert. Im Keller konnten wir in einer Essenspause noch unsere eigenen Cocktails mixen, Grossartig!`},
+{name:`Patrick Krüger`,stars:5,text:``},
+{name:`Craig Dunlop`,stars:4,text:``},
+{name:`Aleksander Smigielski`,stars:1,text:`This place used to have its magic, it’s completely lost now. All we experienced on December 11th was being totally ignored by the waiter. Very disappointing.`},
+{name:`Alina Räuber`,stars:5,text:`Sehr experimentell, es macht Spaß zu essen, kein &quot;Standard&quot; Menü, genauso die Drinks! Preis - Leistung stimmt auch, kommen gerne wieder, Service war auch gut.`},
+{name:`Iván García Rosa`,stars:5,text:`Drink verschüttet - augenblicklich neuen gekriegt! Vielen Dank. Lecker war‘s auch!`},
+{name:`Lorena Segredo`,stars:3,text:`Great for drinks! The food is not amazing, very few options and rather common dishes. Is you are looking for culinary experience is not the place. Atmosphere was great, the place is very nice and drinks are really fun and tasty.`},
+{name:`Marcello Angileri`,stars:5,text:``},
+{name:`Carlo Bifarella`,stars:5,text:``},
+{name:`Marina Enadeghe`,stars:1,text:`Das diskriminierende Verhalten einer Servicekraft war absolut daneben. Uns wurde mitgeteilt, dass der Essbereich komplett ausgebucht sei. Da wir stattdessen etwas getrunken haben, haben wir mitbekommen, wie andere dennoch einen Platz erhalten haben. Zudem wurde es uns schwer gemacht etwas nachzubestellen und zu bezahlen.`},
+{name:`Caroline Malgouzou`,stars:4,text:`Le concept de l’alchimiste est super sympa mais malheureusement on s’attendait à un peu plus de recherche et de cohérence dans les plats avec le menu dégustation. C’est dommage, le potentiel est vraiment la et les cocktails sont délicieux mais le pari n’est pas complètement réussi …`},
+{name:`Frau De`,stars:2,text:`Ich war bereits beim finden des Getränkes überfordert. Würde ich Bier mögen, dann wäre wohl 8dl für 10 CHF die Wahl gewesen. Die anderen Drinks fand ich alle nicht ansprechend. Entweder mochte ich die Inhalte nicht oder ich war nicht bereit auf ein Kürbiscocktail. Dazu kommt, dass Trockeneis, Seifenblase und Zuckerwatte fancy ist, aber den teuren Preis nicht rechtfertigen kann. Dazu kommt, wenn ich nach einem Besuch einer Lokalität im höheren Preissegment verkehre, dann will ich danach nicht wie ein Pommes riechen. Meine sämtlichen Kleider rochen extrem nach Fritteuse, das ist ein absolutes no Go!`},
+{name:`Gigi B`,stars:5,text:`Super Team! Tolles Essen & Kreative Drinks!`},
+{name:`Ashish Chaturvedi`,stars:5,text:`We were a group of 12 and ordered the suprise menu with food and drinks that were paired with each other. It was an experience like no other. The food was delicious and the drinks were paired perfectly. Highly recommended`},
+{name:`Aya Ibrahim`,stars:5,text:`The coolest bar in Basel by far! Very special drinks and cozy ambiance. You can roll the dice and let your luck choose the drinks for you. We got a gin/chestnut on dry ice and whiskey/chestnut/ bubbly combinations. Both were good! Will definitely be visiting again soon.`},
+{name:`H C`,stars:5,text:`Terrible, veges is not cooked through and I feel like eating tree root.  Update:  Went few times recently and the lunch taste much better than last year.`},
+{name:`Vloggy Strohm`,stars:5,text:`Lupe, Pinzette, Trockeneis – definitiv ein Erlebnis der besonderen Art. Abgerundet von einer superfreundlichen und superkompetenten Begleitung.  Das Menü Opus Magnum von A bis Z ein Genuss, abgerundet durch die «speziellen» Drinks von Zuckerwatte bis Sirup, von Gin (zugegebenermassen etwas dominant, doch für mich passt das …) bis Wodka. Mischen, mörsern – fertig ist die Symbiose.  Willkommen im Labor!`},
+{name:`Tho Buser`,stars:5,text:`Super Restaurant. Tolles und unterhaltsames Essen. Man muss berreit sein sich kulinarisch Überraschen zu lassen und genau dies macht die ganze Sache interessant. Es ist die Erfahrung wert. Beeindruckendes Geschmackerlebnis. Hohe Qualität. Alles frisch und tolle Geschmackskombinationen. Die Atmosphäre ist wunderbar. Die Drinks sin seh geschmacksvoll und toll anzusehen. Preis Leistung ist top, wenn man bedenkt das alles frisch, Saisonal und selbst gemacht ist und das Restaurant einen eigenen Kräutergarten in der Region hat. Genau so konzepte unterstützen wir als Konsumenten gerne. Danke für das tolle Erlebnis.`},
+{name:`Philippe Kohler`,stars:5,text:`Ein eindrückliches Erlebnis für den Gaumen und für die Augen  Wir haben das 5 Gang Surprise Menü (CHF 79, inkl. Wasser) genommen und haben es nicht bereut! Jeder Gang war ausgezeichnet. Man wird durch den ganzen Abend mit immer wieder neuen Gerichten begleitet.  Wer sich nicht sicher ist ob er diese Küche mag, dem empfehle ich vorher einen Besuch am Mittag. Da wird für CHF 22 ein kompletter Lunch serviert, inkl. Wasser. Absoluter Preis-Leistungssieger!`},
+{name:`Nadja Albers`,stars:5,text:``},
+{name:`Hannah`,stars:5,text:`Love their food! Always a vegan, a vegetarian and a meat option. Take away over lunch, to me, is the best value for money in Basel - and they have reusable lunchboxes <3 But the interior design in Alchemist is quite special, so can recommend that too`},
+{name:`Oleksii Kosovskyi`,stars:5,text:`Цікаве місто. Алхімія 🧪👨‍🔬`},
+{name:`Karin G.`,stars:5,text:`Top Ambiente, tolle Drinks, einzigartig 👍🏻☺️!`},
+{name:`Em`,stars:5,text:`Wir waren bereits zweimal im Alchemist essen und sind nach wie vor begeistert vom Konzept (Foodsharing, Saisonalität und Regionalität). Der Service ist sehr freundlich und zuvorkommend und das Ambiente total ansprechend. Sehr zu empfehlen, wenn man nicht auf 0815 steht.`},
+{name:`Mike Verduyn`,stars:4,text:`Tof doch serieus prijzig. Prijs/kwaliteit niet in verhouding. Eénmaal gedaan doch ik keer nooit meer terug.`},
+{name:`Ali Gabriel`,stars:3,text:``},
+{name:`Alexander Thummel`,stars:4,text:`Essen ist wirklich top. Am Service kann noch gefeilt werden(Potential nach oben).`},
+{name:`Dumitru Gusilo`,stars:3,text:``},
+{name:`Marco Galuppi`,stars:5,text:``},
+{name:`Марина Диброва`,stars:5,text:`Атмосферное заведение в стиле «Алхимик», необычно, довольно вкусно и интересно. Обслуживание очень приветливое. Ты можешь выбрать меню на двоих ( будет сюрпризом, что вам принесут) но мы сами выбрали блюда. Необычные и в то же время простые овощные рулеты ( мне очень понравился), рис, грибы 🤤, хлеб, два вида мяса. Может показаться, что очень маленькие порции, но на удивление мы наелись и были довольные. На завершении мы выпили коктейль з безалкогольным ромом, который нужно готовить самому и очень прикольная подача коктейля в колбе 🍸  Если вы ищите что то необычное и интересное, то вам сюда. 🙌`},
+{name:`Michael Rodin-Lo`,stars:5,text:``},
+{name:`Domenico Di Gregorio`,stars:2,text:`Se fai dieta, è ideale. Se vuoi mangiare è meglio un'altro  ristorante. Speso quasi 500.- ( eravamo in 5) siamo andati a mangiare da un'altra parte.`},
+{name:`Petra Kruettli`,stars:3,text:`The food is good unfortunately not warm but it is overpriced for what you get. Atmosphere is cool but the personal could be a bit friendlier. Whit sayings like &quot;did you finally find something to order&quot;, not very nice though. The drinks look cool and interessting, that was fun.`},
+{name:`Samantha Turner`,stars:3,text:`Als erstes, das Essen war lecker, keine Frage. Auch die Cocktails waren witzig anzusehen mit dem Trockeneis und das Besteck war wirklich unterhaltsam. Jedoch war die Karte sehr verwirrend und nicht klar beschriftet mit z.B Gemüsebeilage, Stärkebeilage, Fisch und Fleisch. Wir brauchten lange bis wir was zusammengestellt hatten. Ich denke man muss fast eines der drei Menus nehmen um es sich zu vereinfachen. Aber da jeder von uns Allergien hat oder gewisse Dinge nicht mag haben wir uns entschieden es einzeln auszuwählen. Was ich jedoch wirklich überrissen finde sind die Preise. Ein Schüsselchen Sprossensalat 15.- eine kleine Beilagenschüssel Spätzli auch 15.- und Ribs die wegem der kalten Tomatensauce auch schon kalt waren und der grösste Teil ein Knochen war für 19.-. Das ist zusammen 49.- und satt waren die Männer am Tisch auch nicht. Klar kann man dazu bestellen.. aber nochmal 1-2 Sachen von der Karte zu dem Preis? Fazit : Essen lecker aber eindeutig zu teuer für das was es ist. Tut mir leid.`},
+{name:`L. Z.`,stars:5,text:`Sehr leckeres Essen. Sharing Concept ist sehr cool. Jedes Gericht schmeckt großartig.`},
+{name:`T.`,stars:4,text:`Cooles Ambiente, kreative Art die Drinks zu kreieren, das Essen war lecker und die Mengen ausreichend (hatten das Menü für 79.- p.P.). Preisverhältnis in dem Rahmen, den man in Basel zu erwarten hat. Abzug gibts beim Service. Das Personal ist leider einfach zu unaufmerksam. Als wir mit dem Essen fertig waren und der Feierabend wohl langsam näher rückte, sass das Personal im anderen Teil des Restaurants auf Stühlen rum und wir wurden kaum noch beachtet. Hätten gerne noch was getrunken, entschieden uns dann aber zu zahlen.`},
+{name:`Juan`,stars:4,text:`El mejor en postres`},
+{name:`Loretan Adrian`,stars:5,text:``},
+{name:`csilla csalova`,stars:5,text:``},
+{name:`BirdOfSteel`,stars:5,text:``},
+{name:`Bayram Taşan`,stars:5,text:`Sehr Nettes Team & Sehr Gepflegttes Alles Gut Alles von feinsten.`},
+{name:`M „M“ G`,stars:2,text:`Ich habe das Restaurant auf Instagram gesehen und wollte umbedingt mal hin. Leider war der Besuch eine Enttäuschung. Die Speise- une Getränkekarte war sehr verwirrend. Als wir uns diese erklären liesen, war uns klar, man muss mehrere Gerichte bestellen (2-3 pro Person), etwas teuer aber wir bestellten zu zweit 4 Gerichte. Entspechend der Werbefotos erwarteten wir schön angerichtete Speisen mit Trockeneis. Erhalten haben wir 4 winzige töpfchen welches je zwischen 12 und 15 Fr. Kostete. In einem waren 6 halbe (also 3!!!) Falafel mit etwas sauce für 12 Fr. Was total überteuert ist. Auch die weiteren Gerichte waren winzig und für die Menge sau teuer und zudem auch nicht wirklich besonders im Geschmack und auch nicht speziel angerichtet. Auch die Geteänke kosten ein Vermögen (alkoholfreier Gin mit Sirup kostet 18 fr.!)  Dieser wurde jedoch schön angerichtet zum selber mischen.`},
+{name:`ACM`,stars:4,text:`Great place to grab a funky drink! And Friendly staff.`},
+{name:`M. Gähwiler`,stars:5,text:``},
+{name:`Anna Belikova`,stars:5,text:`👍🏻`},
+{name:`Lilith Goetia`,stars:5,text:`Cinque stelle ma anche 10 per l'idea! Il team è stato super gentile nelle spiegazioni, servizio ottimo e molto veloce. Idea ottima, ogni città dovrebbe avere un bar del genere. Bravissimi! Lo consiglio!`},
+{name:`Sarah Xoxo`,stars:5,text:``},
+{name:`Fox Foxson`,stars:3,text:`Interessantes Konzept, aber nicht fertig gedacht und noch weniger fertig umgesetzt. Staff ist über die Drinks und Konzepte fast verwirrter als der Gast. Entweder alles vereinfachen oder den Angestellten das Konzept so klar machen, dass sie den Gästen das Gefühl geben es mache auch Sinn.  Konkret: die gewürfelten Drinks schmecken absolut random. Die Speisen haben andere Hauptzutaten, als beschriftet und haben kaum einen roten Faden, auch die Portionengrösse scheint willkürlich bestimmt.  Positiv: das Dessert sah gut aus und schmeckte prima, auch das Fleisch war spitze (wenn auch schon zu kalt).`},
+{name:`Cécile Gerber`,stars:3,text:``},
+{name:`Thomas Messerli`,stars:2,text:`There are some very good cocktail bars in Basel. This is NOT one of them. It looks stylish, but food is hit and miss, and their approach to drinks is patronising. There are 7-8 cocktails to choose from (none of which are what I would want to choose and the ones I tried were just okay and not worth the steep price tag). And then their pride is that customers can throw the dice (literally) and randomly create a cocktail, which is of course not likely to turn into a very good cocktail (and almost seems a little insulting to people who spend their time coming up with good cocktails.) So, in a nutshell, what summarises the place well is “style over substance”.`},
+{name:`Hubert R.`,stars:4,text:`A nice dinner experience, food is good thus a little too in fusion for my taste. Excellent service.`},
+{name:`John Isabelle`,stars:5,text:`Ein wirklich besonderes Erlebnis. Das Essen war ausgezeichnet, sehr kreativ, frisch! Die Ambiente besonders und schön. Der Service TOP!!! Eventuel nichts für „Grossesser“, kostet auch was, aber absolut empfehlenswert. Wir gehen sicher wieder! Danke!`},
+{name:`Aynur J`,stars:4,text:``},
+{name:`Andy Ettisberger`,stars:5,text:`great service, very good food with a nice presentation. highly recommend to visit here and try out the menu with the drinks`},
+{name:`brigitte busslinger`,stars:5,text:`Hatten nur einen Apéritif. Der war aber super schön und lecker. Wir hatten die Zutaten zum Drink erwürfelt ;-)`},
+{name:`Nora Buechel`,stars:5,text:``},
+{name:`leander wyss`,stars:5,text:`Sehr feines Essen, gut inszeniert (mit trockeneis effekten etc). Drinks sehr gut und fancy. Cooles Ambiente. Eher teuer`},
+{name:`Shobhit Tiwari`,stars:4,text:``},
+{name:`Nadia Kalyuzhna`,stars:5,text:`Nice place. Tasty food, good coffee and friendly people)`},
+{name:`Otto Kunz`,stars:3,text:``},
+{name:`Mergim Maraj`,stars:5,text:``},
+{name:`Tandra Fairbanks-Freund`,stars:4,text:`The cocktails are such a fun experience! We celebrated a birthday and the Alchemist perfectly fit with our group of Harry Potter and D&D loving nerds. The appetizers were a bit expensive for what you get. So eat somewhere else and get your drink on here!`},
+{name:`Karoline Knipping`,stars:5,text:`Mittagsmenü war ausgezeichnet. Verschiedenes zum Teilen. Super Konzept.`},
+{name:`Pit Zed`,stars:5,text:`Es war ein sehr schöner Abend. Die Bedienung war sehr aufmerksam und wir haben uns sehr Wohl gefühlt. Mit dem Spezial-Menü bekommt man fast alles von der Karte und erhält ein sehr gutes und abgerundetes Erlebnis. Mein Geheimtipp in Basel, wenn man ein Erlebnis haben möchte.`},
+{name:`Nini_ Lee`,stars:5,text:`Ich war am 03.03.2023 mit einer Freundin im Alchemist essen und das Erlebnis war super!  Das Konzept dieses Restaurants ist sehr cool, Bedienung sehr freundlich und aufmerksam und hat uns alles genauestens erklärt. Du kannst deine Drinks selbst mischen, das Essen ist eher in kleinen Portiönchen angerichtet, weil es zum Teilen gedacht ist und dieses Restaurant ist definitiv nicht 0815!  Preisleistung war in Ordnung, nicht zu teuer und nicht günstig.  Ich empfehle dieses Restaurant auf jeden!`},
+{name:`Pat Schnidrig`,stars:4,text:`Es war ein Erlebnis sich einen Drink zu erwürfeln. Die Häppchen waren auch fein.`},
+{name:`Barbora Jakubova`,stars:5,text:``},
+{name:`Sandra Hutter`,stars:3,text:`Das Konzept und die Location fand ich ganz ok. Die Speisekarten sind unübersichtlich. Das Angebot eher klein. Vegetarisch und vegan möglich. Speisen sind gut, ausser die zwei Desserts. Sehr teuer, man bekommt wenig fürs Geld. Wir hatten alle noch Hunger... Lage direkt an der Schifflände, deshalb gut mit ÖV zu erreichen. Storchenparking in der Nähe.`},
+{name:`Laurent Zender`,stars:5,text:`Very friendly staff, compose your cocktail by rolling dices, small dish sizes, but 3-4 are enough to get you well saturated. A bit pricier but well worth considering the quality, taste and experience`},
+{name:`S J`,stars:4,text:``},
+{name:`L V`,stars:5,text:`Probably more a 4.5 than a 5 starts but did not wanted to give a 4 starts and bring down the rating  Not for every day dinner but more for special occasions given the tab will be 60 CHF per person , nice ambiance (loved the pharmacy old shop décor )  Food was generally cooked well (meat could have been tender) and well presented, however portions were small given is more considered a tapa place, so you will have to order 3-4 dishes per person  Staff friendly and knowledgeable  Bonus-hint: Beer very good and reasonably prices even for Basel`},
+{name:`Bruno Errante`,stars:5,text:``},
+{name:`Florian Schmitzberger`,stars:4,text:``},
+{name:`Eveline Achermann`,stars:4,text:`Fancy Einrichtung, Portionen nicht so gross.`},
+{name:`Peter Kummli`,stars:4,text:``},
+{name:`Hans-Christian Jakob`,stars:4,text:``},
+{name:`Michel Gysin`,stars:5,text:`Tolle Idde & Umsetzung 👍`},
+{name:`Jean Fahoom`,stars:5,text:`Very unique concept and very well operated. I like the idea of the smaller sharable portions that will give you the chance to try many unique recipes and great food. The drink cocktail with the dice rolling is very original idea and worth the try.`},
+{name:`Chri Sajnma`,stars:4,text:`Wer was anderes Probieren möchte ist dort sicher gut aufgehoben.Wer nicht gerne Gerichte mit anderen teilt eher nicht.Das Essen ist schmackhaft.Die Preise und Mengen aber naja.Das Personal ist sehr bemüht und erklärt einem alles sehr gut .`},
+{name:`Das Schmelz hd`,stars:3,text:``},
+{name:`Caroline Rutz`,stars:5,text:`Restaurant très original que nous avons apprécié du début à la fin. A tester!`},
+{name:`Stefan Rutz`,stars:5,text:`Fantastic atmosphere and great service!`},
+{name:`Nicole Fortini`,stars:5,text:``},
+{name:`Le B.`,stars:5,text:``},
+{name:`Mo Ma`,stars:4,text:``},
+{name:`Wei`,stars:5,text:``},
+{name:`Patrick Bortolan`,stars:5,text:`Sehr tolles Konzept, welches voll durchgezogen wird. Feines und vor allem frisches Essen`},
+{name:`Bruno Gagliano`,stars:5,text:`Very interesting selection of drinks that make you feel like an alchemist.`},
+{name:`Vincent N.`,stars:3,text:`Pros: prime location. Warm, cozy atmosphere and friendly staff. Food concepts are interesting if you’re open to try out strange combination of ingredient things.  Cons: the food was not impressive. Some experimental cuisines go too far that it taste really odd. The hefty bill also does not justify for the value of the meal. Maybe I’m being picky but with 100 CHF per pax, there are equally good if not better options around.`},
+{name:`Manuel Hartmann`,stars:5,text:`Amazing experience with top notch food selection, innovative cocktails & best quality food.  Much more than a meal but a fantastic culinary experience in a cosy, welcoming setting with great service.`},
+{name:`V M`,stars:3,text:``},
+{name:`Tammo S`,stars:5,text:`Sehr empfehlenswert!`},
+{name:`Julian Spagnuolo`,stars:4,text:`Great cocktails, bar snacks are a bit... Average, but the ambience makes up for it`},
+{name:`joel duprat`,stars:5,text:``},
+{name:`Ralph Kissling`,stars:5,text:`Gutes essen, zügige Bedienung, super Cocktails. Hohe Preise.`},
+{name:`Little Reiskorn`,stars:5,text:``},
+{name:`Pablo D.`,stars:3,text:`A few classic drink's on the card would be nice...`},
+{name:`Jonas Schlienger`,stars:5,text:``},
+{name:`M.`,stars:3,text:``},
+{name:`Chris Joseph`,stars:5,text:`Das Konzept mit den Drinks wie in einen Chemielabor fand ich toll. Das Essen war wirklich hervorragend und die Idee als „Tapas“ zum teilen finde ich auch toll`},
+{name:`Hek Kom`,stars:5,text:`Sehr eindrücklich und ganz was Spezielles. Muss man erlebt haben. Die Drinks sind ein Erlebnis!`},
+{name:`Sedat Dilbaz`,stars:4,text:`An sich eine wunderschöne Bar mit sehr freundlichem Service. Wir hatten einige der speziellen Cocktails, muss aber leider sagen, dass diese nicht ausgewogen waren und teils nach nichts geschmeckt haben. Das ist wirklich schade, da die Idee an sich eine sehr gute ist! Wir hatten kein Essen, deshalb kein Urteil darüber.`},
+{name:`Irgendöpper`,stars:5,text:``},
+{name:`Alex Theodore`,stars:5,text:`Fun place to eat.  Great atmosphere and service.  Food is served tapas style and you can enjoy many different flavors.`},
+{name:`Ruben Salazar Quesada`,stars:5,text:``},
+{name:`Erika Meyer`,stars:4,text:``},
+{name:`Nini`,stars:1,text:`Ich war bereits in dem Lokal und finde die Idee spezielle Cocktails zu machen toll. Aber wenn man fragt welchen Cocktails der Herr vom Lokal empfehlen würde und man die Antwort bekommt &quot;Du sollst die Karte lesen und dir selber etwas aussuchen&quot; war ich extrem enttäuscht. Ich habe die Karte gelesen, wollte mich aber überraschen lassen - leider nicht möglich. Und geschmeckt haben uns die verschiedenen Cocktails auch nicht wirklich :/`},
+{name:`Gerhard`,stars:5,text:`Suuuper Erlebnis, wirklich sehr originelle Idee und das Essen sowie die Cocktails waren hervorragend. Anfangs wäre eine kurze Erklärung zu den Menüs nützlich, das man sich das z.B. aus mehren kleinen Portionen zusammenstellt. Auch eine Ausschreibung ob etwas Vegan ist wäre noch gut. Nach Nachfrage ist laut Kellnerin alles vegan außer des Fleisch und Fisch. Dennoch haben z.B. die Spätzle nach Ei geschmeckt und es gibt Feta auf der Karte. Zusammengefasst: Beim ersten Besuch vielleicht etwas verwirrend aber der Geschmack und das Konzept verdient einfach 5 Sterne!`},
+{name:`- BaselStar`,stars:5,text:`We really enjoyed the experience here! The modern fusion cuisine offered here is very creative and varied in taste. The staff was also very friendly and took a lot of time to explain everything to us. The philosopher's stone 4-course menu surprise with cocktail pairing was a complete delight. Gladly again 👍`},
+{name:`Valentina Val`,stars:5,text:``},
+{name:`Mike Rautenberg`,stars:5,text:`Das vegetarische Essen war sehr lecker 😋 und frisch. Auch die Präsentation war spannend und der Service war kompetent.`},
+{name:`C. C.-A.`,stars:4,text:``},
+{name:`Alexandre Roty`,stars:4,text:`Great concept in a fancy place, a bit unexpected for that location. A huge list of cocktails which is probably their main talent. Food was good but not really of my personal taste. I’m also not a big fan of sharing plates, specially for a business lunch. Go for the drinks and the vibe.`},
+{name:`Alex Marahovsky`,stars:4,text:``},
+{name:`Dan Hodgson`,stars:3,text:``},
+{name:`Daniel Stampfli`,stars:5,text:`Freundliche Bedienung die den Gäste die aussergewöhnliche Speise und Getränke Karte erklärt Gutes Essen und spezielle Drinks`},
+{name:`Stefan Riepl`,stars:5,text:``},
+{name:`Ala Taji Heravi`,stars:4,text:``},
+{name:`Ivan Agostena`,stars:4,text:``},
+{name:`Val Gdz`,stars:4,text:`Délicieux, bien servis`},
+{name:`Jan Domroese`,stars:5,text:`Selten so gut gegessen! Und das Essen selbst ist das Erlebnis, vom Cocktail bis zur Toilette ein Wahnsinn. Ein tolles Restaurant und eine persönliche Empfehlung von mir!`},
+{name:`Bita Rza`,stars:2,text:`Interesting interior and nice atmosphere! Food is very pricy for what it is! Not very creative dishes!`},
+{name:`Daniel Frischknecht`,stars:1,text:`Trotz Online Reservation war das Restaurant geschlossen, auch Telefonanrufe werden nicht beantwortet.`},
+{name:`Fabian Siegler`,stars:4,text:`Heute, Donnerstag, 28.07.2022 am Abend war ich mit drei weiteren Personen sehr Spontan im Alchemist Essen. Das Konzept, die Ideen fand ich spannend. Das Essen war Qualitativ sehr gut. Wir haben viele Speisen durcheinander bestellt und konnten durch das die ganze Karte verkosten.  Durch das die Preise, trotz dem Konzept, sehr hoch waren gibt es ein Stern weniger.  Ich bedanke mich und macht so weiter.  ————————————————————— Ich war spontan ein Kaffee ☕️ trinken. Freundliche Mitarbeiter und der Preis CHF 4.- ist Absolut in Ordnung.  Ich gehe bald einmal Essen`},
+{name:`Jace Woblee`,stars:4,text:`Essen war gut. Bedienung Freundlich und zuvorkommend.`},
+{name:`Marianne Müller`,stars:2,text:`Leider sehr enttäuschend: + sehr freundliches Personal + sehr coole Idee prinzipiell + Leckere Limonade & Desert  - Cocktails außer Präsentation nicht besonders - Kein Konzept was das Essen angeht - auch Fusion sollte ein Konzept haben; außerdem haben häufig Gewürze gefehlt - Personal hat während dem 2. Gang (von 4) angefangen das Restaurant aufzuräumen (es war recht leer für einen Freitag um 21:30) was uns wirklich genervt hat, da wir für einen gemütliches Feierabendessen gekommen sind`},
+{name:`Lulue ploop`,stars:3,text:`Excellent concept, nourriture savoureuse. Malheureusement personnel peu correct. Soyez attentif, la facture peut être gonflée si vous ne prévenez pas le restaurant d'un changement de dernière minute.`},
+{name:`Almedina Z (Alme Z.)`,stars:2,text:`Très bonne cuisine. Jolie décoration et concept. Malheureusement, personnel pas très sympathique et pas arrangeant au vu du prix. Si vous réservez et que des participants ne peuvent pas venir, annulez. À défaut, vous devrez payer le prix pour les absents. Pas très commerçant.`},
+{name:`Andrea Rhyner`,stars:5,text:`Qualitativ etwas vom besten seit langem.Endlich wieder ein Team das Gastro macht wie es sein soll. Spannend,lecker,interaktiv und toller Service.Ein rundum perfektes Erlebnis.`},
+{name:`arno kelber`,stars:5,text:``},
+{name:`Hagen Zandt`,stars:4,text:``},
+{name:`Francesco Aimola`,stars:4,text:``},
+{name:`I S`,stars:5,text:`Auf jeden Fall die Cocktails probieren!`},
+{name:`Romanos T.`,stars:1,text:`Short version: Terrible drinks, polite staff, rude owner.  Long version:  Been there twice. First time we ordered multiple dishes and gin tonics. The dishes were mostly mediocre and the gin flavourless no matter what spices you mix in by yourself. Second time I died for an Campari soda which the owner refused to accept (even though Campari is on the drink card) and kept talking over me about how things there are done differently and should order their own version. I ordered it and it was terrible.  The only good thing is the music, which can be loud, and the staff who is very friendly.`},
+{name:`Simone Vo`,stars:5,text:`Toll, toll, toll! Waren Samstag gegen 14:30 dort, also außerhalb der Stoßzeiten, und haben deshalb ohne Reservierung problemlos einen Tisch bekommen. Zudem war es schön ruhig.  Was uns ursprünglich hierher gezogen hat, war die Einrichtung. Sie weckte schon beim Vorbeigehen einen interessanten, gemütlichen Eindruck, der sich dann auch bestätigt hat. Die Baustelle vor der Tür war bei dem tollen Ambiente schnell vergessen. Die Bedienung war auch sehr freundlich und aufmerksam.  Wir konnten uns unter den Beschreibungen auf der Karte nicht viel vorstellen, also haben wir uns einfach für das 4-Gänge-Menü entschieden plus jeden der alkoholfreien Cocktails probiert. Ein großartiger Querschnitt. Alles war ein Hingucker, hat super geschmeckt und war perfekt portioniert. Mehr noch - sich so manchen Drink selber zu mischen, all die Kleinigkeiten zu probieren und zu teilen, das hat wahnsinnig Spaß gemacht!  Besonders gut gefallen haben mir der Virgo Folium Rubrum, das Erbsenpüree und die Schokoladensynthese. Generell kann ich allerdings bloß empfehlen, etwas auszuwählen und sich überraschen zu lassen. Wer etwas für einen besonderen Anlass sucht oder einfach mal was Neues erleben möchte, ist hier gut aufgehoben.`},
+{name:`Michael Schneider`,stars:3,text:`A really fancy bar to have even more outlandish drinks. Certainly Ann experience. The snack food is nice too. The dinner food seems to be a fusion of Indian and Asian, not entirely my taste but everything was presented very nicely and certainly worth a visit!`},
+{name:`Matthias Schwob`,stars:4,text:``},
+{name:`Silvio Basel`,stars:5,text:`Super`},
+{name:`Elle`,stars:4,text:`An interesting concept with some great cocktails and some interesting fusions of food - some of which were fantastic but others didn’t quite hit the mark. The majority of the menu is vegetarian, so easy for non-meat eaters! Don’t be put off by the scaffolding outside, it’s open and has a great bustling restaurant inside.`},
+{name:`Denise G`,stars:3,text:`+ food was great and really tasty + presentation of food and drinks  - service was rude and not helpful - therefore the whole experience was bit too expensive  I asked to have a non alcoholic cocktail. The problem was that the two drinks they offered were either not vegan or had ingredients in it i don't like. I tried to ask for one cocktail either leaving out the non-vegan ingredient or having an alcoholic cocktail replaced with the non-alcoholic spirit. Neither of those options were possible. Which is super disappointing for a restaurant/ bar who advertises it's good cocktails. This gave me the impression that either people responsible for the bar value their cocktail recipe over their customer or are just not able to adapt a recipe slightly. Service wasn't really helpful with that process so at the end i stayed with water because i didn't want to discuss this further... Because of this experience i wouldn't come back for a meal, just the good food alone doesn't justify the high price. sorry.`},
+{name:`Daniel Rieder`,stars:5,text:`Ein etwas anderes Konzept, ähnlich zu Tapas ohne jedoch spanisch zu sein. Alle kleinen Gerichte waren sehr geschmacksvoll und gut. Der Service war freundlich und aufmerksam.`},
+{name:`Andreas Dittrich`,stars:3,text:`Coole Location - innovatives Konzept. Ueber das positive wurde ja schon berichtet, hier ein paar kritische Punkte.  Raumakustik ist eine Katastrophe. Waren gestern Abend - voll besetztes Restaurant - da verstehst du dein Gegenüber nur mit Mühe. Preise sind für mich am oberen Limit. Beispiel: Brot: 5 CHF`},
+{name:`Nico Boss`,stars:5,text:`Extraordinäre Drinks mit gutem Ambiente. Empfehlenswert`},
+{name:`Shengyu Huang`,stars:5,text:``},
+{name:`Roger C. Bryner`,stars:1,text:`Ich war dort Essen am 16.4.2022 und habe mir eine Salmonellenvergiftung  eingefangen!!! Niemehr wieder und nicht zu empfehlen!!`},
+{name:`pedro galiardo`,stars:5,text:`Perfekt, sensationelles Erlebnis, lasst euch überraschen und taucht in eine Welt der Alchemie ein. Unbedingt reservieren…`},
+{name:`Marco Huggenberger`,stars:3,text:``},
+{name:`Rodrigue de Schaetzen`,stars:5,text:`Must go place! Overall great atmosphere,  food, and drinks. Bonus are the cool looking washrooms`},
+{name:`Giovanni Pellegrino`,stars:5,text:`Eine sehr kreative Location. Super cool! Etwas teuer, aber waren dennoch sehr gerne vor Ort. Sehr nette Bedienung.`},
+{name:`Filomena Furrer`,stars:2,text:`Unfreundliches Personal essen gut .`},
+{name:`Stefanie Eglmeier`,stars:5,text:`Wow! Ein Wort beschreibt diesen Abend: Spektakulär!  Tolle, einzigartige Cocktails. Leckeres Essen. Freundliche Mitarbeiter. Insgesamt ein sehr gelungener Abend!`},
+{name:`Niklas Vogt`,stars:5,text:`Uns hat das Erlebnis in diesem Restaurant sehr gefallen. Kein 08/15 Restaurant, aber wenn man sich auf moderne Fusion Cuisine einlassen kann und innovativ umgesetzte Gerichte mag ist man an einer Top-Adresse in Basel. Der Service ist sehr nett und aufmerksam und die Köche und Barkeeper sind wahre Künstler. Das Labor oder Apotheken Feeling kommt bei jedem Detail rüber. So wird zum Beispiel der Wein in einem Erlenmeyerkolben serviert. Die Mini Cocktails zwischen den Gängen des Menüs präsentieren sich in Reagenzgläsern auf Trockeneis. In Apothekenfläschchen steht Salz und Pfeffer mit einem kleinen Mörser bereit. Viele kleine Details machen das Lokal absolut liebenswert.`},
+{name:`Heinz Ziegler`,stars:4,text:``},
+{name:`E B`,stars:2,text:`Great decor, interesting atmosphere and in general unique concept. On the other hand, It was too loud and almost impossible to talk to people at the table or even to hear the waitress. Mixed feelings about the food, some experiments were ok, others can never be validated or should be repeated, including beets dessert, which were the catalyst that made us leave the place to never come back.`},
+{name:`Ricardo Blank`,stars:3,text:`Bin leider recht endtäuscht (u ja Das kann man nur selbst) Eine Bar, die sich Alchemist nennt , Eine wahnsinnig hochtrabende Karte präsentiert, anschliessend aber weder in der Lage noch willens ist einen Einfachen wie klassischen Drink zuzubereiten arbeitet in meinen Augen am Kunden vorbei. Schade,  denn sowohl location als auch die Atmosphäre sind genial. Schenkt dem Barkeeper Mal nen Barkurs, Könnte helfen`},
+{name:`Kim Lê Ngoc`,stars:4,text:`Original! Plein de petits plats à partager`},
+{name:`Yin Yin Baker`,stars:5,text:`Wow! Sehr lecker. sehr speziell, sehr zu empfehlen. Der Service dürfte noch etwas charmanter sein, aber ansonsten hat es uns sehr gut gefallen. Eine echte Bereicherung für Basel.`},
+{name:`Unkel Nice`,stars:5,text:``},
+{name:`Patricia`,stars:4,text:`Gutes essen tolle Atmosphäre und supper Idee der Zubereitungsarten. Wenig Vegane Optionen. Fürbdie kleinen Portionen etwas überteuert.`},
+{name:`Maria Teresa Sabella`,stars:5,text:``},
+{name:`Nirmilan Kanagu`,stars:5,text:``},
+{name:`Gaetan Gros`,stars:5,text:`Concept soigné, ambiance impeccable, équipe efficace, plats délicieux.`},
+{name:`Mikhael Pol`,stars:5,text:`Tipptopp, super und lecker. Très bon, ambiance géniale et staff super. Merci ;)`},
+{name:`Baggio`,stars:5,text:`Went there yesterday evening and my experience was positive.  (+) Friendly and helpful staff. (+) I liked the idea/ them of the place. (+) For people who drink alcohol the menu includes lots of varieties. (+) Nice location. (+) Cozy atmosphere.  (-) Not too many non-alcoholic options. (-) portions could've been bigger (but that's just my own preference 😁).`},
+{name:`Rashad Bakirov`,stars:5,text:``},
+{name:`Stephanie Affeltranger`,stars:5,text:`Ich wollte dieses Restaurant gerne für meinen Geburtstag ausprobieren und war glücklicherweise ein paar Tage vorher noch mit meinem Verein da. Ich war total begeistert! Die Idee dahinter ist genial, die Qualität des Essens macht die kleinen Portionen wett (mensch kann sich durch alles durchprobieren, miteinander teilen etc.). Die Atmosphäre ist magisch und das Essen wird zu einem Erlebnis! Die Freundlichkeit und die Kompetenz de Personals kam besonders bei meinem Geburtstag zum Vorschein: sie gingen auf meinen Wunsch ein, meinen (kostenlosen) &quot;Geburtstagsshot&quot; alkoholfrei und möglichst ohne grosse Show zu servieren (bin etwas scheu). Auch war es für sie überhaupt kein Problem, dass wir alle aus der Gruppe einzeln/kombiniert das Essen zahlen wollten (sorry für die komplizierte Abrechnung von unserer Seite). Am Schluss hat alles super geklappt. Komme gerne wieder!`},
+{name:`sabxu`,stars:4,text:`Dishes are great! Interesting ingredients. Atmosphere is awesome. Very creative. Drinks are ok can be more surprising though.`},
+{name:`Ralf Boesch`,stars:5,text:`Das Essen war sehr abwechslungsreich und hatte richtig gut geschmeckt. Das Personal hat das Essen trotz vieler Gäste super serviert. Wir waren mit einer grösseren Gruppe da und alle hatten zur selben Zeit was zum Essen. Zudem war es sehr, sehr freundlich. Sehr gute Drinks`},
+{name:`Manfred Müller`,stars:5,text:`What a positive surprise. Cocktails from another planet - an explosion of flavors. Complemented by great food and very friendly staff. Very creative location with outstanding design (go to the bathroom)`},
+{name:`Luca Hunkeler`,stars:4,text:``},
+{name:`M. Gisin`,stars:5,text:``},
+{name:`Fotis Polydoros`,stars:5,text:``},
+{name:`geneviève ewig`,stars:3,text:`Bons plats mais le service est catastrophique`},
+{name:`Marc Geiger`,stars:5,text:`Schönes Lokal, ganz eigener Dekostil, freundliches Personal, Drinks top - Essen war ich leider noch nicht, soll aber auch lecker sein was ich so gehört hab.`},
+{name:`A T`,stars:5,text:`Sehr gute und originelle Cocktails (eher in der oberen Preisklasse)`},
+{name:`Kathrin Arnold`,stars:2,text:`konzept voll ok jedoch fokus nicht aufs essen gelegt sondern auf interior, drinks etc. an abzug/lüftungsoption müsste noch was gehen, kleider, haare riechen stark nach frittiert.`},
+{name:`Jörg Alioth`,stars:5,text:`super genial`},
+{name:`Sonja Grosswiler`,stars:5,text:`Ein Restaurant der anderen Art, man hat das Gefühl in einem Labor zu sein , schönes ,gemütliches Ambiente. Das Essen ist sehr gut , kleine Portionen,  so kann man mehrere Speisen bestellen. Reservierung unbedingt da das Restaurant sehr gut besucht ist 😎`},
+{name:`Hannu Linturi`,stars:5,text:``},
+{name:`Matrix Dancer`,stars:5,text:`Update 2: Ich war mal wieder da, und diesmal bin ich voller Lob!  Look & Feel: Die Sessel sind sehr bequem, das Licht angenehm gedämpft, die Wände haben eben den &quot;Alchemist-Style&quot;. Insgesamt hat man Wert darauf gelegt, eine stimmige Atmosphäre zu schaffen, ohne zuviel Schnickschnack oder Deko zu platzieren.  Hygiene: Ein wichtiges Thema, und erfreulicherweise tadellos. Zertifikat-Check und ausreichend Abstände (zumindest wurden wir so gesetzt); Desinfektionsmittel ausreichend vorhanden. (Normalerweise ist dieser Punkt kein Bestandteil meiner Reviews, aber momentan doch wichtig.)  Preis-Leistung: Für das gebotene (siehe unten) und Basel sogar eher günstig! Ich war sehr überrascht. Sehr faire Preise.  Gästebetreuung: Absolut Top. Höflich, Mehrsprachig, die richtigen Fragen gestellt (Allergien?), bei der Entscheidungsfindung geholfen, sehr freundlich, regelmäßig nochmal vorbeigekommen, um zu fragen, ob man noch etwas braucht oder möchte, aber ohne penetrant zu sein - Sehr gut! Großes Lob und Respekt an die Bedienungen. Die anderen Bars in Basel können sich gerne eine Scheibe vom Service abschneiden!  Getränke/Snacks: Sowohl Getränke als auch Snacks machen durchaus Sinn. Die Karte ist nicht überfüllt; es ist sehr spannend, sich die verschiedenen Ingredienzien erklären zu lassen - manche Drinks sind darauf ausgelegt, selbst am Tisch gemixt zu werden. Die Geschmacksnoten passen sehr gut zueinander. Auch für *Vegetarier* gibt es definitiv genug.  Gibt es denn gar nichts negatives? - Naja, die Pilze im Hibiskus-Bierteig frittiert waren etwas weicher als das andere Gemüse. Sehr lecker, aber etwas weicher - ich nehme an, das liegt daran, dass Pilze viel Wasser enthalten, dadurch die Panade aufweicht. Das ist aber mäkeln auf &quot;mimimi&quot; - Niveau, und rechtfertigt keinesfalls einen Sternabzug oder ähnliches, abgesehen davon war es trotzdem lecker.  FAZIT Die Alchemist-Bar ist sehr geschmackvoll eingerichtet, und man hat die vernünftige Entscheidung getroffen, sich auf verhältnismäßig wenige, dafür aber hochwertige und saisonale Speisen und Getränke mit *frischen* Zutaten zu konzentrieren. Die Bar ist eine Date-Night-Empfehlung, angenehm, spannend, mit hervorragendem Personal, und eine willkommene Abwechslung und ein Pluspunkt für Basel. Auf jeden Fall ausprobieren - Reservierung empfohlen.`},
+{name:`Jeremias Degen`,stars:4,text:`nice`},
+{name:`Michael Bethge`,stars:5,text:`It's been a couple weeks since i had the pleasure to be at this restaurant and what can i say, i miss it allready. Unique Restaurant with love in every dish.  The cocktails or shall i say the drink experiments are so unique and delicious. The food is sourced regional and the dishes are seasonal. The Staff was very thoughtful and took their time to exlpain everything about their food. Only downside, you almost have no chance to go there spontaneously on the weekend, you need atleast 1 week in advance to get a table.  5 out of 5, most definitely coming back here.`},
+{name:`nicola vicario`,stars:3,text:``},
+{name:`Sarah Dörfliger`,stars:5,text:``},
+{name:`I „Kili1529“ I`,stars:5,text:``},
+{name:`Moegge`,stars:4,text:`Sehr gutes Essen und tolle Location. Einfach etwas laut, wenn das Lokal voll besucht ist.`},
+{name:`Aurora Visentin (Aurora Visentin)`,stars:5,text:`Un bar e un bistrot davvero carino, curato e dove si pranza benissimo. Cucina principalmente vegetariana, realizzata in maniera originale e gustosa. Da provare anche i cocktail`},
+{name:`Anastasia Koch`,stars:4,text:`Sehr freundliche Bedienung und Drinks mal anders serviert. Definitv einen Besuch wert.`},
+{name:`Henry Scoles (CPUMAN)`,stars:3,text:`Great concept. Not the greatest execution.  Ambiance: Lovely dinning room that has a well designed lab atmosphere.  Food: Extremely heavy handed with the salt and just a general lack of attention to detail. Top notch ingredients though that could be amazing with a deft hand.  Drinks: Cocktails are lovely to look at, but proper cocktails require blending and emulsification of the ingredients. The thoughtfulness of the presentation is 5 stars, but the drinks themselves are 2 stars.  Overall: With some refinement in the cookery and some changes in the organization and execution this could be an absolute winner.`},
+{name:`Frank P`,stars:5,text:`Have been 5 times already since they opened. I really enjoy their very eclectic and unusual menu. They put a lot of effort and move in crafting their offers and it shows. Great for sharing with friends, but also a really good experience with colleagues. Highly recommended.`},
+{name:`Andreea Munteanu`,stars:5,text:``},
+{name:`Andri Caderas`,stars:5,text:`Sehr gutes Essen, tolles Konzept. Kommen gerne wieder.`},
+{name:`Damla Akyol`,stars:5,text:``},
+{name:`Ozlem L.`,stars:4,text:``},
+{name:`Luca Javier Fehr`,stars:3,text:`Very nice interieur. Fantastic drinks. Food was OK. I expected a bit more. No english menu available!?`},
+{name:`Lukas Imhof`,stars:4,text:``},
+{name:`Leia xy`,stars:5,text:`Wunderbares Restaurant mit absolut leckerem Essen. Ein wundervoller Ort, um einen gemütlichen Abend mit Freund*innen zu verbringen. Der Service ist auch hervorragend.`},
+{name:`Michelle Innella`,stars:5,text:`Magnum opus makes for a delicious evening`},
+{name:`Roberto Foselli`,stars:4,text:``},
+{name:`Lara S.`,stars:1,text:`Leider ein enttäuschendes und irritierendes Erlebnis. Wir hatten einen Tisch innen reserviert, anscheinend gab es jedoch ein Missverständnis, sodass nur noch außen ein Tisch frei war… hätte man charmant lösen können, in dem man es freundlich erklärt und den Tisch draußen anbietet, den wir dann auch gerne genommen hätten. Dem war jedoch nicht der Fall. Der Chef, der bereits bei der Begrüßung (nachdem wir etwas länger unbeachtet im Restaurant standen) extrem gestresst und gereizt auftrat, war nicht in der Lage freundlich eine Lösung zu finden, sondern ging uns aggressiv an und lies uns dann einfach stehen. Unfassbar! So etwas haben wir noch nie erlebt. Inakzeptables, infantiles und unprofessionelles Verhalten…  einen Besuch können wir somit nicht empfehlen.`},
+{name:`happiestella`,stars:5,text:`Grossartige Atmosphäre, spektakuläre Präsentation von Speisen und Getränken, guter Service. Hebt sich ab vom Standard.`},
+{name:`B „Cockaigne“ A`,stars:2,text:`Absoluter Hipsterschuppen aber die Toiletten sind geil!`},
+{name:`Matthias Jakobs`,stars:5,text:``},
+{name:`Lukas Haas`,stars:5,text:``},
+{name:`Lukas Lindt`,stars:5,text:``},
+{name:`Benedikt Christopeit`,stars:5,text:`Wir waren gestern das erste mal im Lokal und sind sehr begeistert. Das Personal ist sehr freundlich und das 4 Gang Menü war einfach nur absolut gigantisch. Besser geht's nicht. Wir kommen gerne wieder.`},
+{name:`Janine Erb`,stars:4,text:`Coole Idee, den Drink selber zu mixen! Die Tapas sind lecker, richtige Menüs fehlten in unseren Augen ein bisschen. Wir kommen aber gerne wieder mixen! ;)`},
+{name:`Thomas Baumann`,stars:4,text:``},
+{name:`Simone Riedweg`,stars:5,text:``},
+{name:`Luiz`,stars:3,text:``},
+{name:`Monika Kaltenberger`,stars:3,text:`Essen definitiv ein Erlebnis und sehr gut. Leider s e h r laut! Gespräche kaum zu führen. Etwas Stoff oder Holz und schon wäre alles gedämpfter...`},
+{name:`Yvonne Stieger`,stars:5,text:`Spannende Getränkekarte.Sehr nette Bedienung.Ein Besuch lohnt sich. Die Glaces außergewöhnliche, aber sehr gut.😋Wer hat schon mal ein Randenglace gegessen, oder Gurke und gebrannte Mandeln.Hmmmm uns hats geschmeckt.Auch das Alchimisten Bier, sehr zu empfehlen 😋😉👍`},
+{name:`Stefan Favrod`,stars:5,text:`Das Essen ist ein Gaumengenuss und ein Augenschmaus. Tolle Kombinationen von Fleisch, Gemüse und Kräutern. Optisch sehr ansprechend serviert. Tipp: Die Töpfe aufgewärmt oder heiss zu servieren, damit das Essen nicht zu schnell erkaltet. Der Wein auf Raumtemperatur sollte kühler serviert werden.`},
+{name:`Julien Dyminski`,stars:5,text:`Good cocktails presented in an original manner. Food is good as well  but the portions are quite small. The interior is pretty nice looking, good atmosphere.`},
+{name:`Musti Taleb`,stars:5,text:`Die Mitarbeiter sind sehr freundlich und zuvorkommend! Die Bar ist eine Augenweide und die Drinks sind innovativ. Vielen Dank an das gesamte Team für diese tolle Atmosphäre.`},
+{name:`Thomas Baumann`,stars:4,text:``},
+{name:`Krisztina Fejes`,stars:4,text:``},
+{name:`Sanja`,stars:5,text:`Endlich ein etwas anderes Restaurant in Basel mit einem genialen Konzept. Das Essen hat ausgezeichnet geschmeckt und das Personal war sehr freundlich und aufmerksam. Ich werde bestimmt wiederkommen.`},
+{name:`Martin Bonko`,stars:5,text:`An interesting pub to meet friends. And Good beer😉`},
+{name:`juan troy`,stars:4,text:``},
+{name:`Mike Oswald`,stars:5,text:`Ausgefallene Molekularküche - ein besonderes Erlebnis.`},
+{name:`Monique Leuthard`,stars:4,text:`Supertoll... sehr speziell,sehr feines Essen,alles nicht 0815..... Ein paar Kleinigkeiten zum Besser machen...:) Musik zu laut,macht es extrem schwierig den Erklärungen des supernetten Servicepersonal zu folgen. Die Getränkekarte ist unübersichtlich. Ansonsten einfach top und ein tolles Erlebnis.`},
+{name:`Luis Alberto Fernández`,stars:4,text:``},
+{name:`Kaden Scoles`,stars:5,text:`Small bites that keep you wanting more.`},
+{name:`Pascal bürki`,stars:5,text:``},
+{name:`Urs B.`,stars:5,text:`Toll, dass in Basel kreative Restaurants entstehen. Das Mittagsmenü ist preislich absolut OK und auch gesund. Grosszügig sind auch die Portionen: Als die Essschalen sich langsam leerten, zauberten sie neue auf den Tisch (wir waren mehrere Personen)..`},
+{name:`Zsolt Varga`,stars:5,text:``},
+{name:`Dániel Kökényesi`,stars:5,text:`Voltunk nyaralni, be ültünk az étterembe, isteni volt 😘 Személyzet rendes, ide érdemes vissza mennünk nyaralni csak ez miatt!`},
+{name:`Toth Andràs`,stars:5,text:``},
+{name:`Gabriella Huszti`,stars:5,text:``},
+{name:`Viktória Nádas`,stars:5,text:``},
+{name:`Bettina Varga`,stars:5,text:``},
+{name:`Janos Imre`,stars:5,text:``},
+{name:`Markitoo`,stars:5,text:``},
+{name:`Mich3l`,stars:4,text:``},
+{name:`Boris Giovannelli`,stars:4,text:``},
+{name:`Nicole Matter`,stars:5,text:`Von A bis Z perfekt ❤️ leidenschaftliche Küche, wunderschönes Lokal mit stil und liebe zum Detail.... Vielen Dank für das Erlebnis und auf weitere schöne Momente.... Weiter so🙏`},
+{name:`Manuel Rieder`,stars:5,text:`Zum Mittagessen, sehr geschmackvoll vielschichtig, gute Bedienung. Gerne wieder....`},
+{name:`Nadine S.`,stars:1,text:`Nachmittag nicht zu empfehlen. Tee lauwarm, müssen erst nach Zucker und Milch fragen. Tee in der Tasse 2dl für 6chf eine Frechheit!`},
+{name:`Mara B`,stars:4,text:``},
+{name:`E. R.`,stars:5,text:`Direkt beim ersten Besuch habe ich mich in das Restaurant verliebt und wusste sofort, dass ich öfter dort essen werde. Die Gerichte sind sehr lecker, die Portionen ausreichend und der Service sehr freundlich und aufmerksam. Ein Besuch ist definitiv voller Magie. Die Dekoration wurde sorgfältig ausgewählt und bis ins letzte Detail durchdacht. Das Konzept ist erstklassig und einzigartig. Die Preise sind sehr fair. Ich kann dieses Restaurant weiterempfehlen :)`},
+{name:`Raphael Glünkin`,stars:5,text:`Neues Gastronomiekonzept in Basel! Nur ein wenig laut..`},
+{name:`Jessica Martinez`,stars:5,text:``},
+{name:`Tünde Braun`,stars:5,text:`Geniales Konzept,nettes Personal. Nur zum weiterempfehlen,Erlebnis pur. Das Menü am Mittag ist abwechlugsreich und aus Regionalen Zutaten zubereitet. Danke Alchemist-Team👏`},
+{name:`Prodan Peter`,stars:5,text:``},
+{name:`Chia-chen Lehahn`,stars:5,text:`We originally just wanted to drink something before we headed back to our hotel.  Because the heavy rain, we ended up having diner at Alchemist.  The staff was always very friendly and attentive.  When we ordered our drinks and sat outside, the staff told us that we could move inside the restaurant when it rains.  I like the decoration very much and you can see through the kitchen.  The diner menu is a bit like tapas, you can order many different kinds of food.  My favorite is the eggplant dip and the bread (combined with the olive oil).`},
+{name:`Jean-Luc Meerwein`,stars:5,text:`Anderst, speziell aber sehr positiv überrascht, das hat Basel noch nicht! Tolle Bedienung, keine 0815 Karte und schönes Interieur. Zu empfehlen: Gemüse frittiert 🤩`},
+{name:`Fernando Studer`,stars:5,text:`Everything you order ends up being an experience. The food and drinks taste great and the glasware is straight out of a chemistry or apothecarys tool kit. I definitely recommend this restaurant to anyone travelling in the heart of the city near Schiff's Landing. 👌`},
+{name:`Jérémie Valot`,stars:5,text:`Tolles Angebot für den Mittag. Das Essen schmeckt super lecker!  Lobenswert ist auch das nachhaltig gestaltete Take-Away Angebot mit dem wiederverwendbaren Behälter.`},
+{name:`Bernd Lehahn`,stars:5,text:`Very friendly and helpful staff. Great for unique drinks as well as creative unusual food`},
+{name:`Vianne`,stars:5,text:``},
+{name:`Bibi Bibi`,stars:5,text:``},
+{name:`Bernadett Prodan`,stars:5,text:``},
+{name:`Sebastian Gambino`,stars:4,text:``},
+{name:`Mathilde Ritter`,stars:5,text:``},
+{name:`Brigitte Lacher`,stars:5,text:`Wir hatten gestern einen wunderbaren Abend; alles passt hier zusammen, ein sehr stimmiges und originelles Konzept! Wir wurden sehr freundlich, herzlich und kompetent bedient, die verschiedenen Speisen, die man nach Belieben selbst zusammenstellen kann, waren alle äusserst ansprechend präsentiert und schmeckten hervorragend! Zu meiner Freude gibt es viele vegane Möglichkeiten. Der Toilettenraum ist visuell eine Freude (und ausserdem sehr sauber). Man verlässt das Lokal und ist glücklich... Wir kommen auf jeden Fall gerne wieder und empfehlen das Lokal natürlich weiter!`},
+{name:`Fred Sat`,stars:5,text:`The ribs are incredible`},
+{name:`Steffen Krienke`,stars:5,text:`Super Erlebnis. Abendessen mit toller Auswahl an Speisen. Tolle Atmosphäre und grandiose Bar mit Getränken zum selber mixen. Chemielabor mal anders ;)  Kommen gern wieder.`},
+{name:`Marina Fink`,stars:5,text:`Schmeckt super, gute Portion und gesund!`},
+{name:`Geraldine`,stars:5,text:`Super lecker und gesund! tolle Bedienung, sehr profesioneller und freundlicher Geschäftsführer, guter Chefkoch. Das Essen ist sehr einzigartig und unübertreffbar. Kann dieses Lokal nur weiter empfehlen.`},
+{name:`rowena schönholzer`,stars:5,text:``},
+{name:`Oliwespi Wespiii`,stars:5,text:`Der Service war ausgezeichnet! Habe alle drei Tagesmenüs probiert und die waren sehr köstlich!! Kann dieses Lokal nur weiterempfehlen!!`},
+{name:`Cas TM`,stars:4,text:`Quick and friendly service and the food tastes amazing!`}
+];
+
+let googleFilter = 'all';
+let googlePage = 0;
+const GOOGLE_PER_PAGE = 30;
+
+function switchFeedbackSource(source) {
+  const tabFT = document.getElementById('fb-tab-foratable');
+  const tabG  = document.getElementById('fb-tab-google');
+  const statsFT = document.getElementById('stats-foratable');
+  const statsG  = document.getElementById('stats-google');
+  const filtersFT = document.getElementById('foratable-filters');
+  const listFT = document.getElementById('feedback-list');
+
+  if (source === 'google') {
+    tabFT.style.background = 'transparent'; tabFT.style.borderColor = 'var(--border)'; tabFT.style.color = 'var(--muted)';
+    tabG.style.background = 'var(--gold-glow)'; tabG.style.borderColor = 'var(--gold)'; tabG.style.color = 'var(--gold)';
+    statsFT.style.display = 'none'; statsG.style.display = 'block';
+    filtersFT.style.display = 'none'; listFT.style.display = 'none';
+    renderGoogle();
+  } else {
+    tabG.style.background = 'transparent'; tabG.style.borderColor = 'var(--border)'; tabG.style.color = 'var(--muted)';
+    tabFT.style.background = 'var(--gold-glow)'; tabFT.style.borderColor = 'var(--gold)'; tabFT.style.color = 'var(--gold)';
+    statsG.style.display = 'none'; statsFT.style.display = 'block';
+    filtersFT.style.display = 'flex'; listFT.style.display = 'block';
+  }
+}
+
+function filterGoogle(type, btn) {
+  document.querySelectorAll('#stats-google .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  googleFilter = type;
+  googlePage = 0;
+  renderGoogle();
+}
+
+function renderGoogle() {
+  const list = document.getElementById('google-list');
+  if (!list) return;
+  const filtered = GOOGLE_REVIEWS.filter(r => {
+    if (googleFilter === '5') return r.stars === 5;
+    if (googleFilter === '4') return r.stars === 4;
+    if (googleFilter === 'low') return r.stars <= 3;
+    if (googleFilter === 'comment') return r.text.trim().length > 0;
+    return true;
+  });
+  const start = googlePage * GOOGLE_PER_PAGE;
+  const slice = filtered.slice(start, start + GOOGLE_PER_PAGE);
+  const cards = slice.map(r => {
+    const col = r.stars >= 4 ? 'var(--success)' : r.stars >= 3 ? 'var(--gold)' : 'var(--crimson-text)';
+    const stars = '★'.repeat(r.stars) + '☆'.repeat(5 - r.stars);
+    const textHtml = r.text ? `<p style="font-size:0.88rem;color:var(--text-sec);font-style:italic;font-family:var(--body);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">&ldquo;${r.text}&rdquo;</p>` : '';
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-2);margin-bottom:6px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:0.75rem;color:var(--gold);flex-shrink:0;">${r.name.charAt(0).toUpperCase()}</div>
+          <div style="font-size:0.9rem;color:var(--text);font-family:var(--body);">${r.name}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:1rem;color:${col};letter-spacing:1px;">${stars}</div>
+        </div>
+      </div>
+      ${textHtml}
+    </div>`;
+  }).join('');
+  const totalPages = Math.ceil(filtered.length / GOOGLE_PER_PAGE);
+  const paginationHtml = filtered.length > GOOGLE_PER_PAGE ? `
+    <div style="display:flex;align-items:center;justify-content:center;gap:var(--sp-1);margin-top:var(--sp-2);padding-top:var(--sp-2);border-top:1px solid var(--border);">
+      <button onclick="gPrev()" style="background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 14px;color:var(--muted);font-family:var(--ui);font-size:0.8rem;cursor:pointer;" ${googlePage===0?'disabled':''}> ← Zurück</button>
+      <span style="font-size:0.78rem;color:var(--muted);font-family:var(--ui);">${googlePage+1} / ${totalPages}</span>
+      <button onclick="gNext(${totalPages})" style="background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 14px;color:var(--muted);font-family:var(--ui);font-size:0.8rem;cursor:pointer;" ${googlePage>=totalPages-1?'disabled':''}>Weiter →</button>
+    </div>` : '';
+  list.innerHTML = cards + paginationHtml;
+}
+
+function gPrev() { if (googlePage > 0) { googlePage--; renderGoogle(); window.scrollTo(0,0); } }
+function gNext(t) { if (googlePage < t-1) { googlePage++; renderGoogle(); window.scrollTo(0,0); } }
 
 </script>
 </body>
