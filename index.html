@@ -955,6 +955,10 @@ select option { background: #111110; }
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
               <span class="schicht-name">Bar Übergabe</span>
             </button>
+            <button class="schicht-btn" data-value="Wöchentliche Putzaufgaben Bar" onclick="selectSchicht(this)" style="grid-column:1/-1;">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <span class="schicht-name">Wöchentliche Putzaufgaben Bar</span>
+            </button>
           </div>
           <input type="hidden" id="inp-schicht" value="">
         </div>
@@ -971,6 +975,114 @@ select option { background: #111110; }
         </div>
       </div>
 
+      <div class="section-label">Bar Aufbau</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-1);">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)';" style="padding:var(--sp-2);display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+          <div style="flex:1;">
+            <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Bar Aufbau</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Vorbereitung vor dem Service</div>
+          </div>
+          <span class="abr-chevron" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
+        </div>
+        <div style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);">
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:4px;">Putzutensilien</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">2 Schalen mit Wasser und Spülmittel an Waschbecken und Bieranlage bereitstellen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Grüne Tücher, grauer Lumpen für Milchdüse, schwarzer Putzlumpen für Kaffeemaschine</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Geräte & Gläser</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Gläser / Spülmaschine überprüfen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Eis und Trockeneis auffüllen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Temperaturlisten ausfüllen (sollte der Vortag vergessen worden sein: bitte nachtragen)</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Kaffee Mise en Place (Bohnen, Milch, Zucker, Tee, …)</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Espuma + veg. Rahm kontrollieren, falls nötig neu</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Reservationsbuch kontrollieren</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Sirupe</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Restbestände aus den Kühlladen kontrollieren — falls nötig auffüllen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Wasserflaschen mit/ohne</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Barstation</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Shaker, Jigger, Löffel, … bereitstellen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Alkfreies Bier, Weine und Prosecco überprüfen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Bierfässer kontrollieren / sind genug eingekühlt</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Elixiere und Spirituosen kontrollieren</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Kräutermischungen für Alchemistendrinks</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Showelemente auffüllen (Zuckerwatte, Sojalecithin, …)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Bar Abbau</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-1);">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)';" style="padding:var(--sp-2);display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+          <div style="flex:1;">
+            <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Bar Abbau</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Schichtabschluss Bar — vollständige Reinigung</div>
+          </div>
+          <span class="abr-chevron" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
+        </div>
+        <div style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Barlöffel, Strainer, Shaker etc. mit Matten zum Waschen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Mixer in Spülmaschine, Motor feucht abwischen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);">Eis wegleeren, Eisbehälter in die Spülmaschine — Trockeneis NICHT wegleeren</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Kühlsumpf</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Sirupe in Kühlllade, Flaschen sauber wischen — ALLE KAPPEN IN DEN GLÄSERSPÜLER</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Kühlsumpf mit heissem Wasser enteisen, sauber wischen und desinfizieren</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Ausgiesser von Spirituosen (Speed Rail + Rückwand) nehmen, waschen, Flaschen mit Korken verschliessen</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Bieranlage</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Zapfhähne mit heissem Wasser, Ablaufgitter in Spülmaschine</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Abfluss desinfizieren</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Speed Rails & Flächen</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Flaschen sauber wischen, Matten in Spülmaschine, Rail desinfizieren</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Oberflächen mit Putzstein säubern — auch Aussenflächen der Kühlladen</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Flaschen</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Leere Flaschen in Flaschencontainer / Leergut-Kiste (Office) auswaschen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Ueli Sorglos in Kisten zurück / DEPOT</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Wasserflaschen entleeren, Lade trocken wischen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Müll entsorgen, Müll-Lade säubern + desinfizieren (neuen Müllsack einspannen!!!)</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Servicewagen (beide) sauber wischen</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Kaffeemaschine</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Maschine sauber wischen, Siebträger etc. mit Wasser spülen und trockenwischen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Dampflanze mit heissem Wasser und Lappen reinigen, Gitter und Abfluss reinigen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Kaffeesatz entleeren, Lade reinigen — BITTE KEINE TEILE IN DIE SPÜLMASCHINE</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">GEÖFFNETE MILCH und RAHM DATIEREN</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Gewaschene Teile wieder versorgen: Trichter, Rahmbläser, Siebe … (Sachen aus dem Labor wieder ins Labor)</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">FLAVOUR BLASTER: Spitze mit Desinfektionsmittel und Tuch reinigen, Aroma Tank herausnehmen</span></div>
+            <div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:var(--r-sm);font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">Immer versuchen bereits am Abend alles aufzufüllen (Sirupe, Spirituosen, Weine, …)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label">Kaffeemaschine putzen</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-1);">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)';" style="padding:var(--sp-2);display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <div style="flex:1;">
+            <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Kaffeemaschine korrekt putzen</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Schritt für Schritt</div>
+          </div>
+          <span class="abr-chevron" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
+        </div>
+        <div style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Siebträger rausnehmen — 1× mit Espressotaste spülen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Spülaufsatz in Siebträger: 1× mit Putzmittel spülen, 1× ohne — Tastenkombination: Espressotaste + runder Wirbel gleichzeitig</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);">Siebträger wieder abnehmen — Schraube rausdrehen, die sich lösende Abdeckung zusammen mit Ablaufgitter von Hand waschen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span><span style="color:var(--text);">Dort wo die Schraube gelöst wurde (Kolben innen) mit der Bürste sauber machen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span><span style="color:var(--text);">Ablaufkanal innen sauber wischen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">6</span><span style="color:var(--text);">Alles wieder zusammenbauen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">7</span><span style="color:var(--text);">Einen Espresso (ohne Kaffeepulver) durchlaufen lassen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">8</span><span style="color:var(--text);">Nun den zweiten Kolben auf die selbe Weise reinigen</span></div>
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);margin-bottom:4px;">Milchdüse</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Milchkanne mit kaltem Wasser und etwas Putzpulver füllen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Milchlanze hinein und mehrmals aufdrehen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Wasser wegleeren, mit frischem Wasser füllen, Milchlanze erneut mehrfach aufdrehen</span></div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">·</span><span style="color:var(--text);">Milchkanne in die Spülmaschine</span></div>
+          </div>
+        </div>
+      </div>
+
       <div class="section-label">Abrechnung</div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-1);">
         <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'" style="padding:var(--sp-2);display:flex;align-items:center;gap:12px;cursor:pointer;">
@@ -983,40 +1095,87 @@ select option { background: #111110; }
         </div>
         <div style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
           <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);">
+
+            <!-- Voraussetzung -->
+            <div style="padding:var(--sp-1) var(--sp-2);background:var(--crimson-bg);border:1px solid var(--crimson-border);border-radius:var(--r-sm);font-size:0.88rem;color:var(--crimson-text);font-family:var(--body);margin-bottom:var(--sp-1);">
+              Nur in Abwesenheit von Mark oder Julian. IMMER erst starten wenn alle Tische abgeschlossen sind.
+            </div>
+
+            <!-- Schritt 1 -->
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-1);">Vorbereitung</div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
-              <span style="color:var(--text);">Warte bis wirklich alle Tische abgeschlossen sind. Erst dann starten.</span>
+              <span style="color:var(--text);">Alle iPads abmelden.</span>
             </div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
-              <span style="color:var(--text);">Am iPad: POS öffnen und zum Tagesabschluss navigieren.</span>
+              <span style="color:var(--text);">Stornos immer begründen und visieren.</span>
             </div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span>
-              <span style="color:var(--text);">Prüfe nochmals alle Tische. Kein einziger darf noch offen sein.</span>
+              <span style="color:var(--text);"><strong style="color:var(--text);">Alles immer auf Bar abschliessen</strong> — Ausnahme: VeloGourmet und Debitor. Zahlt jemand per Rechnung (Investor etc.) → auf Debitor abschliessen.</span>
+            </div>
+
+            <!-- Umbuchung -->
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);">Umbuchung Bar → Kreditkarte</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
+              <span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → Minus tippen → auf <em>Bar</em> abschliessen.</span>
+            </div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
+              <span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → auf <em>Kreditkarte</em> abschliessen.</span>
+            </div>
+
+            <!-- Tagesabschluss -->
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);">Tagesabschluss</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
+              <span style="color:var(--text);">Mit Managercode in Kasse einloggen: <strong style="color:var(--gold);">0000</strong></span>
+            </div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
+              <span style="color:var(--text);">Links unten auf Icon → Berichte anwählen.</span>
+            </div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span>
+              <span style="color:var(--text);">„X Financial" anklicken — prüfen ob alles auf Bar abgeschlossen. Falls nicht: Betrag auf Bar umbuchen.</span>
             </div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span>
-              <span style="color:var(--text);">Tagesabschluss auslösen, den Beleg ausdrucken und abheften.</span>
+              <span style="color:var(--text);">„Z Financial" anklicken → rechts oben Drucker-Symbol.</span>
             </div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span>
-              <span style="color:var(--text);">Am Kartenterminal ebenfalls den Tagesabschluss machen: Menü, Abschluss, bestätigen.</span>
+              <span style="color:var(--text);">Bei allen Terminals Tagesabschluss ziehen (Punkt 4 → Tagesabschluss). Summe beider Abschlüsse zusammenzählen.</span>
+            </div>
+
+            <!-- Stockkontrolle -->
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);">Stockkontrolle</div>
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
+              <span style="color:var(--text);">Beide Portemonnaies auf CHF 300.– Stock bringen, restliches Geld ins Abrechnungscouvert.</span>
             </div>
             <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
-              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">6</span>
-              <span style="color:var(--text);">Bargeld zählen und mit dem Systembeleg vergleichen. Differenzen immer notieren.</span>
+              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
+              <span style="color:var(--text);">Im Chat melden, falls Stockgeld benötigt wird.</span>
             </div>
-            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
-              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">7</span>
-              <span style="color:var(--text);">Kassenbericht ausfüllen und in der vorgesehenen Box deponieren.</span>
+
+            <!-- Mäppli -->
+            <div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);">Ins Abrechnungsmäppli</div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-2);display:flex;flex-direction:column;gap:5px;">
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Terminalabschlüsse</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Financial Z</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Gutscheine</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Stornos</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Debitor Belege</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Einkaufsbelege über Kasse (Jumbo, Migros etc.)</div>
+              <div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Restliches Geld</div>
             </div>
-            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
-              <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">8</span>
-              <span style="color:var(--text);">iPads und Terminals einstecken und aufladen.</span>
-            </div>
+            <div style="font-size:0.88rem;color:var(--muted);font-family:var(--body);font-style:italic;margin-top:4px;">Zusammenheften → in Abrechnungscouvert → in Servicefach ablegen.</div>
+
             <div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:var(--r-sm);font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">
-              Bei Fragen oder Differenzen bitte immer zuerst den Verantwortlichen fragen. Nie einfach schätzen.
+              Bei Problemen immer Mark oder Julian Bescheid geben.
             </div>
           </div>
         </div>
@@ -1184,6 +1343,7 @@ select option { background: #111110; }
           <option value="">Alle Schichten</option>
           <option value="Spätdienst Service">Spätdienst Service</option>
           <option value="Abend Bar">Abend Bar</option>
+          <option value="Wöchentliche Putzaufgaben Bar">Wöchentliche Putzaufgaben Bar</option>
           <option value="Temperaturkontrolle Bar">Temperaturkontrolle Bar</option>
           <option value="Bar Übergabe">Bar Übergabe</option>
         </select>
@@ -1232,6 +1392,36 @@ select option { background: #111110; }
 </div>
 
 <!-- ═══ PAGE: ALLERGENE ═══ -->
+<!-- PAGE: WEINE -->
+<div class="page" id="page-weine">
+  <div class="wrap">
+    <div class="ornament">— ✦ —</div>
+    <p class="page-title">Weine</p>
+    <p class="page-sub">Servicehilfe — Beschreibungen für den Gast</p>
+
+    <div class="section-label">Spumae — Schaumwein</div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Le Contesse · Glera (Prosecco)</div><div class="recipe-meta">Treviso, Veneto, Italien · 11%</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Leichter, lebendiger Prosecco aus dem Veneto. Feine Perlage, frische Noten von grünem Apfel, weissem Pfirsich und Akazie. Am Gaumen angenehm trocken und erfrischend.</p></div></div>
+
+    <div class="section-label">Album — Weisswein</div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Falanghina del Sannio Senete</div><div class="recipe-meta">Janare · La Guardiense, Campania, Italien · 2022 · 13.5%</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Strohgelb mit goldenen Reflexen. Intensiv fruchtig in der Nase — grüner Apfel, Zitrus, tropische Früchte, florale Noten von Wisteria und Rose, Hauch Kamille. Am Gaumen frisch, mineral und strukturiert. Nicht nur ein Aperitifwein — er begleitet das ganze Essen.</p></div></div>
+
+    <div class="section-label">Rosa — Rosé</div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Oeil-de-Perdrix · Pinot Noir</div><div class="recipe-meta">Grillette, Cressier NE, Schweiz · 2019 · 12.5%</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">«Rebhuhnauge» — die edelste Schweizer Rosé-Spezialität, direkte Pressung von Pinot Noir. Zartes Lachsrosa, rötlich-goldene Reflexe. Intensives Bukett von roten Beeren, Erdbeere und Blüten. Lebendig, leicht spritzig, elegant frisch. Das Weingut Grillette zählt laut Gault-Millau zu den 100 besten Gütern der Schweiz — biodynamisch bewirtschaftet.</p></div></div>
+
+    <div class="section-label">Rubrum — Rotwein</div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Aglianico Sannio Lucchero</div><div class="recipe-meta">Janare · La Guardiense, Campania, Italien · 2019 · 13.5%</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Intensives Rubinrot mit violetten Reflexen. Reife Kirschen, dunkle Beeren, süsse Gewürze, Hauch Vanille vom Barrique. Am Gaumen strukturiert und tief, seidene Tannine, langer Abgang. Aglianico ist eine der grossen süditalienischen Trauben — kraftvoll und elegant zugleich.</p></div></div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Dona Maria Tinto — Der maskuline Portugiese</div><div class="recipe-meta">Julio T. Bastos, Alentejo, Portugal · 2018 · 14.5%</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Cuvée aus Aragonez, Cabernet, Alicante Bouschet und Syrah — 150 Jahre Weintradition aus dem heissen Alentejo. Kirsche, Pflaume, Brombeere, Hauch schwarzen Pfeffers. Saftig am Gaumen, gut strukturiert, elegante Tannine. Kraft und Finesse aus dem sonnigen Süden Portugals.</p></div></div>
+
+    <div class="section-label">Besondere Flaschen</div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Serra Ferdinandea — Der französische Italiener</div><div class="recipe-meta">Nero d'Avola &amp; Syrah · Planeta × Oddo, Sicilia · 2020 · CHF 79.–</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Gemeinschaftsprojekt der sizilianischen Familie Planeta und der französischen Familie Oddo. 50% Nero d'Avola, 50% Syrah, auf 450 m Höhe in Agrigento. Dunkle Pflaume, Brombeere, Kirsche, Macchia und elegante Pfeffernote. Kraftvoll, würzig, langer Abgang.</p></div></div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Châteauneuf-du-Pape — Die königliche Französin</div><div class="recipe-meta">Reine Jeanne · Ogier, Vallée du Rhône · 2020 · CHF 99.–</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Grenache, Syrah, Mourvèdre aus biologischem Anbau. Die Ogier-Familie keltert seit 1859 in Châteauneuf-du-Pape. Tiefes Rubinrot. Pflaume, kandierte Orangenzeste, Kirschkompott und Tabak. Weich und saftig am Gaumen, reife Frucht, harmonische Tannine, sehr langer Abgang. 93/100 Falstaff.</p></div></div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">P1 Reserve — Der traditionelle Österreicher</div><div class="recipe-meta">Zweigelt, Blaufränkisch, Merlot · Payr, Carnuntum · 2013 · CHF 129.–</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Weingut Payr im Carnuntum, 30 min östlich von Wien — Mitglied der österreichischen Traditionsweingüter. P1 ist die Paradelinie: 36 Monate im Barrique. Dunkles Rubingranat, Brombeere, reife Kirsche, Nougat, Tabak, edle Holzwürze. Stoffig, komplex, schokoladiger Abgang. 94 Punkte Falstaff.</p></div></div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Finca Los Hoyales — Der limitierte Spanier</div><div class="recipe-meta">Tempranillo · Cruz de Alba, Ribera del Duero · 2017 · CHF 139.–</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Absolute Rarität: 1,8 Hektar, Reben von 1958, biodynamisch, nur 6000 Flaschen pro Jahr. 100% Tempranillo, 22 Monate in neuem Barrique, unfiltriert. Dunkle Früchte, Gewürze, Balsam, Kaffee und Schokolade. Seidig, dicht und nobel. 93 Punkte Peñin.</p></div></div>
+    <div class="recipe-card"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">Opus One</div><div class="recipe-meta">Cabernet Sauvignon, Petit Verdot, Merlot, Cab. Franc, Malbec · Mondavi/Rothschild, Napa · 2018 · CHF 499.–</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><p class="recipe-steps">Die Ikone — 1979 gegründet von Robert Mondavi und Baron Philippe de Rothschild. Bordeaux-Blend aus dem Napa Valley. Dunkle Cassis, Zedernholz, Graphit, Schokolade und florale Nuancen. Am Gaumen enorm tief, cremige Textur, samtige Tannine, endloser Abgang.</p></div></div>
+
+  </div>
+</div>
+
 <div class="page" id="page-allergene">
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
@@ -1342,6 +1532,10 @@ select option { background: #111110; }
 
 <!-- Drawer Content -->
 <div class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-item" onclick="showPage('weine');closeDrawer()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+    Weine
+  </div>
   <div class="nav-drawer-item" onclick="showPage('check');showCheckView('history');closeDrawer()">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Verlauf
@@ -1431,6 +1625,38 @@ const CHECKLISTEN = {
       ]}
     ]
   },
+  'Wöchentliche Putzaufgaben Bar': {
+    sections: [
+      { title: 'Putzaufgaben — 1× pro Woche', tasks: [
+        'Glasflächen an der Rückwand wischen (Nummerierung beginnt von unten): Fläche 1',
+        'Glasflächen an der Rückwand wischen: Fläche 2',
+        'Glasflächen an der Rückwand wischen: Fläche 3',
+        'Glasflächen an der Rückwand wischen: Fläche 4',
+        'Abstellflächen unter den Gläsern wischen, Matten in die Spülmaschine: vordere Seite (Tumbler, Stopfengläser…)',
+        'Abstellflächen unter den Gläsern wischen: Rückwand (Erlenmaier, Stopfengläser…)',
+        'Barstation: Bierstation wischen',
+        'Kaffestation: Fläche auf der Maschine putzen',
+        'Kaffestation: Schubladen ordnen und wischen',
+        'Kaffestation: Unter der Maschine wischen',
+        'Kühlladen innen wischen (Gummidichtungen!!!)',
+        'Lade Wasser wischen',
+        'Lade Wein wischen',
+        'Lade Bier wischen',
+        'Lade Prosecco wischen',
+        'Lade Sirupe Plastikflaschen wischen',
+        'Lade Sirupe Glas wischen',
+      ]},
+      { title: 'Monatlich', tasks: [
+        'Flaschen im Glasregal (Rückwand) wischen',
+        'Ablagen im Kühlhaus wischen',
+        'Ablagen im Bierraum wischen',
+        'Boden Bierkühlung wischen',
+        'Sirupflaschen (Plastik) mit einer Bürste reinigen, danach durch Gläserspüler',
+        'Eismaschine putzen',
+      ]},
+
+    ]
+  },
   'Abend Bar': {
     sections: [
       { title: 'Aufbau & Vorbereitung', tasks: [
@@ -1499,8 +1725,75 @@ function renderCocktails() {
     return `<div class="recipe-card" id="cc-${i}"><div class="recipe-head" onclick="this.closest('.recipe-card').classList.toggle('open')"><div><div class="recipe-name">${c.name}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${c.zubereitung}</p>${notizHtml}</div></div>`;
   }).join('');
 }
-function filterCocktails() { renderCocktails(); }
 
+function initLogin() {
+  const saved = localStorage.getItem('alchemist_user');
+  if (saved) { try { currentUser = JSON.parse(saved); applyLogin(); return; } catch(e) {} }
+  const groups = { Leitung: [], Service: [], Bar: [], 'Küche': [], Reinigung: [] };
+  MITARBEITER.forEach(m => { if (groups[m.rolle] !== undefined) groups[m.rolle].push(m); });
+  const gridMap = { 'Leitung':'grid-leitung', 'Service':'grid-service', 'Bar':'grid-bar', 'Küche':'grid-kueche', 'Reinigung':'grid-reinigung' };
+  Object.entries(groups).forEach(([rolle, members]) => {
+    const grid = document.getElementById(gridMap[rolle]);
+    if (!grid) return;
+    if (members.length === 0) { const prev = grid.previousElementSibling; if (prev) prev.style.display = 'none'; grid.style.display = 'none'; return; }
+    grid.innerHTML = members.map((m) => {
+      const initials = m.name.split(' ').map(n => n[0]).slice(0,2).join('');
+      const cls = ROLLE_STYLE[m.rolle] || 'av-service';
+      return `<button class="avatar-btn" data-idx="${MITARBEITER.indexOf(m)}" onclick="selectUserByIdx(this.dataset.idx)">
+        <div class="av-circle ${cls}">${initials}</div>
+        <div class="av-name">${m.name.split(' ')[0]}</div>
+        <div class="av-role">${m.rolle}</div>
+      </button>`;
+    }).join('');
+  });
+}
+
+function selectUserByIdx(idx) {
+  const m = MITARBEITER[parseInt(idx)];
+  if (!m) return;
+  const cls = ROLLE_STYLE[m.rolle] || 'av-service';
+  currentUser = { name: m.name, rolle: m.rolle, kuerzel: m.kuerzel, cls };
+  localStorage.setItem('alchemist_user', JSON.stringify(currentUser));
+  applyLogin();
+}
+
+function applyLogin() {
+  document.getElementById('login-screen').style.display = 'none';
+  const bar = document.getElementById('greeting-bar');
+  const av = document.getElementById('greeting-av');
+  const txt = document.getElementById('greeting-text');
+  bar.style.display = 'flex';
+  const initials = currentUser.name.split(' ').map(n => n[0]).slice(0,2).join('');
+  av.className = 'greeting-av ' + (currentUser.cls || 'av-service');
+  av.textContent = initials;
+  const hour = new Date().getHours();
+  const greet = hour < 11 ? 'Guten Morgen' : hour < 17 ? 'Hallo' : 'Guten Abend';
+  txt.textContent = greet + ', ' + currentUser.name.split(' ')[0] + ' (' + currentUser.rolle + ')';
+  const kField = document.getElementById('inp-kuerzel');
+  if (kField && !kField.value) kField.value = currentUser.kuerzel.replace('2','');
+  const schichtField = document.getElementById('inp-schicht');
+  if (schichtField && !schichtField.value) {
+    let autoVal = '';
+    if (currentUser.rolle === 'Service') autoVal = 'Spätdienst Service';
+    else if (currentUser.rolle === 'Bar') autoVal = 'Abend Bar';
+    if (autoVal) { const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`); if (btn) selectSchicht(btn); }
+  }
+  validateSetup();
+}
+
+function logout() { localStorage.removeItem('alchemist_user'); localStorage.removeItem('checkliste_draft'); currentUser = null; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('greeting-bar').style.display = 'none'; initLogin(); }
+
+// ─── BAR ÜBERGABE ─────────────────────────────────────────────────────────────
+const UBERGABE_SECTIONS = [
+  { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
+  { title: 'Alkohol – Basis', items: ['Vodka','Gin','Rum','Whiskey','Absinth','Mezcal','Obstbrand','Sake','Grappa'] },
+  { title: 'Alkohol – Spezifisch', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus','Absinthe Bizzare','Graham\'s Port'] },
+  { title: 'Obstbrände', items: ['Apfel','Abricot','Williams','Kirsch'] },
+  { title: 'Schaumwein & Wein', items: ['Prosecco','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape'] },
+  { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Milch','Eisbär'] },
+  { title: 'Garnitur', items: ['Rosmarin','Thymian','Minze','Basilikum','Früchte','Sojalecithin','Zuckerwatte'] },
+  { title: 'Sonstiges', items: ['Gewürzmischung Gin','Gewürzmischung Rum','Würfelzucker','Streichhölzer'] },
+];
 // ─── ALLERGENE DATA ────────────────────────────────────────────────────────────
 const ALLERGENE_FELDER = ['Vegan','Gluten','Sellerie','Laktose','Sesam','Soja','Zitrus','Knoblauch','Mandel','Erdnüsse'];
 const ALLERGENE_DATA = [
@@ -1596,74 +1889,6 @@ const MITARBEITER = [
 const ROLLE_STYLE = { 'Leitung': 'av-leitung', 'Service': 'av-service', 'Bar': 'av-bar', 'Küche': 'av-kueche', 'Reinigung': 'av-reinigung' };
 let currentUser = null;
 
-function initLogin() {
-  const saved = localStorage.getItem('alchemist_user');
-  if (saved) { try { currentUser = JSON.parse(saved); applyLogin(); return; } catch(e) {} }
-  const groups = { Leitung: [], Service: [], Bar: [], 'Küche': [], Reinigung: [] };
-  MITARBEITER.forEach(m => { if (groups[m.rolle] !== undefined) groups[m.rolle].push(m); });
-  const gridMap = { 'Leitung':'grid-leitung', 'Service':'grid-service', 'Bar':'grid-bar', 'Küche':'grid-kueche', 'Reinigung':'grid-reinigung' };
-  Object.entries(groups).forEach(([rolle, members]) => {
-    const grid = document.getElementById(gridMap[rolle]);
-    if (!grid) return;
-    if (members.length === 0) { const prev = grid.previousElementSibling; if (prev) prev.style.display = 'none'; grid.style.display = 'none'; return; }
-    grid.innerHTML = members.map((m) => {
-      const initials = m.name.split(' ').map(n => n[0]).slice(0,2).join('');
-      const cls = ROLLE_STYLE[m.rolle] || 'av-service';
-      return `<button class="avatar-btn" data-idx="${MITARBEITER.indexOf(m)}" onclick="selectUserByIdx(this.dataset.idx)">
-        <div class="av-circle ${cls}">${initials}</div>
-        <div class="av-name">${m.name.split(' ')[0]}</div>
-        <div class="av-role">${m.rolle}</div>
-      </button>`;
-    }).join('');
-  });
-}
-
-function selectUserByIdx(idx) {
-  const m = MITARBEITER[parseInt(idx)];
-  if (!m) return;
-  const cls = ROLLE_STYLE[m.rolle] || 'av-service';
-  currentUser = { name: m.name, rolle: m.rolle, kuerzel: m.kuerzel, cls };
-  localStorage.setItem('alchemist_user', JSON.stringify(currentUser));
-  applyLogin();
-}
-
-function applyLogin() {
-  document.getElementById('login-screen').style.display = 'none';
-  const bar = document.getElementById('greeting-bar');
-  const av = document.getElementById('greeting-av');
-  const txt = document.getElementById('greeting-text');
-  bar.style.display = 'flex';
-  const initials = currentUser.name.split(' ').map(n => n[0]).slice(0,2).join('');
-  av.className = 'greeting-av ' + (currentUser.cls || 'av-service');
-  av.textContent = initials;
-  const hour = new Date().getHours();
-  const greet = hour < 11 ? 'Guten Morgen' : hour < 17 ? 'Hallo' : 'Guten Abend';
-  txt.textContent = greet + ', ' + currentUser.name.split(' ')[0] + ' (' + currentUser.rolle + ')';
-  const kField = document.getElementById('inp-kuerzel');
-  if (kField && !kField.value) kField.value = currentUser.kuerzel.replace('2','');
-  const schichtField = document.getElementById('inp-schicht');
-  if (schichtField && !schichtField.value) {
-    let autoVal = '';
-    if (currentUser.rolle === 'Service') autoVal = 'Spätdienst Service';
-    else if (currentUser.rolle === 'Bar') autoVal = 'Abend Bar';
-    if (autoVal) { const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`); if (btn) selectSchicht(btn); }
-  }
-  validateSetup();
-}
-
-function logout() { localStorage.removeItem('alchemist_user'); localStorage.removeItem('checkliste_draft'); currentUser = null; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('greeting-bar').style.display = 'none'; initLogin(); }
-
-// ─── BAR ÜBERGABE ─────────────────────────────────────────────────────────────
-const UBERGABE_SECTIONS = [
-  { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
-  { title: 'Alkohol – Basis', items: ['Vodka','Gin','Rum','Whiskey','Absinth','Mezcal','Obstbrand','Sake','Grappa'] },
-  { title: 'Alkohol – Spezifisch', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus','Absinthe Bizzare','Graham\'s Port'] },
-  { title: 'Obstbrände', items: ['Apfel','Abricot','Williams','Kirsch'] },
-  { title: 'Schaumwein & Wein', items: ['Prosecco','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape'] },
-  { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Milch','Eisbär'] },
-  { title: 'Garnitur', items: ['Rosmarin','Thymian','Minze','Basilikum','Früchte','Sojalecithin','Zuckerwatte'] },
-  { title: 'Sonstiges', items: ['Gewürzmischung Gin','Gewürzmischung Rum','Würfelzucker','Streichhölzer'] },
-];
 let ubStatus = {};
 
 function startUbergabe() {
@@ -1754,7 +1979,7 @@ function showPage(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navEl = document.getElementById('nav-' + name);
   if (navEl) navEl.classList.add('active');
-  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', cocktails: 'Cocktails', allergene: 'Allergene', reglement: 'Reglement' };
+  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', cocktails: 'Cocktails', allergene: 'Allergene', reglement: 'Reglement', weine: 'Weine' };
   document.getElementById('header-sub').textContent = subs[name] || '';
   closeDrawer();
 }
