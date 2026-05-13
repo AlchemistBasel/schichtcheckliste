@@ -238,12 +238,11 @@ body {
    ═══════════════════════════════════════════════════════════════════════════ */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  background: rgba(4,4,3,0.97);
-  border-top: 1px solid var(--border);
+  background: rgba(22,20,16,0.98);
+  border-top: 1px solid var(--border2);
   display: flex;
   z-index: 100;
   backdrop-filter: blur(12px);
-  /* FIX 5: 64px Gesamthöhe */
   height: 64px;
 }
 .nav-btn {
@@ -258,7 +257,7 @@ body {
   font-size: 0.42rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: #4a4840;
   transition: color 0.18s;
   position: relative;
   padding: 0 4px;
@@ -267,7 +266,7 @@ body {
   width: 22px; height: 22px;
   stroke: currentColor; fill: none;
   stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
-  opacity: 0.55;
+  opacity: 0.7;
   transition: opacity 0.18s, transform 0.15s;
 }
 /* FIX 5: Aktiver State mit Gold-Punkt UNTER dem Icon, nicht Underline */
