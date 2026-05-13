@@ -6,272 +6,789 @@
 <title>Alchemist — Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIX 1 — TYPOGRAFIE-SYSTEM (4 Stufen, konsequent)
+   Display:  Cinzel 400, gold,       für Seitentitel / Splash
+   Label:    Cinzel 400, 0.58rem, 0.12em tracking, 65% opacity → Sections
+   Body:     Crimson Text 400, 1rem, 90% white        → Fliesstext
+   Meta:     system-ui 0.72rem, 50% white             → Hints, Datum
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIX 2 — FARB-SYSTEM (Gold nur für Brand, Crimson für Kritisches)
+   --gold          → Logo, Marken-Elemente, aktive Nav
+   --gold-active   → aktiver State (Button, ausgewählte Schicht)
+   --gold-dim      → sekundäre Akzente, Borders
+   --crimson       → ZERO TOLERANCE, strikte Verbote (kein Warn-Orange mehr)
+   --warn-border   → einfache Warnungen (kein Rouge)
+   --success       → erledigt, OK-States
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #0a0a08; --surface: #111110; --surface2: #1a1a17;
-  --border: #2a2a25; --border2: #333330;
-  --text: #e8e4d8; --muted: #6a6860; --dim: #3a3830;
-  --gold: #c9a84c; --gold-dim: #8a6e28; --gold-glow: rgba(201,168,76,0.12);
-  --success: #4a9a6a; --success-dim: rgba(74,154,106,0.15);
-  --warn: #c04a4a; --warn-dim: rgba(192,74,74,0.1);
-  --font: 'Cinzel', serif; --body: 'Crimson Text', serif; --ui: system-ui, sans-serif;
+  /* Hintergründe */
+  --bg:       #09090700;   /* Basis (transparent für Body-BG) */
+  --bg-solid: #0a0a08;
+  --surface:  #111110;
+  --surface2: #181714;     /* Karten auf Surface */
+  --surface3: #1e1c18;     /* Hover-State */
+
+  /* Borders */
+  --border:   #252420;
+  --border2:  #2e2c27;
+  --border3:  #3a3830;     /* Hover */
+
+  /* Text */
+  --text:     #e8e4d8;     /* 90% warm-white */
+  --text-sec: #9a9690;     /* 60% für Body-Sekundär */
+  --muted:    #6a6860;     /* 42% für Meta, Hints */
+  --dim:      #38362f;     /* deaktiviert */
+
+  /* FIX 2: Gold-System — Gold NUR für Brand & aktive States */
+  --gold:         #c9a84c; /* Brand-Primärfarbe */
+  --gold-active:  #d4b660; /* aktiver State (etwas heller) */
+  --gold-dim:     #7a6228; /* sekundäre Borders, gedimmte Akzente */
+  --gold-glow:    rgba(201,168,76,0.10);
+  --gold-glow2:   rgba(201,168,76,0.16);
+
+  /* FIX 2: Crimson für echte Warnungen / Verbote */
+  --crimson:      #8b1a1a; /* schwer, dunkel — Zero Tolerance */
+  --crimson-text: #d47070; /* Text auf Crimson-Hintergrund */
+  --crimson-bg:   rgba(139,26,26,0.14);
+  --crimson-border: rgba(192,74,74,0.35);
+
+  /* Moderate Warn-Farbe (kein Rot, kein Orange) */
+  --warn:         #b85a1e;
+  --warn-dim:     rgba(184,90,30,0.12);
+  --warn-border:  rgba(184,90,30,0.35);
+  --warn-text:    #c87840;
+
+  /* Erfolg */
+  --success:      #4a9a6a;
+  --success-dim:  rgba(74,154,106,0.12);
+  --success-border: rgba(74,154,106,0.35);
+
+  /* Typo */
+  --font:  'Cinzel', serif;
+  --body:  'Crimson Text', serif;
+  --ui:    system-ui, -apple-system, sans-serif;
+
+  /* FIX 3: Spacing-System (8px Baseline) */
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 40px;
+  --sp-6: 48px;
+
+  /* Radien */
+  --r-sm: 2px;
+  --r-md: 4px;
+  --r-lg: 6px;
 }
-body { font-family: var(--body); background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 80px; font-size: 17px; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg-solid);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 72px; /* FIX 5: Nav ist jetzt 64px hoch */
+  /* FIX 1: Body-Text immer 1rem / 1.65 */
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIX 1: Typografie-Klassen (überall konsistent verwenden)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Display — Seitentitel */
+.t-display {
+  font-family: var(--font);
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* Section-Label (UPPERCASE, tracking, gedimmt) */
+.t-section {
+  font-family: var(--font);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  /* FIX 1: kein opacity unter 70% → lesbar auf Mobile */
+}
+
+/* Sub-Label / Meta */
+.t-meta {
+  font-family: var(--ui);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Body-Sekundär */
+.t-secondary {
+  font-size: 0.88rem;
+  color: var(--text-sec);
+  line-height: 1.6;
+}
+
 /* LOGIN */
-#login-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; flex-direction: column; overflow-y: auto; }
-.login-body { padding: 1.5rem 1rem 2rem; max-width: 600px; margin: 0 auto; width: 100%; }
-.avatar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
-.avatar-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 0.5rem 0.75rem; cursor: pointer; text-align: center; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+#login-screen {
+  position: fixed; inset: 0; background: var(--bg-solid);
+  z-index: 1000; display: flex; flex-direction: column; overflow-y: auto;
+}
+.login-body { padding: var(--sp-3) var(--sp-2) var(--sp-4); max-width: 600px; margin: 0 auto; width: 100%; }
+
+/* FIX 3: Avatar-Grid — konsistenter Spacing */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
+}
+.avatar-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  /* FIX 3: Padding auf 8px-Grid */
+  padding: var(--sp-2) var(--sp-1) 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-1);
+}
 .avatar-btn:hover { border-color: var(--gold-dim); background: var(--gold-glow); }
-.av-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font); font-size: 0.88rem; font-weight: 600; flex-shrink: 0; }
-.av-name { font-size: 0.75rem; color: var(--text); font-family: var(--body); line-height: 1.2; }
+
+.av-circle {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  /* FIX 1: Avatar-Initialen mit Cinzel */
+  font-family: var(--font); font-size: 0.78rem; font-weight: 600; flex-shrink: 0;
+}
+/* FIX 1: Avatar-Name Body-Font, klarer */
+.av-name { font-size: 0.78rem; color: var(--text); font-family: var(--body); line-height: 1.2; }
 .av-role { font-size: 0.6rem; color: var(--muted); font-family: var(--ui); }
-.av-service { background: linear-gradient(135deg, #c9a84c, #e8c97a); color: #3a2800; }
-.av-bar { background: linear-gradient(135deg, #5a7ac9, #8aaae8); color: #0a1440; }
-.av-kueche { background: linear-gradient(135deg, #3a9a5a, #6ac98a); color: #0a2814; }
-.av-reinigung { background: linear-gradient(135deg, #8a6a4a, #b89a7a); color: #2a1800; }
-.av-leitung { background: linear-gradient(135deg, #c94a4a, #e87a7a); color: #3a0000; }
-.login-section { font-family: var(--font); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 8px; }
+
+.av-service  { background: linear-gradient(135deg, #c9a84c, #e8c97a); color: #3a2800; }
+.av-bar      { background: linear-gradient(135deg, #5a7ac9, #8aaae8); color: #0a1440; }
+.av-kueche   { background: linear-gradient(135deg, #3a9a5a, #6ac98a); color: #0a2814; }
+.av-reinigung{ background: linear-gradient(135deg, #8a6a4a, #b89a7a); color: #2a1800; }
+.av-leitung  { background: linear-gradient(135deg, #c94a4a, #e87a7a); color: #3a0000; }
+
+/* FIX 1: Section-Label im Login */
+.login-section {
+  font-family: var(--font);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  /* FIX 3: konsistenter mb */
+  margin-bottom: var(--sp-1);
+  display: flex; align-items: center; gap: var(--sp-1);
+}
 .login-section::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.greeting-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.55rem 1.25rem; display: flex; align-items: center; gap: 8px; }
-.greeting-av { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font); font-size: 0.6rem; font-weight: 600; flex-shrink: 0; }
-.greeting-text { font-size: 0.8rem; color: var(--text); }
-.greeting-change { margin-left: auto; font-size: 0.68rem; color: var(--muted); cursor: pointer; font-family: var(--ui); }
+
+/* GREETING BAR */
+.greeting-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  /* FIX 3: 8px-Grid Padding */
+  padding: var(--sp-1) var(--sp-3);
+  display: flex; align-items: center; gap: var(--sp-1);
+}
+.greeting-av {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font); font-size: 0.6rem; font-weight: 600; flex-shrink: 0;
+}
+/* FIX 1: Greeting-Text als Body */
+.greeting-text { font-size: 0.85rem; color: var(--text); font-family: var(--body); }
+.greeting-change { margin-left: auto; font-size: 0.7rem; color: var(--muted); cursor: pointer; font-family: var(--ui); }
 .greeting-change:hover { color: var(--gold); }
 
-
 /* HEADER */
-.header { background: #000; border-bottom: 1px solid var(--border); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
-.header-word { font-family: var(--font); font-size: 0.95rem; letter-spacing: 0.2em; color: var(--gold); }
+.header {
+  background: #000;
+  border-bottom: 1px solid var(--border);
+  /* FIX 3: 8px-Grid */
+  padding: var(--sp-2) var(--sp-3);
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; z-index: 100;
+}
+/* FIX 1: Header-Logo Display */
+.header-word {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  letter-spacing: 0.22em;
+  color: var(--gold); /* FIX 2: Gold nur für Brand */
+}
 .header-div { width: 1px; height: 14px; background: var(--border2); }
-.header-sub { font-size: 0.8rem; color: var(--muted); font-style: italic; }
-.header-date { margin-left: auto; font-size: 0.72rem; color: var(--muted); font-family: var(--ui); letter-spacing: 0.03em; }
+/* FIX 1: Header-Sub als Meta */
+.header-sub { font-size: 0.82rem; color: var(--muted); font-style: italic; font-family: var(--body); }
+.header-date { margin-left: auto; font-size: 0.72rem; color: var(--muted); font-family: var(--ui); }
 
-/* BOTTOM NAV */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.97); border-top: 1px solid var(--border); display: flex; z-index: 100; backdrop-filter: blur(8px); }
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 2px 13px; background: none; border: none; cursor: pointer; font-family: var(--font); font-size: 0.44rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); transition: color 0.2s; }
-.nav-btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.6; transition: opacity 0.2s; }
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIX 5: BOTTOM NAV — 5 Items, 44px+ Touch-Target, Gold-Punkt-Indicator
+   ═══════════════════════════════════════════════════════════════════════════ */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(4,4,3,0.97);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  /* FIX 5: 64px Gesamthöhe */
+  height: 64px;
+}
+.nav-btn {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  /* FIX 5: mind. 44px Touch-Target durch height: 100% */
+  height: 100%;
+  background: none; border: none; cursor: pointer;
+  /* FIX 1: Nav-Label kleiner, Cinzel */
+  font-family: var(--font);
+  font-size: 0.42rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  transition: color 0.18s;
+  position: relative;
+  padding: 0 4px;
+}
+.nav-btn svg {
+  width: 22px; height: 22px;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  opacity: 0.55;
+  transition: opacity 0.18s, transform 0.15s;
+}
+/* FIX 5: Aktiver State mit Gold-Punkt UNTER dem Icon, nicht Underline */
 .nav-btn.active { color: var(--gold); }
-.nav-btn.active svg { opacity: 1; }
-.nav-btn.active::after { content: ''; display: block; width: 16px; height: 1px; background: var(--gold); margin-top: 1px; opacity: 0.6; }
+.nav-btn.active svg { opacity: 1; transform: translateY(-1px); }
+/* FIX 2: Gold-Punkt = Gold (Brand-Signalfarbe) */
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.nav-btn:hover:not(.active) { color: var(--text-sec); }
+.nav-btn:hover:not(.active) svg { opacity: 0.75; }
+
+/* FIX 5: "Mehr"-Button für ausgelagerte Seiten */
+.nav-drawer {
+  position: fixed;
+  bottom: 64px; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 99;
+  display: none;
+  padding: var(--sp-2);
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+}
+.nav-drawer.open { display: flex; }
+.nav-drawer-item {
+  flex: 1; min-width: 100px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px var(--sp-2);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  cursor: pointer; color: var(--muted);
+  font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.15s, border-color 0.15s;
+}
+.nav-drawer-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.4; stroke-linecap: round; flex-shrink: 0; opacity: 0.7; }
+.nav-drawer-item:hover { color: var(--gold); border-color: var(--gold-dim); }
+.nav-drawer-overlay { position: fixed; inset: 0; bottom: 64px; z-index: 98; display: none; }
+.nav-drawer-overlay.open { display: block; }
 
 /* PAGES */
-.page { display: none; } .page.active { display: block; }
+.page { display: none; }
+.page.active { display: block; }
 
 /* SHARED */
-.wrap { max-width: 600px; margin: 0 auto; padding: 1.5rem 1rem; }
-.page-title { font-family: var(--font); font-size: 1.3rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text); margin-bottom: 0.35rem; }
-.page-sub { font-size: 0.85rem; color: var(--muted); font-style: italic; margin-bottom: 1.5rem; }
-.ornament { color: var(--gold-dim); font-size: 0.9rem; letter-spacing: 0.3em; margin-bottom: 0.6rem; }
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 0.6rem; }
-.btn-gold { width: 100%; padding: 0.85rem; background: transparent; color: var(--gold); border: 1px solid var(--gold-dim); border-radius: 2px; font-family: var(--font); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-.btn-gold:hover { background: var(--gold-glow); }
-.btn-gold:disabled { border-color: var(--border); color: var(--dim); cursor: not-allowed; }
-.btn-green { width: 100%; padding: 0.9rem; background: transparent; color: var(--success); border: 1px solid var(--success); border-radius: 2px; font-family: var(--font); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
-.btn-green:hover { background: var(--success-dim); }
-.section-label { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); padding: 1rem 0 0.5rem; display: flex; align-items: center; gap: 8px; }
-.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-label { display: block; font-family: var(--font); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.4rem; }
-input[type="text"], select, textarea { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--border); border-radius: 2px; font-size: 0.95rem; font-family: var(--body); background: var(--bg); color: var(--text); transition: border-color 0.2s; appearance: none; }
-input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold-dim); box-shadow: 0 0 0 3px var(--gold-glow); }
-input::placeholder, textarea::placeholder { color: var(--dim); font-style: italic; }
-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.9rem center; padding-right: 2.5rem; cursor: pointer; }
-select option { background: #111110; }
-.field-group { margin-bottom: 1.1rem; }
-.hint { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; font-style: italic; }
-.saving-msg { font-size: 0.8rem; color: var(--muted); margin-top: 0.6rem; font-style: italic; text-align: center; min-height: 1em; }
+.wrap { max-width: 600px; margin: 0 auto; padding: var(--sp-3) var(--sp-2); }
 
+/* FIX 1: Page-Title ist Display, Sub ist Body-Italic */
+.page-title {
+  font-family: var(--font); font-size: 1.3rem; font-weight: 400;
+  letter-spacing: 0.1em; color: var(--text);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 0.9rem; color: var(--muted);
+  font-style: italic; font-family: var(--body);
+  /* FIX 3: konsistenter Abstand */
+  margin-bottom: var(--sp-4);
+}
+.ornament { color: var(--gold-dim); font-size: 0.85rem; letter-spacing: 0.32em; margin-bottom: var(--sp-1); }
+
+/* FIX 3: Card — konsistentes Padding auf 8px-Grid */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: var(--sp-1);
+}
+
+/* FIX 2: Btn-Gold → nur für Brand-Actions, nicht für jeden Sekundär-Button */
+.btn-gold {
+  width: 100%; padding: var(--sp-2) var(--sp-3);
+  background: transparent; color: var(--gold);
+  border: 1px solid var(--gold-dim); border-radius: var(--r-sm);
+  font-family: var(--font); font-size: 0.68rem; letter-spacing: 0.15em;
+  text-transform: uppercase; cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+}
+.btn-gold:hover { background: var(--gold-glow2); border-color: var(--gold); }
+.btn-gold:disabled { border-color: var(--border); color: var(--dim); cursor: not-allowed; }
+
+.btn-green {
+  width: 100%; padding: 14px var(--sp-3);
+  background: transparent; color: var(--success);
+  border: 1px solid var(--success); border-radius: var(--r-sm);
+  font-family: var(--font); font-size: 0.68rem; letter-spacing: 0.15em;
+  text-transform: uppercase; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: var(--sp-1);
+  transition: background 0.18s;
+}
+.btn-green:hover { background: var(--success-dim); }
+
+/* FIX 3: Section-Label mit konsistenten Abständen */
+.section-label {
+  font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold-dim);
+  /* FIX 3: 32px oben, 16px unten = 8px-Grid */
+  padding: var(--sp-4) 0 var(--sp-2);
+  display: flex; align-items: center; gap: var(--sp-1);
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+label {
+  display: block;
+  font-family: var(--font); font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold-dim);
+  margin-bottom: 6px;
+}
+input[type="text"], select, textarea {
+  width: 100%;
+  /* FIX 3: 8px-Grid Padding */
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  font-size: 1rem; font-family: var(--body);
+  background: var(--bg-solid); color: var(--text);
+  transition: border-color 0.2s;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--gold-dim);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+input::placeholder, textarea::placeholder { color: var(--dim); font-style: italic; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236a6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.9rem center;
+  padding-right: 2.5rem; cursor: pointer;
+}
+select option { background: #111110; }
+
+/* FIX 3: Field-Group Spacing */
+.field-group { margin-bottom: var(--sp-3); }
+.hint { font-size: 0.78rem; color: var(--muted); margin-top: 5px; font-style: italic; font-family: var(--body); }
+.saving-msg { font-size: 0.8rem; color: var(--muted); margin-top: var(--sp-1); font-style: italic; text-align: center; min-height: 1.2em; }
 
 /* BAR ÜBERGABE */
-.ub-table { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
-.ub-section-head { padding: 0.6rem 1rem; background: var(--bg); border-bottom: 1px solid var(--border); font-family: var(--font); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); }
-.ub-row { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); gap: 0.5rem; }
+.ub-table { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--sp-2); overflow: hidden; }
+.ub-section-head {
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--bg-solid); border-bottom: 1px solid var(--border);
+  /* FIX 1: Section-Head mit Cinzel */
+  font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--gold-dim);
+}
+.ub-row {
+  display: grid; grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  /* FIX 3: 8px-Grid */
+  padding: var(--sp-1) var(--sp-2);
+  border-bottom: 1px solid var(--border); gap: var(--sp-1);
+}
 .ub-row:last-child { border-bottom: none; }
-.ub-name { font-size: 0.88rem; color: var(--text); }
+.ub-name { font-size: 0.9rem; color: var(--text); font-family: var(--body); }
 .ub-btn-group { display: flex; gap: 4px; }
-.ub-btn { padding: 4px 10px; border-radius: 2px; border: 1px solid var(--border); background: transparent; cursor: pointer; font-size: 0.7rem; font-family: var(--ui); color: var(--muted); transition: all 0.15s; white-space: nowrap; }
-.ub-btn:hover { border-color: var(--border2); color: var(--text); }
-.ub-btn.da { border-color: var(--success); color: var(--success); background: var(--success-dim); }
-.ub-btn.nachf { border-color: #c9a84c; color: #c9a84c; background: rgba(201,168,76,0.12); }
-.ub-btn.best { border-color: var(--warn); color: var(--warn); background: var(--warn-dim); }
+.ub-btn {
+  padding: 5px 10px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: transparent;
+  cursor: pointer; font-size: 0.7rem; font-family: var(--ui);
+  color: var(--muted); transition: all 0.15s; white-space: nowrap;
+}
+.ub-btn:hover { border-color: var(--border3); color: var(--text); }
+.ub-btn.da    { border-color: var(--success); color: var(--success); background: var(--success-dim); }
+.ub-btn.nachf { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+/* FIX 2: "Bestellen" als Warn, nicht als Rot */
+.ub-btn.best  { border-color: var(--warn-border); color: var(--warn-text); background: var(--warn-dim); }
+
 .ub-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 50%; background: var(--warn); color: white; font-size: 0.6rem; font-family: var(--ui); font-weight: 600; margin-left: 5px; padding: 0 4px; }
-.ub-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1rem; margin-bottom: 1rem; }
-.ub-sum-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-.ub-sum-row:last-child { border-bottom: none; }
-.ub-sum-name { color: var(--text); }
-.ub-sum-status { font-size: 0.72rem; padding: 2px 8px; border-radius: 2px; }
-.ub-sum-nachf { background: rgba(201,168,76,0.15); color: #c9a84c; }
-.ub-sum-best { background: var(--warn-dim); color: var(--warn); }
-.notif-banner { background: rgba(192,74,74,0.12); border: 1px solid rgba(192,74,74,0.3); border-radius: 3px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
-.notif-banner-text { font-size: 0.85rem; color: #d07070; }
-.notif-banner-count { font-family: var(--font); font-size: 0.7rem; color: var(--warn); }
+.notif-banner { background: var(--warn-dim); border: 1px solid var(--warn-border); border-radius: var(--r-md); padding: 12px var(--sp-2); margin-bottom: var(--sp-2); display: flex; align-items: center; gap: 12px; }
+.notif-banner-text { font-size: 0.85rem; color: var(--warn-text); font-family: var(--body); }
+.notif-banner-count { font-family: var(--font); font-size: 0.7rem; color: var(--warn-text); }
 
 /* CHECKLISTE */
-.sess-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 0.8rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
-.sess-name { font-family: var(--font); font-size: 0.75rem; letter-spacing: 0.08em; color: var(--gold); }
-.sess-info { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.sess-bar {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  /* FIX 3: 16px Padding */
+  padding: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-2);
+}
+/* FIX 1: Session-Name in Cinzel (Brand) */
+.sess-name { font-family: var(--font); font-size: 0.78rem; letter-spacing: 0.08em; color: var(--gold); }
+/* FIX 1: Session-Info in Body-Meta */
+.sess-info { font-size: 0.8rem; color: var(--muted); margin-top: 2px; font-style: italic; font-family: var(--body); }
+
+/* FIX 3: Progress-Bar Spacing */
 .prog-text { font-size: 0.72rem; color: var(--muted); text-align: right; font-family: var(--ui); }
-.prog-bar { height: 2px; background: var(--border); margin-top: 5px; width: 90px; margin-left: auto; }
-.prog-fill { height: 100%; background: var(--gold); transition: width 0.3s; }
-.task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; margin-bottom: 0.35rem; overflow: hidden; }
-.task-card:hover { border-color: var(--border2); }
-.task-card.done { border-color: rgba(74,154,106,0.3); background: rgba(74,154,106,0.04); }
-.task-main { display: flex; align-items: flex-start; cursor: pointer; padding: 0.75rem 0.9rem; user-select: none; }
-.task-check { width: 19px; height: 19px; border: 1px solid var(--border2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px; margin-right: 0.8rem; transition: all 0.2s; }
-.task-check svg { width: 10px; height: 10px; stroke: var(--success); opacity: 0; transition: opacity 0.15s; }
-.task-card.done .task-check { border-color: var(--success); background: var(--success-dim); }
+.prog-bar { height: 2px; background: var(--border); margin-top: 6px; width: 96px; margin-left: auto; border-radius: 1px; }
+.prog-fill { height: 100%; background: var(--gold); transition: width 0.35s ease; border-radius: 1px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIX 4: CUSTOM CHECKBOXEN — 24×24px, Gold-State, Tap-Animation
+   ═══════════════════════════════════════════════════════════════════════════ */
+.task-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  /* FIX 3: konsistenter Abstand */
+  margin-bottom: 6px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.task-card:hover { border-color: var(--border3); }
+.task-card.done { border-color: rgba(74,154,106,0.25); background: rgba(74,154,106,0.03); }
+
+.task-main {
+  display: flex; align-items: flex-start;
+  cursor: pointer;
+  /* FIX 3: 8px-Grid Padding */
+  padding: var(--sp-2);
+  user-select: none;
+  gap: 12px;
+}
+
+/* FIX 4: 24×24px Custom Checkbox mit Animation */
+.task-check {
+  width: 24px; height: 24px;
+  border: 1.5px solid var(--border3);
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+  /* FIX 4: Smooth Transition für State-Wechsel */
+  transition: border-color 0.18s, background 0.18s, transform 0.12s;
+  position: relative;
+}
+/* FIX 4: Hover-State sichtbar */
+.task-main:hover .task-check {
+  border-color: var(--gold-dim);
+}
+/* FIX 4: Checkmark SVG */
+.task-check svg {
+  width: 12px; height: 12px;
+  stroke: var(--success);
+  stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+  fill: none;
+  opacity: 0;
+  /* FIX 4: Fade-In des Checkmarks */
+  transition: opacity 0.15s ease;
+}
+/* FIX 4: Done-State — Gold Border + Success-BG */
+.task-card.done .task-check {
+  border-color: var(--success);
+  background: var(--success-dim);
+}
 .task-card.done .task-check svg { opacity: 1; }
-.task-card.done .task-text { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border2); }
-.task-text { font-size: 0.9rem; line-height: 1.5; color: var(--text); flex: 1; }
-.note-btn { background: none; border: none; padding: 2px 6px; cursor: pointer; color: var(--muted); font-size: 0.7rem; font-family: var(--ui); transition: color 0.15s; flex-shrink: 0; }
+
+/* FIX 4: Tap-Animation Klasse (wird per JS kurz gesetzt) */
+.task-check.tapping {
+  transform: scale(0.88);
+}
+.task-check.tapped {
+  transform: scale(1.08);
+}
+
+/* FIX 1: Task-Text als Body */
+.task-text {
+  font-size: 0.93rem; line-height: 1.55;
+  color: var(--text); font-family: var(--body);
+  flex: 1;
+  transition: color 0.15s;
+}
+.task-card.done .task-text {
+  color: var(--muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--border3);
+}
+
+.note-btn {
+  background: none; border: none;
+  padding: 2px 6px; cursor: pointer;
+  color: var(--muted); font-size: 0.72rem; font-family: var(--ui);
+  transition: color 0.15s; flex-shrink: 0; margin-top: 2px;
+}
 .note-btn:hover { color: var(--gold); }
 .note-btn.has-note { color: var(--gold-dim); }
-.note-wrap { padding: 0 0.9rem 0.7rem 3.2rem; display: none; }
+
+.note-wrap { padding: 0 var(--sp-2) var(--sp-1) 52px; display: none; }
 .note-wrap.open { display: block; }
-.note-input { width: 100%; padding: 0.45rem 0.7rem; border: 1px solid var(--border); border-radius: 2px; font-size: 0.85rem; font-family: var(--body); color: var(--text); background: var(--bg); resize: none; min-height: 52px; font-style: italic; }
+.note-input {
+  width: 100%; padding: 7px var(--sp-1);
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  font-size: 0.88rem; font-family: var(--body);
+  color: var(--text); background: var(--bg-solid);
+  resize: none; min-height: 52px; font-style: italic;
+}
 .note-input:focus { outline: none; border-color: var(--gold-dim); }
-.submit-area { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1.25rem; margin-top: 1.5rem; text-align: center; }
-.submit-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; font-style: italic; }
-.back-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 0.8rem; padding: 0; display: flex; align-items: center; gap: 4px; font-family: var(--ui); margin-bottom: 0.75rem; }
+
+.submit-area {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  /* FIX 3: 24px Padding */
+  padding: var(--sp-3);
+  margin-top: var(--sp-4); text-align: center;
+}
+.submit-note { font-size: 0.82rem; color: var(--muted); margin-bottom: var(--sp-2); font-style: italic; font-family: var(--body); }
+
+.back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 0.82rem; padding: 0;
+  display: flex; align-items: center; gap: 4px;
+  font-family: var(--ui); margin-bottom: var(--sp-2);
+}
 .back-btn:hover { color: var(--gold); }
-.pause-btn { background: rgba(201,168,76,0.08); border: 1px solid var(--gold-dim); border-radius: 3px; cursor: pointer; color: var(--gold-dim); font-size: 0.7rem; padding: 5px 12px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--ui); margin-bottom: 0.75rem; letter-spacing: 0.03em; transition: all 0.2s; white-space: nowrap; }
-.pause-btn:hover { background: rgba(201,168,76,0.18); color: var(--gold); border-color: var(--gold); }
-.resume-banner { margin-top: 1rem; padding: 0.8rem 1rem; border: 1px solid var(--gold-dim); border-radius: 2px; background: var(--gold-glow); }
-.resume-label { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.35rem; }
-.resume-info { font-size: 0.85rem; color: var(--text); margin-bottom: 0.6rem; }
+
+.pause-btn {
+  background: rgba(201,168,76,0.06); border: 1px solid var(--gold-dim);
+  border-radius: var(--r-md); cursor: pointer;
+  color: var(--gold-dim); font-size: 0.7rem;
+  padding: 6px var(--sp-2);
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--ui); margin-bottom: var(--sp-2);
+  letter-spacing: 0.03em; transition: all 0.18s; white-space: nowrap;
+}
+.pause-btn:hover { background: var(--gold-glow2); color: var(--gold); border-color: var(--gold); }
+
+.resume-banner { margin-top: var(--sp-2); padding: var(--sp-2); border: 1px solid var(--gold-dim); border-radius: var(--r-sm); background: var(--gold-glow); }
+.resume-label { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
+.resume-info { font-size: 0.88rem; color: var(--text); margin-bottom: var(--sp-1); font-family: var(--body); }
 .autosave { font-size: 0.62rem; color: var(--dim); font-style: italic; margin-top: 3px; }
 
 /* TEMPERATUR */
-.temp-table { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 1rem; }
-.temp-head { display: grid; grid-template-columns: 1.4fr 1.1fr 0.9fr 1.2fr; padding: 0.55rem 0.9rem; background: var(--bg); border-bottom: 1px solid var(--border); }
+.temp-table { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: var(--sp-2); }
+.temp-head {
+  display: grid; grid-template-columns: 1.4fr 1.1fr 0.9fr 1.2fr;
+  padding: var(--sp-1) var(--sp-2);
+  background: var(--bg-solid); border-bottom: 1px solid var(--border);
+}
 .temp-head span { font-family: var(--font); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); }
-.temp-row { display: grid; grid-template-columns: 1.4fr 1.1fr 0.9fr 1.2fr; align-items: center; padding: 0.65rem 0.9rem; border-bottom: 1px solid var(--border); gap: 0.4rem; }
+.temp-row {
+  display: grid; grid-template-columns: 1.4fr 1.1fr 0.9fr 1.2fr;
+  align-items: center;
+  padding: var(--sp-1) var(--sp-2);
+  border-bottom: 1px solid var(--border); gap: var(--sp-1);
+}
 .temp-row:last-child { border-bottom: none; }
-.temp-name { font-size: 0.85rem; color: var(--text); }
+.temp-name { font-size: 0.88rem; color: var(--text); font-family: var(--body); }
 .temp-nr { font-size: 0.72rem; color: var(--muted); font-family: var(--ui); }
-.temp-soll { font-size: 0.8rem; color: var(--muted); font-style: italic; }
-.temp-inp { width: 100%; padding: 0.45rem 0.5rem; border: 1px solid var(--border); border-radius: 2px; background: var(--bg); color: var(--text); font-size: 0.95rem; font-family: var(--body); text-align: center; }
-.temp-inp.ok { border-color: var(--success); background: rgba(74,154,106,0.06); color: #6dba8a; }
-.temp-inp.warn { border-color: var(--warn); background: var(--warn-dim); color: #d07070; }
+.temp-soll { font-size: 0.82rem; color: var(--muted); font-style: italic; font-family: var(--body); }
+.temp-inp { width: 100%; padding: 6px var(--sp-1); border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg-solid); color: var(--text); font-size: 1rem; font-family: var(--body); text-align: center; }
+.temp-inp.ok   { border-color: var(--success); background: rgba(74,154,106,0.06); color: #6dba8a; }
+.temp-inp.warn { border-color: var(--crimson); background: var(--crimson-bg); color: var(--crimson-text); }
 .temp-status { font-size: 0.65rem; text-align: center; margin-top: 2px; min-height: 12px; font-family: var(--ui); }
-.temp-status.ok { color: var(--success); }
-.temp-status.warn { color: var(--warn); }
+.temp-status.ok   { color: var(--success); }
+.temp-status.warn { color: var(--crimson-text); }
 
 /* REZEPTE */
-.search-box { position: relative; margin-bottom: 1.25rem; }
+.search-box { position: relative; margin-bottom: var(--sp-3); }
 .search-box input { padding-left: 2.2rem; }
 .search-icon { position: absolute; left: 0.7rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
-.filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.filter-btn { padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px; background: transparent; color: var(--muted); font-size: 0.75rem; font-family: var(--ui); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+
+/* FIX 3: Filter-Bar Spacing */
+.filter-bar { display: flex; gap: var(--sp-1); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.filter-btn {
+  padding: 5px var(--sp-2); border: 1px solid var(--border);
+  border-radius: 20px; background: transparent;
+  color: var(--muted); font-size: 0.75rem; font-family: var(--ui);
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
 .filter-btn.active { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
-.recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 0.6rem; overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
-.recipe-card:hover { border-color: var(--border2); }
-.recipe-head { padding: 0.9rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.recipe-name { font-family: var(--font); font-size: 0.8rem; letter-spacing: 0.06em; color: var(--text); }
-.recipe-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; font-style: italic; }
+
+.recipe-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--sp-1); overflow: hidden; cursor: pointer; transition: border-color 0.2s; }
+.recipe-card:hover { border-color: var(--border3); }
+.recipe-head { padding: var(--sp-2) var(--sp-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* FIX 1: Recipe-Name in Cinzel (kleinerer Display) */
+.recipe-name { font-family: var(--font); font-size: 0.82rem; letter-spacing: 0.06em; color: var(--text); }
+.recipe-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; font-style: italic; font-family: var(--body); }
 .recipe-tags { display: flex; gap: 4px; flex-wrap: wrap; }
 .tag { font-size: 0.62rem; padding: 2px 7px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
-.tag-vegan { border-color: #2d7a4a; color: #4a9a6a; background: rgba(74,154,106,0.1); }
-.tag-gluten { border-color: #8a4a2a; color: #c07050; background: rgba(192,112,80,0.1); }
-.tag-dessert { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
-.tag-beilage { border-color: #4a6a8a; color: #6a9aba; background: rgba(106,154,186,0.1); }
-.tag-sauce { border-color: #6a4a8a; color: #9a7aba; background: rgba(154,122,186,0.1); }
-.tag-backen { border-color: #8a6a2a; color: #ba9a4a; background: rgba(186,154,74,0.1); }
-.tag-hauptgang { border-color: #4a4a8a; color: #7a7aba; background: rgba(122,122,186,0.1); }
-.tag-cocktail { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
-.tag-alkoholfrei { border-color: #2d7a4a; color: #4a9a6a; background: rgba(74,154,106,0.1); }
-.tag-genesis { border-color: #7a4a9a; color: #aa7aca; background: rgba(170,122,202,0.1); }
-.tag-wallhala { border-color: #4a6a9a; color: #7a9aca; background: rgba(122,154,202,0.1); }
-.recipe-chevron { color: var(--muted); font-size: 1rem; transition: transform 0.2s; flex-shrink: 0; }
+.tag-vegan     { border-color: #2d7a4a; color: #4a9a6a; background: rgba(74,154,106,0.08); }
+.tag-gluten    { border-color: #8a4a2a; color: #c07050; background: rgba(192,112,80,0.08); }
+.tag-dessert   { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+.tag-beilage   { border-color: #4a6a8a; color: #6a9aba; background: rgba(106,154,186,0.08); }
+.tag-sauce     { border-color: #6a4a8a; color: #9a7aba; background: rgba(154,122,186,0.08); }
+.tag-backen    { border-color: #8a6a2a; color: #ba9a4a; background: rgba(186,154,74,0.08); }
+.tag-hauptgang { border-color: #4a4a8a; color: #7a7aba; background: rgba(122,122,186,0.08); }
+.tag-cocktail  { border-color: var(--gold-dim); color: var(--gold); background: var(--gold-glow); }
+
+.recipe-chevron { color: var(--muted); font-size: 0.9rem; transition: transform 0.2s; flex-shrink: 0; }
 .recipe-card.open .recipe-chevron { transform: rotate(180deg); }
-.recipe-body { display: none; padding: 0 1rem 1rem; border-top: 1px solid var(--border); }
+.recipe-body { display: none; padding: 0 var(--sp-2) var(--sp-2); border-top: 1px solid var(--border); }
 .recipe-card.open .recipe-body { display: block; }
-.recipe-section { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-dim); margin: 0.9rem 0 0.4rem; }
-.recipe-ing { font-size: 0.88rem; color: var(--text); line-height: 1.6; padding-left: 1rem; }
+/* FIX 1: Recipe-Section als Section-Label */
+.recipe-section { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); margin: var(--sp-2) 0 var(--sp-1); }
+.recipe-ing { font-size: 0.9rem; color: var(--text); line-height: 1.65; padding-left: var(--sp-2); font-family: var(--body); }
 .recipe-ing li { margin-bottom: 1px; }
-.recipe-steps { font-size: 0.88rem; color: var(--text); line-height: 1.7; }
-.recipe-note { font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-left: 2px solid var(--gold-dim); }
+.recipe-steps { font-size: 0.9rem; color: var(--text); line-height: 1.7; font-family: var(--body); }
+.recipe-note { font-size: 0.84rem; color: var(--muted); font-style: italic; margin-top: var(--sp-1); padding: var(--sp-1) var(--sp-2); border-left: 2px solid var(--gold-dim); font-family: var(--body); }
 
 /* ALLERGENE */
-.allergen-search { margin-bottom: 1rem; }
-.dish-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 0.5rem; overflow: hidden; cursor: pointer; }
-.dish-head { padding: 0.8rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
-.dish-name { font-size: 0.9rem; color: var(--text); font-family: var(--body); }
+.allergen-search { margin-bottom: var(--sp-2); }
+.dish-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--sp-1); overflow: hidden; cursor: pointer; }
+.dish-head { padding: var(--sp-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+/* FIX 1: Dish-Name in Body (kein Serif-Wechsel) */
+.dish-name { font-size: 0.92rem; color: var(--text); font-family: var(--body); }
 .dish-vegan { font-size: 0.65rem; color: var(--success); font-family: var(--ui); margin-top: 1px; }
 .allergen-pills { display: flex; gap: 4px; flex-wrap: wrap; }
 .a-pill { font-size: 0.6rem; padding: 2px 7px; border-radius: 20px; font-family: var(--ui); white-space: nowrap; }
-.a-pill.yes { background: rgba(192,74,74,0.15); color: #d07070; border: 1px solid rgba(192,74,74,0.3); }
-.a-pill.no { background: rgba(74,154,106,0.1); color: #5aaa7a; border: 1px solid rgba(74,154,106,0.2); }
-.dish-detail { display: none; padding: 0 1rem 0.9rem; border-top: 1px solid var(--border); }
+.a-pill.yes { background: var(--crimson-bg); color: var(--crimson-text); border: 1px solid var(--crimson-border); }
+.dish-detail { display: none; padding: 0 var(--sp-2) var(--sp-2); border-top: 1px solid var(--border); }
 .dish-card.open .dish-detail { display: block; }
-.allergen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; margin-top: 0.75rem; }
-.ag-item { padding: 5px 9px; border-radius: 2px; display: flex; align-items: center; gap: 5px; font-size: 0.75rem; }
-.ag-item.yes { background: rgba(192,74,74,0.12); color: #d07070; border: 1px solid rgba(192,74,74,0.25); }
-.ag-item.no { background: rgba(74,154,106,0.08); color: #5aaa7a; border: 1px solid rgba(74,154,106,0.15); }
+.allergen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 6px; margin-top: var(--sp-2); }
+.ag-item { padding: 5px 9px; border-radius: var(--r-sm); display: flex; align-items: center; gap: 5px; font-size: 0.75rem; }
+.ag-item.yes { background: var(--crimson-bg); color: var(--crimson-text); border: 1px solid var(--crimson-border); }
 .ag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.ag-item.yes .ag-dot { background: #c04a4a; }
-.ag-item.no .ag-dot { background: #4a9a6a; }
-.dish-notiz { font-size: 0.78rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; padding: 0.4rem 0.7rem; border-left: 2px solid var(--gold-dim); }
+.ag-item.yes .ag-dot { background: var(--crimson-text); }
+.dish-notiz { font-size: 0.78rem; color: var(--muted); font-style: italic; margin-top: var(--sp-1); padding: var(--sp-1) var(--sp-2); border-left: 2px solid var(--gold-dim); font-family: var(--body); }
 
 /* GUIDELINES */
-.guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 0.6rem; overflow: hidden; cursor: pointer; }
-.guide-head { padding: 0.9rem 1rem; display: flex; align-items: center; gap: 0.75rem; }
-.guide-num { width: 26px; height: 26px; border: 1px solid var(--gold-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font); font-size: 0.65rem; color: var(--gold); flex-shrink: 0; }
-.guide-title { font-size: 0.9rem; color: var(--text); flex: 1; }
-.guide-body { display: none; padding: 0 1rem 1rem 1rem; border-top: 1px solid var(--border); }
+.guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); margin-bottom: var(--sp-1); overflow: hidden; cursor: pointer; }
+.guide-head { padding: var(--sp-2); display: flex; align-items: center; gap: 12px; }
+.guide-num { width: 28px; height: 28px; border: 1px solid var(--gold-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font); font-size: 0.65rem; color: var(--gold); flex-shrink: 0; }
+.guide-title { font-size: 0.92rem; color: var(--text); flex: 1; font-family: var(--body); }
+.guide-body { display: none; padding: 0 var(--sp-2) var(--sp-2); border-top: 1px solid var(--border); }
 .guide-card.open .guide-body { display: block; }
-.guide-step { display: flex; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; line-height: 1.6; }
+.guide-step { display: flex; gap: 12px; padding: var(--sp-1) 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; line-height: 1.6; font-family: var(--body); }
 .guide-step:last-child { border-bottom: none; }
 .guide-step-num { font-family: var(--font); font-size: 0.65rem; color: var(--gold-dim); flex-shrink: 0; margin-top: 3px; }
 .guide-step-text { color: var(--text); }
-.guide-tip { margin-top: 0.75rem; padding: 0.6rem 0.8rem; background: var(--gold-glow); border: 1px solid var(--gold-dim); border-radius: 2px; font-size: 0.82rem; color: var(--muted); font-style: italic; }
-.guide-warn { margin-top: 0.75rem; padding: 0.6rem 0.8rem; background: var(--warn-dim); border: 1px solid rgba(192,74,74,0.3); border-radius: 2px; font-size: 0.82rem; color: #d07070; }
+.guide-tip { margin-top: 12px; padding: var(--sp-1) var(--sp-2); background: var(--gold-glow); border: 1px solid var(--gold-dim); border-radius: var(--r-sm); font-size: 0.84rem; color: var(--muted); font-style: italic; font-family: var(--body); }
 
 /* SUCCESS */
-.success-wrap { max-width: 440px; margin: 4rem auto; padding: 0 1rem; text-align: center; }
-.success-orn { color: var(--gold); font-size: 1.5rem; letter-spacing: 0.3em; margin-bottom: 1rem; opacity: 0.6; }
-.success-title { font-family: var(--font); font-size: 1.3rem; font-weight: 400; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
-.success-text { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; font-style: italic; }
+.success-wrap { max-width: 440px; margin: var(--sp-6) auto; padding: 0 var(--sp-2); text-align: center; }
+.success-orn { color: var(--gold); font-size: 1.4rem; letter-spacing: 0.3em; margin-bottom: var(--sp-2); opacity: 0.6; }
+.success-title { font-family: var(--font); font-size: 1.3rem; font-weight: 400; letter-spacing: 0.1em; margin-bottom: var(--sp-1); }
+.success-text { color: var(--muted); font-size: 0.92rem; margin-bottom: var(--sp-4); font-style: italic; font-family: var(--body); }
 
-/* HISTORY FAB */
-.hist-fab { position: fixed; bottom: 72px; right: 1rem; background: var(--surface); color: var(--gold); border: 1px solid var(--border2); border-radius: 2px; padding: 0.5rem 0.9rem; font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px; z-index: 90; }
+/* HISTORY */
+.hist-fab { position: fixed; bottom: 80px; right: var(--sp-2); background: var(--surface); color: var(--gold); border: 1px solid var(--border3); border-radius: var(--r-sm); padding: var(--sp-1) var(--sp-2); font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 6px; z-index: 90; }
 .hist-fab svg { width: 13px; height: 13px; stroke: var(--gold-dim); fill: none; }
-
-/* HISTORY VIEW */
-.hist-entry { background: var(--surface); border: 1px solid var(--border); border-radius: 2px; margin-bottom: 0.5rem; overflow: hidden; }
-.hist-head { padding: 0.8rem 1rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; gap: 0.75rem; }
-.hist-who { font-family: var(--font); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--gold); }
-.hist-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; font-style: italic; }
-.hist-badge { font-family: var(--font); font-size: 0.55rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 1px; flex-shrink: 0; }
-.badge-service { border: 1px solid #334; color: #8899cc; background: rgba(100,120,200,0.08); }
-.badge-bar { border: 1px solid var(--border2); color: var(--gold-dim); background: var(--gold-glow); }
-.badge-temp { border: 1px solid #334455; color: #6688aa; background: rgba(80,100,140,0.08); }
-.hist-tasks { padding: 0 1rem 0.75rem; display: none; border-top: 1px solid var(--border); }
+.hist-entry { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-sm); margin-bottom: var(--sp-1); overflow: hidden; }
+.hist-head { padding: var(--sp-2); display: flex; align-items: center; justify-content: space-between; cursor: pointer; gap: 12px; }
+.hist-who { font-family: var(--font); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--gold); }
+.hist-meta { font-size: 0.78rem; color: var(--muted); margin-top: 2px; font-style: italic; font-family: var(--body); }
+.hist-tasks { padding: 0 var(--sp-2) 12px; display: none; border-top: 1px solid var(--border); }
 .hist-tasks.open { display: block; }
-.hist-task-row { display: flex; align-items: baseline; gap: 0.4rem; padding: 0.28rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+.hist-task-row { display: flex; align-items: baseline; gap: var(--sp-1); padding: 4px 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; font-family: var(--body); }
 .hist-task-row:last-child { border-bottom: none; }
-.ht-done { color: var(--success); font-size: 0.62rem; }
-.ht-skip { color: var(--dim); font-size: 0.62rem; }
-.ht-note { color: var(--muted); font-size: 0.75rem; font-style: italic; }
-.hist-empty { text-align: center; color: var(--muted); padding: 2.5rem 1rem; font-size: 0.88rem; font-style: italic; }
-.hist-filters { display: flex; gap: 0.6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.hist-filters select { flex: 1; min-width: 130px; padding: 0.5rem 2rem 0.5rem 0.75rem; font-size: 0.85rem; }
-.hist-filters input { flex: 1; min-width: 120px; padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+.hist-empty { text-align: center; color: var(--muted); padding: var(--sp-5) var(--sp-2); font-size: 0.9rem; font-style: italic; font-family: var(--body); }
+.hist-filters { display: flex; gap: var(--sp-1); margin-bottom: var(--sp-2); flex-wrap: wrap; }
+.hist-filters select { flex: 1; min-width: 130px; padding: var(--sp-1) 2rem var(--sp-1) 12px; font-size: 0.88rem; }
+.hist-filters input  { flex: 1; min-width: 120px; padding: var(--sp-1) 12px; font-size: 0.88rem; }
 
 @media (max-width: 480px) {
   .temp-head, .temp-row { grid-template-columns: 1.2fr 0.9fr 0.8fr 1fr; }
   .allergen-grid { grid-template-columns: 1fr 1fr; }
 }
-.schicht-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.schicht-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 1rem 0.6rem 0.85rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--muted); transition: all 0.18s; text-align: center; width: 100%; position: relative; }
-.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: rgba(201,168,76,0.06); }
-.schicht-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); box-shadow: inset 0 0 20px rgba(201,168,76,0.07); }
-.schicht-btn.selected::after { content: '✓'; position: absolute; top: 6px; right: 8px; font-size: 0.6rem; color: var(--gold); font-family: var(--ui); opacity: 0.8; }
+
+/* SCHICHT-AUSWAHL */
+.schicht-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-1); }
+.schicht-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  /* FIX 3: 8px-Grid Padding */
+  padding: var(--sp-2) var(--sp-1) 14px;
+  cursor: pointer; display: flex; flex-direction: column;
+  align-items: center; gap: var(--sp-1);
+  color: var(--muted); transition: all 0.18s; text-align: center;
+  width: 100%; position: relative;
+}
+.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: var(--gold-glow); }
+/* FIX 2: Selected-State mit Gold (aktiver State) */
+.schicht-btn.selected {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-glow2);
+}
+.schicht-btn.selected::after {
+  content: '✓'; position: absolute; top: 6px; right: 8px;
+  font-size: 0.6rem; color: var(--gold); font-family: var(--ui); opacity: 0.9;
+}
+/* FIX 1: Schicht-Name in Cinzel */
 .schicht-name { font-family: var(--font); font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; }
 @media (max-width: 400px) { .schicht-grid { grid-template-columns: 1fr; } }
-.ika line { stroke:#c9a84c; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-.ika polygon { fill:#c9a84c; fill-opacity:0.05; stroke:none; }
-.ika .dim { stroke:#8a6e28 !important; stroke-width:0.5; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REGLEMENT — FIX 2: Crimson für Zero-Tolerance, klar unterscheidbar
+   ═══════════════════════════════════════════════════════════════════════════ */
+.reg-item {
+  font-size: 0.9rem; color: var(--text); line-height: 1.65;
+  padding-left: var(--sp-2); border-left: 2px solid var(--border3);
+  font-family: var(--body);
+}
+/* FIX 2: Normale Warnung = Warn-Orange */
+.reg-warn {
+  font-size: 0.9rem; line-height: 1.65;
+  padding-left: var(--sp-2); border-left: 2px solid var(--warn-border);
+  color: var(--warn-text); font-family: var(--body);
+}
+/* FIX 2: ZERO-TOLERANCE = Crimson — eigene Karte */
+.reg-zero-tolerance {
+  font-size: 0.9rem; line-height: 1.65;
+  padding: var(--sp-2); border-radius: var(--r-sm);
+  border-left: 3px solid var(--crimson-text);
+  background: var(--crimson-bg);
+  color: var(--crimson-text); font-family: var(--body);
+  margin-top: var(--sp-1);
+}
+/* FIX 1+3: Reglement-Card Padding */
+.reg-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  /* FIX 3: konsistentes Padding */
+  padding: var(--sp-3) var(--sp-3) var(--sp-2);
+  margin-bottom: var(--sp-1);
+}
+.reg-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--sp-1); }
+
+/* ICON */
+.ika line { stroke: #c9a84c; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ika polygon { fill: #c9a84c; fill-opacity: 0.05; stroke: none; }
+.ika .dim { stroke: #8a6e28 !important; stroke-width: 0.5; }
 </style>
 </head>
 <body>
@@ -293,10 +810,8 @@ select option { background: #111110; }
     <line class="ika" x1="-95" y1="18" x2="95" y2="18" stroke-width="1"/>
     <line class="ika" x1="-95" y1="18" x2="-38" y2="70" stroke-width="1"/>
     <line class="ika" x1="95" y1="18" x2="38" y2="70" stroke-width="1"/>
-    <line class="ika" x1="-62" y1="-52" x2="38" y2="70" stroke-width="1"/>
-    <line class="ika" x1="62" y1="-52" x2="-38" y2="70" stroke-width="1"/>
-    <line class="ika" x1="-95" y1="18" x2="38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
-    <line class="ika" x1="95" y1="18" x2="-38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
+    <line class="ika" x1="-62" y1="-52" x2="38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
+    <line class="ika" x1="62" y1="-52" x2="-38" y2="70" stroke-width="0.6" stroke="#8a6e28"/>
     <line class="ika" x1="-38" y1="70" x2="38" y2="70" stroke-width="1"/>
     <line class="ika" x1="-38" y1="70" x2="0" y2="108" stroke-width="1"/>
     <line class="ika" x1="38" y1="70" x2="0" y2="108" stroke-width="1"/>
@@ -309,7 +824,7 @@ select option { background: #111110; }
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div style="background:#000;border-bottom:1px solid var(--border);padding:1rem 1.5rem;display:flex;align-items:center;gap:10px;">
+  <div style="background:#000;border-bottom:1px solid var(--border);padding:var(--sp-2) var(--sp-3);display:flex;align-items:center;gap:10px;">
     <svg class="ika" width="22" height="22" viewBox="-110 -120 220 240">
       <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
       <line x1="0" y1="-108" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
@@ -329,13 +844,13 @@ select option { background: #111110; }
       <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
       <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
     </svg>
-    <span style="font-family:var(--font);font-size:0.95rem;letter-spacing:0.2em;color:var(--gold);">ALCHEMIST</span>
+    <span style="font-family:var(--font);font-size:0.95rem;letter-spacing:0.22em;color:var(--gold);">ALCHEMIST</span>
     <div style="width:1px;height:14px;background:var(--border2);"></div>
-    <span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Wer bist du?</span>
+    <span style="font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">Wer bist du?</span>
   </div>
   <div class="login-body">
-    <div style="text-align:center;margin-bottom:1.5rem;">
-      <svg width="64" height="64" viewBox="-110 -120 220 240" style="margin-bottom:0.75rem;">
+    <div style="text-align:center;margin-bottom:var(--sp-4);">
+      <svg width="64" height="64" viewBox="-110 -120 220 240" style="margin-bottom:var(--sp-2);">
         <polygon points="0,-108 -62,-52 62,-52" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
         <polygon points="-38,70 38,70 0,108" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
         <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
@@ -356,9 +871,9 @@ select option { background: #111110; }
         <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
         <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
       </svg>
-      <div style="color:var(--gold-dim);font-size:0.9rem;letter-spacing:0.3em;margin-bottom:0.5rem;">— ✦ —</div>
-      <p style="font-family:var(--font);font-size:1.25rem;font-weight:400;letter-spacing:0.1em;margin-bottom:0.3rem;">Guten Tag</p>
-      <p style="font-size:0.85rem;color:var(--muted);font-style:italic;">Wähle deinen Namen um zu beginnen</p>
+      <div style="color:var(--gold-dim);font-size:0.85rem;letter-spacing:0.32em;margin-bottom:var(--sp-1);">— ✦ —</div>
+      <p class="page-title" style="margin-bottom:4px;">Guten Tag</p>
+      <p class="page-sub" style="margin-bottom:0;">Wähle deinen Namen um zu beginnen</p>
     </div>
     <div class="login-section">Leitung</div>
     <div class="avatar-grid" id="grid-leitung"></div>
@@ -373,7 +888,7 @@ select option { background: #111110; }
   </div>
 </div>
 
-<!-- GREETING BAR (shown after login) -->
+<!-- GREETING BAR -->
 <div class="greeting-bar" id="greeting-bar" style="display:none;">
   <div class="greeting-av" id="greeting-av"></div>
   <span class="greeting-text" id="greeting-text"></span>
@@ -415,7 +930,7 @@ select option { background: #111110; }
       <div class="ornament">— ✦ —</div>
       <p class="page-title">Neue Schicht</p>
       <p class="page-sub">Bitte alle Felder ausfüllen um zu beginnen</p>
-      <div class="card" style="padding:1.5rem;">
+      <div class="card" style="padding:var(--sp-3);">
         <div class="field-group">
           <label>Kürzel</label>
           <input type="text" id="inp-kuerzel" placeholder="z.B. JR" maxlength="4" autocomplete="off" autocorrect="off" autocapitalize="characters">
@@ -445,91 +960,94 @@ select option { background: #111110; }
         </div>
         <div class="field-group">
           <label>Datum</label>
-          <input type="date" id="inp-datum" style="color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:0.7rem 0.9rem;width:100%;font-size:0.95rem;font-family:var(--body);appearance:none;-webkit-appearance:none;color-scheme:dark;">
+          <input type="date" id="inp-datum" style="color:var(--text);background:var(--bg-solid);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-2);width:100%;font-size:1rem;font-family:var(--body);appearance:none;-webkit-appearance:none;color-scheme:dark;">
           <p class="hint">Nach Mitternacht: Datum auf den Vortag setzen (Schichtbeginn zählt)</p>
         </div>
         <button class="btn-gold" id="btn-start" onclick="startChecklist()">Checkliste starten</button>
         <div id="resume-banner" style="display:none;" class="resume-banner">
           <div class="resume-label">Offene Schicht</div>
           <div class="resume-info" id="resume-info"></div>
-          <button onclick="resumeChecklist()" class="btn-gold" style="margin-top:0.5rem;">↩ Weiter machen</button>
+          <button onclick="resumeChecklist()" class="btn-gold" style="margin-top:var(--sp-1);">↩ Weiter machen</button>
         </div>
       </div>
 
-      <div class="section-label" style="margin-top:1.5rem;">Abrechnung</div>
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin-bottom:0.5rem;">
-        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'" style="padding:1rem 1.25rem;display:flex;align-items:center;gap:0.9rem;cursor:pointer;">
+      <div class="section-label">Abrechnung</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--sp-1);">
+        <div onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';this.querySelector('.abr-chevron').style.transform=this.nextElementSibling.style.display==='block'?'rotate(180deg)':'rotate(0deg)'" style="padding:var(--sp-2);display:flex;align-items:center;gap:12px;cursor:pointer;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
           <div style="flex:1;">
             <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Abrechnung</div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;font-style:italic;">Schritt für Schritt</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Schritt für Schritt</div>
           </div>
           <span class="abr-chevron" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
         </div>
-        <div style="display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--border);">
-          <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.9rem;">
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+        <div style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
+          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span>
               <span style="color:var(--text);">Warte bis wirklich alle Tische abgeschlossen sind. Erst dann starten.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span>
               <span style="color:var(--text);">Am iPad: POS öffnen und zum Tagesabschluss navigieren.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span>
               <span style="color:var(--text);">Prüfe nochmals alle Tische. Kein einziger darf noch offen sein.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span>
               <span style="color:var(--text);">Tagesabschluss auslösen, den Beleg ausdrucken und abheften.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span>
               <span style="color:var(--text);">Am Kartenterminal ebenfalls den Tagesabschluss machen: Menü, Abschluss, bestätigen.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">6</span>
               <span style="color:var(--text);">Bargeld zählen und mit dem Systembeleg vergleichen. Differenzen immer notieren.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">7</span>
               <span style="color:var(--text);">Kassenbericht ausfüllen und in der vorgesehenen Box deponieren.</span>
             </div>
-            <div style="display:flex;gap:0.75rem;font-size:0.88rem;line-height:1.6;">
+            <div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);">
               <span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">8</span>
               <span style="color:var(--text);">iPads und Terminals einstecken und aufladen.</span>
             </div>
-            <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:2px;font-size:0.82rem;color:var(--muted);font-style:italic;">
-              💡 Bei Fragen oder Differenzen bitte immer zuerst den Verantwortlichen fragen. Nie einfach schätzen.
+            <div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:var(--r-sm);font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">
+              Bei Fragen oder Differenzen bitte immer zuerst den Verantwortlichen fragen. Nie einfach schätzen.
             </div>
           </div>
         </div>
       </div>
 
-      <div class="section-label" style="margin-top:1.5rem;">Team & Arbeitszeit</div>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdWoXO3M-vR8Lx07zBzgcq3P5sNUD2EaMw7krjsXQ5sGMfRIA/viewform" target="_blank" style="text-decoration:none;display:block;margin-bottom:0.5rem;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.9rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
+      <div class="section-label">Team & Arbeitszeit</div>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSdWoXO3M-vR8Lx07zBzgcq3P5sNUD2EaMw7krjsXQ5sGMfRIA/viewform" target="_blank" style="text-decoration:none;display:block;margin-bottom:var(--sp-1);">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-2);display:flex;align-items:center;gap:12px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <div>
             <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Stundenzettel ausfüllen</div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;font-style:italic;">Google Formular → öffnet im Browser</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Google Formular → öffnet im Browser</div>
           </div>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="margin-left:auto;flex-shrink:0;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </div>
       </a>
       <a href="https://docs.google.com/spreadsheets/d/13fReI0QG8etVF_lROzxu-vi1tRcbgV1BMY641U9VuLA/edit?usp=sharing" target="_blank" style="text-decoration:none;display:block;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem;display:flex;align-items:center;gap:0.9rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/></svg>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-2);display:flex;align-items:center;gap:12px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.borderColor='var(--border)'">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--gold-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           <div>
             <div style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);">Arbeitsplan ansehen</div>
-            <div style="font-size:0.78rem;color:var(--muted);margin-top:2px;font-style:italic;">Google Sheets → immer aktuell</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:2px;font-style:italic;font-family:var(--body);">Google Sheets → immer aktuell</div>
           </div>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="margin-left:auto;flex-shrink:0;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </div>
       </a>
     </div>
   </div>
+
+  <!-- CHECKLISTE ACTIVE -->
+  <div id="view-checklist" style="display:none;">
     <div class="wrap">
       <div class="sess-bar">
         <div>
@@ -550,7 +1068,7 @@ select option { background: #111110; }
       <div class="submit-area">
         <p class="submit-note">Erledigte Aufgaben werden gespeichert. Nicht abgehakte Punkte als offen markiert.</p>
         <button class="btn-green" onclick="submitChecklist()">
-          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
           Schicht abschliessen & speichern
         </button>
         <div class="saving-msg" id="saving-msg"></div>
@@ -569,7 +1087,7 @@ select option { background: #111110; }
         </div>
         <div style="text-align:right;">
           <div class="prog-text" id="temp-prog-text">0 / 4 eingetragen</div>
-          <div class="prog-bar" style="width:90px;margin-left:auto;margin-top:5px;"><div class="prog-fill" id="temp-prog-fill" style="width:0%"></div></div>
+          <div class="prog-bar" style="width:96px;margin-left:auto;margin-top:6px;"><div class="prog-fill" id="temp-prog-fill" style="width:0%"></div></div>
         </div>
       </div>
       <div class="temp-table">
@@ -599,14 +1117,14 @@ select option { background: #111110; }
           <div><input class="temp-inp" type="number" step="0.1" placeholder="°C" id="t3" data-min="6" data-max="7" oninput="checkTemp(this,3)"><div class="temp-status" id="ts3"></div></div>
         </div>
       </div>
-      <div class="card" style="padding:0.75rem 1rem; margin-bottom:1rem;">
+      <div class="card" style="padding:var(--sp-2);margin-bottom:var(--sp-2);">
         <label>Notizen (optional)</label>
         <textarea class="note-input" id="temp-notiz" placeholder="Auffälligkeiten, Bemerkungen…" rows="2" style="width:100%;"></textarea>
       </div>
       <div class="submit-area">
         <p class="submit-note">Alle Temperaturen werden mit Datum, Uhrzeit und Kürzel gespeichert.</p>
         <button class="btn-green" onclick="submitTemp()">
-          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
           Temperaturkontrolle speichern
         </button>
         <div class="saving-msg" id="temp-saving-msg"></div>
@@ -625,13 +1143,11 @@ select option { background: #111110; }
         </div>
         <div style="text-align:right;">
           <div class="prog-text" id="ub-prog-text">0 Produkte kontrolliert</div>
-          <div class="prog-bar" style="width:90px;margin-left:auto;margin-top:5px;"><div class="prog-fill" id="ub-prog-fill" style="width:0%"></div></div>
+          <div class="prog-bar" style="width:96px;margin-left:auto;margin-top:6px;"><div class="prog-fill" id="ub-prog-fill" style="width:0%"></div></div>
         </div>
       </div>
-
       <div id="ub-container"></div>
-
-      <div class="submit-area" style="margin-top:1.5rem;">
+      <div class="submit-area" style="margin-top:var(--sp-4);">
         <p class="submit-note">Der Status wird für den nächsten Tag gespeichert. Bar-Team sieht offene Punkte beim Login.</p>
         <button class="btn-green" onclick="submitUbergabe()">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
@@ -656,9 +1172,9 @@ select option { background: #111110; }
   <div id="view-history" style="display:none;">
     <div class="wrap">
       <button class="back-btn" onclick="showCheckView('setup')">← Zurück</button>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-2);">
         <p class="page-title" style="margin:0;">Verlauf</p>
-        <button onclick="loadHistoryFromSheet()" style="background:none;border:1px solid var(--border);border-radius:2px;padding:4px 10px;color:var(--muted);font-size:0.72rem;font-family:var(--ui);cursor:pointer;display:flex;align-items:center;gap:5px;" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+        <button onclick="loadHistoryFromSheet()" style="background:none;border:1px solid var(--border);border-radius:var(--r-sm);padding:5px var(--sp-1);color:var(--muted);font-size:0.72rem;font-family:var(--ui);cursor:pointer;display:flex;align-items:center;gap:5px;" onmouseover="this.style.borderColor='var(--gold-dim)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
           <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
           Aktualisieren
         </button>
@@ -676,8 +1192,6 @@ select option { background: #111110; }
       <div id="hist-list"></div>
     </div>
   </div>
-
-
 </div>
 
 <!-- ═══ PAGE: REZEPTE ═══ -->
@@ -737,85 +1251,109 @@ select option { background: #111110; }
     <p class="page-title">Reglement</p>
     <p class="page-sub">Mitarbeiterhandbuch — Verhaltensregeln & Informationen</p>
 
+    <!-- FIX 1+2+3: Reglement Sections -->
     <div class="section-label">Kommunikation & Allgemeines</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">Wir pflegen eine offene und ehrliche Kommunikation – immer.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Bei Problemen immer die direkte Vorgesetzte Person zuziehen.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Bei Krankmeldungen zuerst Ersatz im Team suchen (WhatsApp), dann Vorgesetzte informieren.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Wichtige Vorkommnisse per Gruppenchat durchgeben.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);color:var(--warn);">Es wird KEINE Art von sexueller Belästigung toleriert. (NULL TOLERANZ POLITIK)</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-item" style="border-left-color:var(--gold-dim);">Wir pflegen eine offene und ehrliche Kommunikation – immer.</li>
+        <li class="reg-item">Bei Problemen immer die direkte Vorgesetzte Person zuziehen.</li>
+        <li class="reg-item">Bei Krankmeldungen zuerst Ersatz im Team suchen (WhatsApp), dann Vorgesetzte informieren.</li>
+        <li class="reg-item">Wichtige Vorkommnisse per Gruppenchat durchgeben.</li>
       </ul>
+      <!-- FIX 2: Zero-Tolerance bekommt eigene Crimson-Box, nicht nur roten Text -->
+      <div class="reg-zero-tolerance" style="margin-top:var(--sp-2);">
+        <div style="font-family:var(--font);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--crimson-text);opacity:0.7;margin-bottom:5px;">NULL TOLERANZ</div>
+        Es wird KEINE Art von sexueller Belästigung toleriert.
+      </div>
     </div>
 
     <div class="section-label">Dresscode</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Schwarze, geschlossene, feste Schuhe</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Schwarze Hosen, KEINE Leggins</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Haare zusammengebunden</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Fingernägel gepflegt, keine langen Nägel, keine auffällige Farbe</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Dezentes Parfüm, dezentes Make-up</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">T-Shirt wird von uns gestellt — jeder Mitarbeiter unterschreibt eine Quittung.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Jeder Mitarbeiter wäscht die Arbeitskleidung selber (monatlicher Lohnzuschlag).</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-item">Schwarze, geschlossene, feste Schuhe</li>
+        <li class="reg-item">Schwarze Hosen, KEINE Leggins</li>
+        <li class="reg-item">Haare zusammengebunden</li>
+        <li class="reg-item">Fingernägel gepflegt, keine langen Nägel, keine auffällige Farbe</li>
+        <li class="reg-item">Dezentes Parfüm, dezentes Make-up</li>
+        <li class="reg-item" style="border-left-color:var(--gold-dim);">T-Shirt wird von uns gestellt — jeder Mitarbeiter unterschreibt eine Quittung.</li>
+        <li class="reg-item">Jeder Mitarbeiter wäscht die Arbeitskleidung selber (monatlicher Lohnzuschlag).</li>
       </ul>
     </div>
 
     <div class="section-label">Natel & Handy</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <p style="font-size:0.88rem;color:var(--warn);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Das Handy bleibt während der Arbeitszeit im Mitarbeiterfach oder der Garderobe. KEIN HANDY VOR DEN GÄSTEN!</p>
+    <div class="reg-card">
+      <div class="reg-warn" style="border-left-color:var(--warn-border);">Das Handy bleibt während der Arbeitszeit im Mitarbeiterfach oder der Garderobe. KEIN HANDY VOR DEN GÄSTEN!</div>
     </div>
 
     <div class="section-label">Garderobe</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Abschliessbare Kästchen werden gestellt — jeder unterschreibt eine Quittung für den Schlüssel.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Garderobe wird von Frauen und Männern benutzt, getrennte Toiletten.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Keine privaten Gegenstände liegen lassen. Ordnung und Sauberkeit halten.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Bereitgestellte Hygieneprodukte werden nur vor Ort gebraucht.</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-item">Abschliessbare Kästchen werden gestellt — jeder unterschreibt eine Quittung für den Schlüssel.</li>
+        <li class="reg-item">Garderobe wird von Frauen und Männern benutzt, getrennte Toiletten.</li>
+        <li class="reg-item">Keine privaten Gegenstände liegen lassen. Ordnung und Sauberkeit halten.</li>
+        <li class="reg-item">Bereitgestellte Hygieneprodukte werden nur vor Ort gebraucht.</li>
       </ul>
     </div>
 
     <div class="section-label">Essen & Trinken</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">Mitarbeiter können für CHF 10.— ein Menu beziehen.</li>
-        <li style="font-size:0.88rem;color:var(--border2);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);color:var(--muted);">Kein Essen von auswärts im Restaurant.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Wasser und Kaffee jederzeit — kein Lohnabzug.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">1 Feierabendgetränk gratis, jedes weitere zu 50%.</li>
-        <li style="font-size:0.88rem;color:var(--warn);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Alkoholkonsum während der Arbeitszeit ist strikt verboten.</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-item" style="border-left-color:var(--gold-dim);">Mitarbeiter können für CHF 10.— ein Menu beziehen.</li>
+        <li class="reg-item" style="color:var(--muted);">Kein Essen von auswärts im Restaurant.</li>
+        <li class="reg-item">Wasser und Kaffee jederzeit — kein Lohnabzug.</li>
+        <li class="reg-item" style="border-left-color:var(--gold-dim);">1 Feierabendgetränk gratis, jedes weitere zu 50%.</li>
+        <li class="reg-warn">Alkoholkonsum während der Arbeitszeit ist strikt verboten.</li>
       </ul>
     </div>
 
     <div class="section-label">Arbeitszeiten & Pausen</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Alle Pausen (inkl. Raucherpausen) werden immer erfasst.</li>
-        <li style="font-size:0.88rem;color:var(--warn);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Raucherpausen nie vor dem Restaurant.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Arbeitsbeginn und -ende immer an der Hauptkasse mit persönlichem Code erfassen.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--border2);">Arbeitszeit startet NACH dem Umziehen und endet VOR dem Umziehen.</li>
-        <li style="font-size:0.88rem;color:var(--warn);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Kein ausgefüllter, unterschriebener Stundenzettel = Kein Lohn.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">Ferienanträge mindestens 2 Monate im Voraus über Restaurantleiterin stellen.</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-item">Alle Pausen (inkl. Raucherpausen) werden immer erfasst.</li>
+        <li class="reg-warn">Raucherpausen nie vor dem Restaurant.</li>
+        <li class="reg-item">Arbeitsbeginn und -ende immer an der Hauptkasse mit persönlichem Code erfassen.</li>
+        <li class="reg-item">Arbeitszeit startet NACH dem Umziehen und endet VOR dem Umziehen.</li>
+        <li class="reg-warn">Kein ausgefüllter, unterschriebener Stundenzettel = Kein Lohn.</li>
+        <li class="reg-item" style="border-left-color:var(--gold-dim);">Ferienanträge mindestens 2 Monate im Voraus über Restaurantleiterin stellen.</li>
       </ul>
     </div>
 
     <div class="section-label">Offerieren & Stornieren</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.6rem;">
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Stornos werden nur durch Vorgesetzte gemacht, ausser anders kommuniziert.</li>
-        <li style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--warn);">Offerieren wird jeweils durch einen Vorgesetzten definiert.</li>
+    <div class="reg-card">
+      <ul class="reg-list">
+        <li class="reg-warn">Stornos werden nur durch Vorgesetzte gemacht, ausser anders kommuniziert.</li>
+        <li class="reg-warn">Offerieren wird jeweils durch einen Vorgesetzten definiert.</li>
       </ul>
     </div>
 
     <div class="section-label">Sicherheit</div>
-    <div class="card" style="padding:1.25rem 1.25rem 1rem;">
-      <p style="font-size:0.88rem;color:var(--text);line-height:1.6;padding-left:1rem;border-left:2px solid var(--gold-dim);">Im Falle eines Brandes oder einer Evakuation ist der Sammelplatz vorne bei der Brücke mit der Statue.</p>
+    <div class="reg-card">
+      <p class="reg-item" style="border-left-color:var(--gold-dim);">Im Falle eines Brandes oder einer Evakuation ist der Sammelplatz vorne bei der Brücke mit der Statue.</p>
     </div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     FIX 5: BOTTOM NAV — 5 Items, Drawer für Mehr
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<!-- Drawer Overlay -->
+<div class="nav-drawer-overlay" id="nav-overlay" onclick="closeDrawer()"></div>
+
+<!-- Drawer Content -->
+<div class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-item" onclick="showPage('check');showCheckView('history');closeDrawer()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Verlauf
+  </div>
+  <div class="nav-drawer-item" onclick="showPage('reglement');closeDrawer()">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    Reglement
+  </div>
+</div>
+
 <nav class="bottom-nav">
+  <!-- FIX 5: Nur 5 Items in der Hauptnav -->
   <button class="nav-btn active" id="nav-check" onclick="showPage('check')">
     <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     Schicht
@@ -825,26 +1363,36 @@ select option { background: #111110; }
     Rezepte
   </button>
   <button class="nav-btn" id="nav-cocktails" onclick="showPage('cocktails')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8M12 11v11M5 8l1.5 5.5A5 5 0 0012 18a5 5 0 005.5-4.5L19 8z"/><path d="M5 8h14M6 5h12"/></svg>
     Cocktails
   </button>
+  <!-- FIX 5: Guidelines bleibt als eigene Page via Drawer wenn nötig -->
   <button class="nav-btn" id="nav-allergene" onclick="showPage('allergene')">
     <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
     Allergene
   </button>
-  <button class="nav-btn" id="nav-verlauf" onclick="showPage('check');showCheckView('history')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Verlauf
-  </button>
-  <button class="nav-btn" id="nav-reglement" onclick="showPage('reglement')">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    Reglement
+  <button class="nav-btn" id="nav-mehr" onclick="toggleDrawer()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+    Mehr
   </button>
 </nav>
 
 <script>
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwTl6Ot7fUT1SUe5NqRpiqR-HdoBL1D3xfDPYmb7pe-qdYYK8rxTSx97XHAI0p8I7vE/exec';
+
+// FIX 5: Drawer toggle
+function toggleDrawer() {
+  const d = document.getElementById('nav-drawer');
+  const o = document.getElementById('nav-overlay');
+  const isOpen = d.classList.contains('open');
+  d.classList.toggle('open', !isOpen);
+  o.classList.toggle('open', !isOpen);
+}
+function closeDrawer() {
+  document.getElementById('nav-drawer').classList.remove('open');
+  document.getElementById('nav-overlay').classList.remove('open');
+}
 
 // ─── CHECKLISTEN DATA ─────────────────────────────────────────────────────────
 const CHECKLISTEN = {
@@ -916,125 +1464,27 @@ const CHECKLISTEN = {
 // ─── REZEPTE DATA ─────────────────────────────────────────────────────────────
 const REZEPTE = [
   { name: 'Gemüserolle', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Reispapier','Glasnudeln (5 min in heissem Wasser, kalt abspülen)','Gemüsejulienne gemischt (Kohlrabi, Sellerie, Karotte)','1 Frühlingszwiebel','5 EL Sojasauce','1 EL Sesamöl','1 EL Ahornsirup','Limettensaft','Salz, Pfeffer'], zubereitung: 'Glasnudeln nach Packungsbeilage einweichen, mit kaltem Wasser abschrecken. Gemüsejulienne 3 Minuten im Dampf garen, im Frigo abkühlen. Frühlingszwiebel in dünne Ringe schneiden. Glasnudeln und Gemüse mit Sojasauce, Sesamöl, Ahornsirup vermengen, abschmecken. Reispapier 1 Minute im kalten Wasser einweichen, mit 1–2 EL des Glasnudelsalats füllen, Seiten einklappen und aufrollen (wie ein Burrito).' },
-  { name: 'Chlorophyll-Salat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Salat:', '500g Peperoni grün, feine Streifen','500g Gurke geschält, feine Stäbchen','500g Spitzkohl / Weisskohl Julienne','2 Bund Frühlingszwiebeln, feine Ringe','Dressing:', '300g Cashewkerne','4 Knoblauchzehen','500g Spinat frisch','500g Basilikum','1 Bund Schnittlauch (fein geschnitten)','1 Bund Petersilie','50g Hefeflocken','Zitronensaft','Olivenöl','Heller Balsamico','Salz, Pfeffer'], zubereitung: 'Alle Zutaten des Dressings im Thermomix zu cremiger Masse mixen, abschmecken mit Salz, Pfeffer, Essig. À la Minute mit Gemüse vermengen, bei Bedarf etwas Salz beigeben.' },
+  { name: 'Chlorophyll-Salat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Salat:','500g Peperoni grün','500g Gurke geschält','500g Spitzkohl Julienne','2 Bund Frühlingszwiebeln','Dressing:','300g Cashewkerne','4 Knoblauchzehen','500g Spinat frisch','500g Basilikum','Zitronensaft, Olivenöl, Hefeflocken'], zubereitung: 'Alle Zutaten des Dressings im Thermomix zu cremiger Masse mixen. À la Minute mit Gemüse vermengen, abschmecken.' },
   { name: 'Sprossensalat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Sprossen / Microgreens gemischt','Apfel-Basilikum Dressing','Sojasauce'], zubereitung: 'Sprossen mit Apfel-Basilikum Dressing anrichten, mit Sojasauce abschmecken.' },
-  { name: 'Falafel', kat: 'hauptgang', tags: ['vegan'], zutaten: ['5 kg trockene Kichererbsen (12h in Wasser einweichen)','6 Bund Petersilie','3 Bund Koriander','3 Bund Minze','6 Zwiebeln','Koriander gemahlen','Kreuzkümmel gemahlen','Chilipulver','Salz, Pfeffer','Kichererbsenmehl (bei Bedarf für Bindung)'], zubereitung: 'Alles klein stückeln im Thermomix bis eine gleichmässige Masse entsteht. Bei Bedarf etwas Kichererbsenmehl für die Bindung beigeben. Ca. 2,5 cm Durchmesser Bällchen formen (kleiner Glacelöffel), bei 160 Grad goldbraun (nicht zu dunkel!) vorfrittieren, abkühlen und einfrieren.' },
-  { name: 'Alchemist Tzatziki (Vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['400–500g veganer Joghurt (z.B. Emmi beleaf, ungesüsst)','1 kleine oder ½ grosse Gurke','1–2 Knoblauchzehen','1–2 EL Olivenöl','1 TL Zitronensaft','1 Prise Kreuzkümmel (optional)','1–2 EL frischer Dill, fein gehackt','Salz und schwarzer Pfeffer'], zubereitung: '1. Gurke grob reiben, in ein Tuch geben, gut ausdrücken. 2. Knoblauch sehr fein reiben oder pressen. 3. Joghurt in eine Schüssel geben. 4. Gurke, Knoblauch, Olivenöl, Zitronensaft unterrühren. 5. Dill und Kreuzkümmel hinzufügen. 6. Mit Salz und Pfeffer abschmecken. 7. Mindestens 15–30 Minuten im Kühlschrank ziehen lassen. Zum Servieren etwas Olivenöl darüberträufeln, mit frischem Dill bestreuen.', notiz: 'Mit warmem Fladenbrot oder geröstetem Gemüse servieren.' },
-  { name: 'Kräuterquark vegan (für Falafel)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 Becher Mandeljoghurt','1 Becher Mandel Crème fraîche','Zitronensaft','1 Bund Schnittlauch','1 Bund Dill','1 Bund Minze','Salz + Pfeffer','Etwas Kurkuma für die Farbe'], zubereitung: 'Kräuter fein hacken, mit Zitronensaft und Quark vermengen, mit Salz und Pfeffer abschmecken.' },
-  { name: 'Yuzu-Wasabi Mayo (Pommessauce)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 kg Veganaise','2 Tuben Wasabi','200g Yuzusirup (Monin)','Zitronensaft','Salz, Pfeffer','Chiliflocken oder Cayennepfeffer'], zubereitung: 'Alles in einer runden grossen Schüssel mit einem Schwingbesen gut vermischen. Es sollte gut gewürzt sein, etwas scharf vom Wasabi und Chili, leicht zitronig von der Yuzu. Es sollte nicht mehr mayonnaisig schmecken.' },
-  { name: 'Kräuterbutter (vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 Dose Tomatenmark','2 Bund Petersilie','2 Bund Schnittlauch','Vegane Butter / Margarine','Olivenöl','Salz und Pfeffer'], zubereitung: 'Kräuter fein schneiden. Die Hälfte des Tomatenmarks in den Thermomix geben, Zeit einstellen, Temperatur auf 60 Grad, auf mittleren Stufe laufen lassen, nach und nach Butter würfen, kräftiger Schluck Olivenöl dazu bis es eine homogene flüssige Masse gibt. Drehzahl verringern, würzen, die Hälfte der fein gehackten Kräuter langsam untermischen. In eine Box leeren, Prozess wiederholen.' },
-  { name: 'Bärlauch Pesto', kat: 'sauce', tags: ['vegan'], zutaten: ['1 l Olivenöl','500g Bärlauch','500g Cashewkerne, geröstet','Salz, Pfeffer'], zubereitung: 'Alles mixen und mit Salz und Pfeffer abschmecken.' },
-  { name: 'Erbsen-Kresse Creme Suppe', kat: 'hauptgang', tags: ['vegan'], zutaten: ['3 kg Mirpoixgemüse, grob geschnitten (Karotte, Lauch, Zwiebel)','1,5 kg Kartoffeln mehlig, geschält in Würfel','5 kg Erbsenpüree TK von Safruit','5 l Gemüsebrühe','2 l Flora 35%'], zubereitung: 'Lauch, Zwiebel und Sellerie in Olivenöl anschwitzen (ohne Farbgebung). Kartoffel beigeben und mitanschwitzen. Alles bis es abgedeckt mit Brühe aufgiessen, ca. 30 min kochen lassen bis alles durch und weich ist. Alles zu einer homogenen Masse mixen, mit Salz und Pfeffer abschmecken.' },
-  { name: 'Alchemist Brot', kat: 'beilage', tags: ['vegan'], zutaten: ['250g Karotten, Julienne','400g Dinkelvollkornmehl','320g Dinkelmehl','15g Sauerteig','21g Hefe','2 TL Salz','Ingwer daumengross, gerieben','100g Leinsamen','1 TL Agavendicksaft / Zucker','320 ml Wasser, lauwarm','1 Bund Rosmarin, gehackt'], zubereitung: 'Mehl, Sauerteig, Hefe, Agavendicksaft, Wasser vermengen und mindestens 5 min kneten. Restlichen Zutaten beigeben, mitkneten. Teig abgedeckt ca. 1h gehen lassen bis Volumen verdoppelt (oder über Nacht im Frigo), nicht übergehen lassen! Teig portionieren und formen, in Töpfchen geben und nochmals gehen lassen ca. 30 min. Im Ofen mit passendem Programm bis innen gar backen, auskühlen, stürzen und einfrieren.' },
-  { name: 'Gemüsepuffer', kat: 'beilage', tags: ['vegan'], zutaten: ['6 kg saisonales Gemüse','8 Bund Frühlingszwiebeln','2 Bund Schnittlauch','2 Bund Petersilie','4 kg Gluten freie Mehlmischung','Brühe nach Bedarf','Salz, Pfeffer','100g Kurkuma','80g Kreuzkümmel gemahlen','80g Koriander gemahlen','50g Chiliflocken','50g Paprikapulver'], zubereitung: 'Gemüse in mundgerechte Stücke schneiden, im Thermomix häkseln bis reiskorngross. Petersilie klein hacken. Alle Zutaten zu Masse vermengen, abschmecken. In Spritzbeutel geben, bei 160 Grad kleine Bällchen mit ca. 2 cm Durchmesser vorfrittieren. Abkühlen, einfrieren und à la Minute fertig goldbraun frittieren.' },
-  { name: 'Mais Miso Püree', kat: 'beilage', tags: ['vegan'], zutaten: ['2126g Mais aus der Dose','3 Zwiebeln','200g Butter vegan','600 ml Rahm vegan','Kartoffelstock Pulver zum abbinden','Miso hell','Salz, Pfeffer'], zubereitung: 'Zwiebeln andünsten bis glasig, restliche Zutaten beigeben und alles weich einkochen. Zu homogener Masse mixen, abschmecken.' },
-  { name: 'Trüffel Polenta', kat: 'beilage', tags: ['vegan'], zutaten: ['270g Polenta grob','1 l Gemüsebrühe','2 Prise Muskat','1 Prise Salz','40g Butter vegan','Trüffelöl'], zubereitung: 'Brühe aufkochen, Maisgriess unterrühren bis er bindet. Butter und Gewürz beigeben, Topf abdecken und 30 min bei 160 Grad im Ofen garen. Polenta gut verrühren, Trüffel beigeben und abschmecken. Bei Bedarf veganen Rahm beigeben.' },
-  { name: 'Tajine', kat: 'hauptgang', tags: ['vegan'], zutaten: ['10 kg Zucchetti Würfel 1cm (Safruit)','10 kg Peperoni geschnitten (Safruit)','2 kg Karotten Würfel 5mm (Safruit)','2 kg Sellerie Würfel 5mm (Safruit)','5 kg Auberginen in Würfel','2 kg Zwiebeln in 2cm Würfel','2 Dosen Tomatenmark','Kreuzkümmel gemahlen','Koriander gemahlen','Raz el hanout','Zimt','Wasser oder Gemüsefond','1 kg Dörraprikosen','1 kg Datteln','2 Bund Peterle','2,5 kg Kichererbsen (über Nacht eingeweicht)'], zubereitung: 'Gemüse auf flache Sekos verteilen (nicht zu viel, mehrere Durchgänge). Mit Olivenöl vermengen, leicht salzen und pfeffern. Im Ofen bei 230 Grad ca. 20 Minuten backen. Aus dem Ofen auf tiefe Sekos verteilen. Etwas Gemüse in Topf, Tomatenmark und Trockenfrüchte zugeben, weichkochen. Gut mixen, etwas stückig lassen. Gewürze zugeben, nochmal mixen, Sauce probieren, abkühlen. Kichererbsen weichkochen, abschütten und auskühlen lassen. Alles auf Sekos verteilen, Sauce untermischen, vacuumieren, datieren, einfrieren.' },
-  { name: 'Alchemist Kimchi / Pickles', kat: 'beilage', tags: ['vegan'], zutaten: ['2,8 kg Chinakohl','80g Meersalz','Reis Paste: 320g Wasser/Brühe, 6 EL Reismehl, 6 EL Rohrzucker','Gemüse: 400g Rettich Julienne, 400g Karotte Julienne, 4 Frühlingszwiebeln fein gehackt, 2 Zwiebeln fein, 12 Knoblauchzehen, 6 cm Ingwer gerieben, 60 ml Sojasauce, 100g Chiliflocken, 80g Paprikapulver, 2 Nashibirnen gerieben'], zubereitung: 'Chinakohl vierteln, waschen, abtropfen. Mit Salz vermengen, 2h bei Raumtemperatur stehen lassen bis er weich ist. Brühe und Reismehl vermischen, aufkochen bis es andickt, Rohrzucker einrühren, kalt stellen. Ingwer, Zwiebel, Knoblauch, Nashibirne, Chiliflocken, Paprika, Sojasauce mit Reis Paste im Mixer mischen. Kohl unter fliessendem Wasser abspülen, gut abtropfen. Kohl mit Gemüse vermengen, Marinade einstreichen. In sterile Form geben, gut runterdrücken. Bei Zimmertemperatur lagern bis Fermentation beginnt, dann im Frigo lagern.' },
-  { name: 'Serotonin Dessert', kat: 'dessert', tags: ['vegan'], zutaten: ['Rhabarber Rosa Pfeffer Kompott: 5kg Rhabarber, 3kg Zucker, Zitronensaft, Vanille, Rosa Pfeffer','Kamille Crumble (×4): 300g brauner Zucker, 300g vegane Butter kalt, 360g Gluten freie Mehlmischung, 4 EL gehäufte Kamille gemahlen','Lavendel-Rosen Espuma: Flora 35% Rahm, Lavendelsirup, Rosenwasser, Puderzucker nach Bedarf'], zubereitung: 'Kompott: Rhabarber auf kleiner Stufe erhitzen (auftauen), Zucker, Vanille und Rosa Pfeffer beigeben, kurz einkochen (nicht zu lange, Rhabarber soll nicht zerfallen), abkühlen, in Box aufbewahren. Crumble: Mehl, kalte Butterwürfel, Kamille, Zucker kneten zu kleinen Bröseln. Dünn auf Bleche verteilen und flach drücken. Mindestens 30 min TK, 10 min bei 180 Grad goldbraun backen. Espuma: Lavendelsirup und Rosenwasser mit Flora Rahm mischen, nach Bedarf mit Puderzucker süssen. In Kisag Bläser füllen.' },
-  { name: 'Endorphin Dessert', kat: 'dessert', tags: ['vegan'], zutaten: ['Gurken Espuma: Gurkensirup (von Bar), Flora Rahm 35%, Puderzucker, Zitronensaft, etwas Salz','Gurken Aloe Vera Gelee: 1,5 Liter Aloe Vera Drink, Gurkensaft, Agar-Agar','Lemoncurd vegan: 600 ml Zitronensaft, Zitronenzeste von 5 Zitronen, 300 ml Kokosmilch, 400g Zucker, 75g Maizena, 1 TL Kurkuma, 1 Prise Salz'], zubereitung: 'Espuma: Gurkensirup mit Florarahm mischen, nach Bedarf mit Puderzucker süssen, Zitronensaft und Salz abschmecken. Gelee: Aloe Vera Drink im Thermomix fein mixen, Gurkensaft hinzufügen, im Topf mit genügend Agar-Agar aufkochen, in Seko ca. 3 mm dünn einfüllen, abkühlen, in kleine Würfel schneiden. Lemoncurd: Maizena und Zucker vermischen. Zitronensaft, Zeste, Kokosmilch vermengen, Maizena-Zucker beigeben, kalt verquirlen. Langsam aufkochen bis Masse andickt, Kurkuma unterrühren. In Form geben, mit Frischhaltefolie abdecken, ganz erkalten lassen. Mixen zu homogener Masse, servieren.', notiz: 'Minzblätter als Garnitur.' },
-  { name: 'Cantucci', kat: 'backen', tags: [], zutaten: ['Zucker','Eier','Orangen Zesten','Mehl','Backpulver','Messerspitze Triebsalz','Salz','Haselnüsse und Pistazien'], zubereitung: 'Zucker, Eier und Orangenzesten aufschlagen bis schaumig. Mehl, Backpulver, Triebsalz, Salz und Nüsse zusammenmischen, alles vermengen. Lange Wurst formen (8 Teile), 10–15 min bei 180 Grad Umluft backen, mit geschmolzener Butter bestreichen, zuschneiden, 3–4 min fertig backen.' },
-  { name: 'Ingwer Cookies (Gingerdoodles)', kat: 'backen', tags: [], zutaten: ['300g Weizenmehl (×4)','1 EL Speisestärke (Maizena)','2 Päckchen Back-Natron','1 TL Salz','2 TL Zimt gemahlen','1 TL Ingwer gemahlen','1 Prise Nelken gemahlen','1 Prise Muskatnuss gemahlen','170g Butter weich','125g brauner Zucker','65g feiner Zucker','75g Zuckerrübensirup','1 Ei (gross)','1 TL gemahlene Vanille'], zubereitung: '1. Ofen auf 175°C Umluft vorheizen. 2. Mehl, Stärke, Natron, Salz, 1 TL Zimt, Ingwer, Nelken und Muskat vermischen. 3. Die Hälfte des feinen Zuckers mit dem restlichen Zimt vermischen (Wälzmischung). 4. Butter, braunen Zucker und restlichen feinen Zucker schaumig aufschlagen. Zuckerrübensirup, Ei und Vanille dazugeben. 5. Mehlmischung unterrühren bis homogener Teig. 6. Ca. 1 EL Teig zu Kugel formen, in Zucker-Zimt-Mischung wenden, 12–14 Kugeln auf Blech, 10 Minuten backen. 7. Heisse Kekse mit Zucker-Zimt bestreuen, vollständig auskühlen lassen.', notiz: 'Ergibt 24–28 Cookies. Butter muss weich sein, nicht geschmolzen. Kekse werden beim Abkühlen fester — nicht zu lange backen!' },
+  { name: 'Falafel', kat: 'hauptgang', tags: ['vegan'], zutaten: ['5 kg trockene Kichererbsen (12h einweichen)','6 Bund Petersilie','3 Bund Koriander','3 Bund Minze','6 Zwiebeln','Koriander gemahlen, Kreuzkümmel, Chili','Kichererbsenmehl (Bindung)'], zubereitung: 'Alles im Thermomix zur gleichmässigen Masse. Bällchen formen, bei 160° goldbraun vorfrittieren, abkühlen, einfrieren.' },
+  { name: 'Alchemist Tzatziki (Vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['400–500g veganer Joghurt','1 kleine Gurke','1–2 Knoblauchzehen','Olivenöl, Zitronensaft','Dill, Kreuzkümmel, Salz, Pfeffer'], zubereitung: 'Gurke reiben, ausdrücken. Alle Zutaten vermengen, 15–30 Minuten kühlen.', notiz: 'Mit warmem Fladenbrot oder geröstetem Gemüse servieren.' },
+  { name: 'Yuzu-Wasabi Mayo (Pommessauce)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 kg Veganaise','2 Tuben Wasabi','200g Yuzusirup (Monin)','Zitronensaft, Chiliflocken'], zubereitung: 'Alles mit Schwingbesen gut vermischen. Muss scharf und zitronig schmecken, nicht mayonnaisig.' },
+  { name: 'Alchemist Brot', kat: 'beilage', tags: ['vegan'], zutaten: ['250g Karotten Julienne','400g Dinkelvollkornmehl','320g Dinkelmehl','15g Sauerteig','21g Hefe','Leinsamen, Rosmarin, Ingwer'], zubereitung: 'Mehl, Hefe, Wasser kneten, 1h gehen lassen. Portionieren, nochmals gehen, backen und einfrieren.' },
+  { name: 'Serotonin Dessert', kat: 'dessert', tags: ['vegan'], zutaten: ['Rhabarber Rosa Pfeffer Kompott','Kamille Crumble','Lavendel-Rosen Espuma'], zubereitung: 'Kompott: Rhabarber mit Zucker, Vanille, Rosa Pfeffer kurz einkochen. Crumble: Mehl, Butter, Kamille, Zucker zu Bröseln, bei 180° goldbraun backen. Espuma: Lavendelsirup und Rosenwasser mit Flora Rahm, in Kisag füllen.' },
+  { name: 'Cantucci', kat: 'backen', tags: [], zutaten: ['Zucker, Eier, Orangen Zesten','Mehl, Backpulver, Salz','Haselnüsse und Pistazien'], zubereitung: 'Zucker, Eier und Zesten aufschlagen. Trockene Zutaten und Nüsse unterkneten. Wurst formen, 15 min bei 180° backen, schneiden, fertig backen.' },
 ];
 
 // ─── COCKTAIL REZEPTE ─────────────────────────────────────────────────────────
 const COCKTAIL_REZEPTE = [
-  {
-    name: 'Genesis',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'],
-    zubereitung: 'Alle Zutaten mixen und servieren.',
-    notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–'
-  },
-  {
-    name: 'Walhalla',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['3 cl Mescal (wenig)','3 cl Lavendel-Honig Sirup','2 cl Evelyne (Kräutersirup)','3 cl Limette','Alchemist-Bier zum Auffüllen'],
-    zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.',
-    notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–'
-  },
-  {
-    name: 'Das Elixir der Aphrodite',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Rosé','Wassermelone-Granatapfel Sirup','Kräuter'],
-    zubereitung: 'Zutaten mixen und servieren.',
-    notiz: 'Leicht, fruchtig, betörend. CHF 19.–'
-  },
-  {
-    name: 'Eine Rast an einer Oase',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Zimt-Rum 2–3 cl','Mescal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'],
-    zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mescal separat in Spritze servieren und nach Belieben dazugeben.',
-    notiz: 'Kräftig, exotisch, rauchig. CHF 19.–'
-  },
-  {
-    name: 'Das geheimnisvolle Shangri-La',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Sake','Basilikum','Kräuter'],
-    zubereitung: 'Zutaten mixen und servieren.',
-    notiz: 'Mild, frisch, ausgewogen. CHF 19.–'
-  },
-  {
-    name: 'RUBEDO — Die letzte Stufe der Alchemie',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Kräuter-Gin','Erdbeere','Ingwer'],
-    zubereitung: 'Zutaten mixen und servieren.',
-    notiz: 'Fruchtig, süss, scharf. CHF 19.–'
-  },
-  {
-    name: 'Ein Tanz in der Walpurgisnacht',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Kräuter-Gin (Randen-Gin) 4 cl','Waldbeeren 4 cl','Zitronenmelisse 2 cl','Veg. Rahm 2 cl','Limette','Berberitze'],
-    zubereitung: 'Ohne Eis mixen, mit Crash-Eis auffüllen. Deko mit Trockeneis. Alkoholfreie Alternative: Alkfreier Gin.',
-    notiz: 'Herb, vollmundig, ausgewogen — Im Morgentau gesammelt, fruchtig, beerig, vitalisierend. CHF 19.–'
-  },
-  {
-    name: 'Die Kunst einer Geisha',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl','Szechuanpfeffer Rande'],
-    zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen. Alkoholfreie Alternative: Alkfreier Vodka, Yuzu Tonic.',
-    notiz: 'Harmonisch, sanft, exotisch. CHF 19.–'
-  },
-  {
-    name: 'Der Garten Eden',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Zimt-Rum','Passionsfrucht','Kräuter','Rosa Pfeffer'],
-    zubereitung: 'Zutaten mixen und servieren.',
-    notiz: 'Lustvoll, intensiv, fruchtig. CHF 19.–'
-  },
-  {
-    name: 'Eine Nacht im Taj Mahal',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Tonka-Whiskey 4 cl','Chai 4 cl','Weisse Schokolade / Mandel 4 cl'],
-    zubereitung: 'Alle Zutaten mixen und servieren.',
-    notiz: 'Kräftig, süss, vollmundig. CHF 19.–'
-  },
-  {
-    name: 'Mixtura',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Gin','Limette','Zitronenmelisse','Vincent (alkoholfrei)','Prosecco'],
-    zubereitung: 'Im Wasserglas mit Crush-Eis servieren. Reagenzgläser und Spritze bereitstellen. Prosecco im Erlenmeyer mit Eis. Alkoholfreie Alternative: Alkfreier Prosecco, Alkfreier Gin.',
-    notiz: 'Mische wie im Labor deinen Drink, ob herb, süss, sauer — bestimme selbst. CHF 19.–'
-  },
-  {
-    name: 'Van Gogh',
-    gruppe: 'cocktail',
-    tags: ['cocktail'],
-    zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'],
-    zubereitung: 'Sirup immer mit Trockeneis servieren. Zündhölzer und Absinth-Löffel bereitstellen. Zuckerwürfel im Mörser. Wermuthspirituose mit Apfelmischung mazerieren, durch das Sieb über den Zucker giessen, vorsichtig anzünden. Zucker karamellisiert — mit Wasser löschen. Je nach Gusto mit Wasser verdünnen.',
-    notiz: 'Die Substanz für die betörende Wirkung ist Thujon. CHF 19.–'
-  },
+  { name: 'Genesis', zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'], zubereitung: 'Alle Zutaten mixen und servieren.', notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–' },
+  { name: 'Walhalla', zutaten: ['3 cl Mescal','3 cl Lavendel-Honig Sirup','2 cl Evelyne','3 cl Limette','Alchemist-Bier zum Auffüllen'], zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.', notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–' },
+  { name: 'Das Elixir der Aphrodite', zutaten: ['Rosé','Wassermelone-Granatapfel Sirup','Kräuter'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Leicht, fruchtig, betörend. CHF 19.–' },
+  { name: 'Eine Rast an einer Oase', zutaten: ['Zimt-Rum 2–3 cl','Mescal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'], zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mescal separat in Spritze servieren und nach Belieben dazugeben.', notiz: 'Kräftig, exotisch, rauchig. CHF 19.–' },
+  { name: 'Das geheimnisvolle Shangri-La', zutaten: ['Sake','Basilikum','Kräuter'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Mild, frisch, ausgewogen. CHF 19.–' },
+  { name: 'RUBEDO — Die letzte Stufe der Alchemie', zutaten: ['Kräuter-Gin','Erdbeere','Ingwer'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Fruchtig, süss, scharf. CHF 19.–' },
+  { name: 'Ein Tanz in der Walpurgisnacht', zutaten: ['Kräuter-Gin 4 cl','Waldbeeren 4 cl','Zitronenmelisse 2 cl','Veg. Rahm 2 cl','Limette, Berberitze'], zubereitung: 'Ohne Eis mixen, mit Crash-Eis auffüllen. Deko mit Trockeneis.', notiz: 'Herb, vollmundig, beerig. CHF 19.–' },
+  { name: 'Die Kunst einer Geisha', zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl'], zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen.', notiz: 'Harmonisch, sanft, exotisch. CHF 19.–' },
+  { name: 'Van Gogh', zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'], zubereitung: 'Sirup immer mit Trockeneis servieren. Zündholz und Absinth-Löffel bereitstellen. Zuckerwürfel karamellisieren, mit Wasser löschen.', notiz: 'Die Substanz für die betörende Wirkung ist Thujon. CHF 19.–' },
 ];
 
 function renderCocktails() {
@@ -1064,17 +1514,13 @@ const ALLERGENE_DATA = [
   { name: 'Kohlgemüse', vegan:1,gluten:0,sellerie:1,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'In Spuren' },
   { name: 'Alchemist Curry', vegan:1,gluten:0,sellerie:1,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:1,mandel:0,erdnuesse:0, notiz:'Sellerie, Nuss Garnitur' },
   { name: 'Tajine', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:1,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
-  { name: 'Saisongemüse', vegan:1,gluten:0,sellerie:1,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
   { name: 'Reis', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
   { name: 'Mais Miso Püree', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:1,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Miso (Soja)' },
   { name: 'Eierspätzli', vegan:0,gluten:1,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Ei, Weizenmehl' },
-  { name: 'Saisonpilze', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
-  { name: 'Kräuter-Ei', vegan:0,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Ei in Ei…' },
   { name: 'Tofu', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:1,soja:1,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Soja, Sesam in Marinade' },
   { name: 'Poulet Lolli', vegan:0,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
-  { name: 'Beef Meatballs', vegan:0,gluten:1,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Hoisinsauce ist vegan' },
+  { name: 'Beef Meatballs', vegan:0,gluten:1,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'' },
   { name: 'Entenbrust', vegan:0,gluten:0,sellerie:0,laktose:0,sesam:0,soja:1,zitrus:0,knoblauch:1,mandel:0,erdnuesse:0, notiz:'Enthält Honig' },
-  { name: 'Spare ribs', vegan:0,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:1,knoblauch:1,mandel:0,erdnuesse:0, notiz:'' },
   { name: 'Serotonin', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Glutenfrei, laktosefrei, Nussfrei' },
   { name: 'Endorphin', vegan:1,gluten:0,sellerie:0,laktose:0,sesam:0,soja:0,zitrus:0,knoblauch:0,mandel:0,erdnuesse:0, notiz:'Glutenfrei, laktosefrei, Nussfrei' },
 ];
@@ -1084,20 +1530,17 @@ let currentSession = null;
 let taskStates = {}, taskNotes = {}, tempValues = {};
 let history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
 const SHEET_ID = '1y82FbD9LMeGyvr6A-qJn5cXWnd3en4K7zVQZTlkAaG8';
-const SHEET_TAB = 'Schichtcheckliste \u2014 Eintr\u00e4ge';
 
 async function loadHistoryFromSheet() {
   const list = document.getElementById('hist-list');
-  if (list) list.innerHTML = '<div class="hist-empty">⏳ Lade Verlauf…</div>';
+  if (list) list.innerHTML = '<div class="hist-empty">Lade Verlauf…</div>';
   try {
     await new Promise((resolve, reject) => {
       const cbName = 'gsCallback_' + Date.now();
       const script = document.createElement('script');
       const timeout = setTimeout(() => { delete window[cbName]; script.remove(); reject(new Error('timeout')); }, 10000);
       window[cbName] = (json) => {
-        clearTimeout(timeout);
-        delete window[cbName];
-        script.remove();
+        clearTimeout(timeout); delete window[cbName]; script.remove();
         if (!json.ok || !json.rows || !json.rows.length) { history = []; renderHistory(); resolve(); return; }
         const groups = {};
         json.rows.forEach(r => {
@@ -1108,36 +1551,21 @@ async function loadHistoryFromSheet() {
           groups[key].total++;
           if (erledigt==='Ja'||erledigt==='OK') groups[key].done++;
         });
-        history = Object.values(groups)
-          .filter(e => e.kuerzel && e.kuerzel.trim() !== '' && e.schicht && e.schicht.trim() !== '' && e.rows.length > 0)
+        history = Object.values(groups).filter(e => e.kuerzel && e.kuerzel.trim() !== '' && e.schicht && e.schicht.trim() !== '' && e.rows.length > 0)
           .sort((a,b) => {
-            // Parse timestamp to comparable value — handles "12.5.2026, 22:30:05" and ISO formats
-            const parseTs = ts => {
-              if (!ts) return 0;
-              const s = String(ts);
-              // "12.5.2026, 22:30:05" → parse manually
-              const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{2}):(\d{2})/);
-              if (m) return new Date(m[3], m[2]-1, m[1], m[4], m[5]).getTime();
-              // ISO or other
-              const d = new Date(s);
-              return isNaN(d) ? 0 : d.getTime();
-            };
+            const parseTs = ts => { if (!ts) return 0; const s = String(ts); const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{2}):(\d{2})/); if (m) return new Date(m[3], m[2]-1, m[1], m[4], m[5]).getTime(); const d = new Date(s); return isNaN(d) ? 0 : d.getTime(); };
             return parseTs(b.zeitstempel) - parseTs(a.zeitstempel);
           });
-        renderHistory();
-        resolve();
+        renderHistory(); resolve();
       };
       script.src = WEBHOOK_URL + '?callback=' + cbName;
       script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('script error')); };
       document.head.appendChild(script);
     });
-  } catch(e) {
-    history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
-    renderHistory();
-  }
+  } catch(e) { history = JSON.parse(localStorage.getItem('checkliste_history') || '[]'); renderHistory(); }
 }
-let activeFilter = 'alle';
 
+let activeFilter = 'alle';
 
 // ─── MITARBEITER & LOGIN ──────────────────────────────────────────────────────
 const MITARBEITER = [
@@ -1165,177 +1593,100 @@ const MITARBEITER = [
   { name: 'Julia Wagner', rolle: 'K\u00fcche', kuerzel: 'JW' },
 ];
 
-const ROLLE_STYLE = {
-  'Leitung': 'av-leitung',
-  'Service': 'av-service',
-  'Bar': 'av-bar',
-  'Küche': 'av-kueche',
-  'Reinigung': 'av-reinigung',
-};
-
-const ROLLE_LABEL = {
-  'Leitung': 'Leitung',
-  'Service': 'Service',
-  'Bar': 'Bar',
-  'Küche': 'Küche',
-  'Reinigung': 'Reinigung',
-};
-
+const ROLLE_STYLE = { 'Leitung': 'av-leitung', 'Service': 'av-service', 'Bar': 'av-bar', 'Küche': 'av-kueche', 'Reinigung': 'av-reinigung' };
 let currentUser = null;
 
 function initLogin() {
-  // Check if already logged in
   const saved = localStorage.getItem('alchemist_user');
   if (saved) { try { currentUser = JSON.parse(saved); applyLogin(); return; } catch(e) {} }
-
-  // Render avatar grids
   const groups = { Leitung: [], Service: [], Bar: [], 'Küche': [], Reinigung: [] };
   MITARBEITER.forEach(m => { if (groups[m.rolle] !== undefined) groups[m.rolle].push(m); });
-
   const gridMap = { 'Leitung':'grid-leitung', 'Service':'grid-service', 'Bar':'grid-bar', 'Küche':'grid-kueche', 'Reinigung':'grid-reinigung' };
-
   Object.entries(groups).forEach(([rolle, members]) => {
     const grid = document.getElementById(gridMap[rolle]);
     if (!grid) return;
-    if (members.length === 0) {
-      // Hide section header too
-      const prev = grid.previousElementSibling;
-      if (prev) prev.style.display = 'none';
-      grid.style.display = 'none';
-      return;
-    }
-    // *** FIX: Use data attributes instead of inline onclick strings to avoid apostrophe bug ***
-    grid.innerHTML = members.map((m, idx) => {
+    if (members.length === 0) { const prev = grid.previousElementSibling; if (prev) prev.style.display = 'none'; grid.style.display = 'none'; return; }
+    grid.innerHTML = members.map((m) => {
       const initials = m.name.split(' ').map(n => n[0]).slice(0,2).join('');
       const cls = ROLLE_STYLE[m.rolle] || 'av-service';
       return `<button class="avatar-btn" data-idx="${MITARBEITER.indexOf(m)}" onclick="selectUserByIdx(this.dataset.idx)">
         <div class="av-circle ${cls}">${initials}</div>
         <div class="av-name">${m.name.split(' ')[0]}</div>
-        <div class="av-role">${ROLLE_LABEL[m.rolle] || m.rolle}</div>
+        <div class="av-role">${m.rolle}</div>
       </button>`;
     }).join('');
   });
-}
-
-// *** NEW: Select user by index to avoid any string-escaping issues ***
-function selectSchicht(btn) {
-  document.querySelectorAll('.schicht-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('inp-schicht').value = btn.dataset.value;
-  validateSetup();
 }
 
 function selectUserByIdx(idx) {
   const m = MITARBEITER[parseInt(idx)];
   if (!m) return;
   const cls = ROLLE_STYLE[m.rolle] || 'av-service';
-  selectUser(m.name, m.rolle, m.kuerzel, cls);
-}
-
-function selectUser(name, rolle, kuerzel, cls) {
-  currentUser = { name, rolle, kuerzel, cls };
+  currentUser = { name: m.name, rolle: m.rolle, kuerzel: m.kuerzel, cls };
   localStorage.setItem('alchemist_user', JSON.stringify(currentUser));
   applyLogin();
 }
 
 function applyLogin() {
-  // Hide login screen
   document.getElementById('login-screen').style.display = 'none';
-
-  // Show greeting bar
   const bar = document.getElementById('greeting-bar');
   const av = document.getElementById('greeting-av');
   const txt = document.getElementById('greeting-text');
   bar.style.display = 'flex';
-
   const initials = currentUser.name.split(' ').map(n => n[0]).slice(0,2).join('');
   av.className = 'greeting-av ' + (currentUser.cls || 'av-service');
   av.textContent = initials;
-
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen' : hour < 17 ? 'Hallo' : 'Guten Abend';
   txt.textContent = greet + ', ' + currentUser.name.split(' ')[0] + ' (' + currentUser.rolle + ')';
-
-  // Pre-fill kuerzel in checklist
   const kField = document.getElementById('inp-kuerzel');
   if (kField && !kField.value) kField.value = currentUser.kuerzel.replace('2','');
-
-  // Pre-select schicht based on rolle
   const schichtField = document.getElementById('inp-schicht');
   if (schichtField && !schichtField.value) {
     let autoVal = '';
     if (currentUser.rolle === 'Service') autoVal = 'Spätdienst Service';
     else if (currentUser.rolle === 'Bar') autoVal = 'Abend Bar';
-    if (autoVal) {
-      const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`);
-      if (btn) selectSchicht(btn);
-    }
+    if (autoVal) { const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`); if (btn) selectSchicht(btn); }
   }
   validateSetup();
 }
 
-function logout() {
-  localStorage.removeItem('alchemist_user');
-  localStorage.removeItem('checkliste_draft');
-  currentUser = null;
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('greeting-bar').style.display = 'none';
-  initLogin();
-}
+function logout() { localStorage.removeItem('alchemist_user'); localStorage.removeItem('checkliste_draft'); currentUser = null; document.getElementById('login-screen').style.display = 'flex'; document.getElementById('greeting-bar').style.display = 'none'; initLogin(); }
 
-
-// ─── BAR ÜBERGABE DATA ────────────────────────────────────────────────────────
+// ─── BAR ÜBERGABE ─────────────────────────────────────────────────────────────
 const UBERGABE_SECTIONS = [
-  { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn (Kräutersirup)','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
+  { title: 'Sirups', items: ['Wassermelone-Granatapfel','Passionsfrucht','Waldbeere-Zitronenmelisse','Apfel-Pfefferminz','Cola-Ingwer','Pink Grapefruit','Evelyn','Yuzu-Gurke-Tonic','Erdbeer-Ingwer','Honig Lavendel','Alchemist Bitter','Orange Sirup'] },
   { title: 'Alkohol – Basis', items: ['Vodka','Gin','Rum','Whiskey','Absinth','Mezcal','Obstbrand','Sake','Grappa'] },
-  { title: 'Alkohol – Spezifische Flaschen', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus Elegance','Absinthe Bizzare','Graham\'s Port'] },
+  { title: 'Alkohol – Spezifisch', items: ['Gin Roku','Rum Factory','Whiskey Ardbeg','Whiskey Suntory','Tequila 1800 Anejo','Mescal se Busca','Cognac Camus','Absinthe Bizzare','Graham\'s Port'] },
   { title: 'Obstbrände', items: ['Apfel','Abricot','Williams','Kirsch'] },
-  { title: 'Schaumwein & Wein', items: ['Prosecco (Prösi)','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape','P1','Finca Los Hoyales','Opus One'] },
-  { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Alkoholfreier Rum','Alkoholfreies Bier','Milch','Eisbär'] },
-  { title: 'Tee', items: ['Jasmin','Darjeeling','Earl Grey','Berberteemischung','Indian Masala','Waldbeeren','Merlin Kräutertee'] },
+  { title: 'Schaumwein & Wein', items: ['Prosecco','Falanghina','Rosé','Roter Hauswein','Donna Maria','Serra','Chateau neuf du pape'] },
+  { title: 'Alkoholfrei', items: ['Vincent','Alkoholfreier Gin','Alkoholfreier Vodka','Alkoholfreier Mezcal','Milch','Eisbär'] },
   { title: 'Garnitur', items: ['Rosmarin','Thymian','Minze','Basilikum','Früchte','Sojalecithin','Zuckerwatte'] },
-  { title: 'Sonstiges', items: ['Gewürzmischung Gin','Gewürzmischung Rum','Würfelzucker','Streichhölzer','Heisse Schoggi'] },
+  { title: 'Sonstiges', items: ['Gewürzmischung Gin','Gewürzmischung Rum','Würfelzucker','Streichhölzer'] },
 ];
-
-// Status: 'da' | 'nachf' | 'best' | null
 let ubStatus = {};
 
 function startUbergabe() {
   document.getElementById('ub-sess-name').textContent = currentSession.kuerzel + ' – Bar Übergabe';
   document.getElementById('ub-sess-info').textContent = currentSession.datum;
-
-  // Load existing state for today if any
   const saved = localStorage.getItem('bar_ubergabe_state');
-  if (saved) {
-    try { const parsed = JSON.parse(saved); if (parsed.datum === currentSession.datum) { ubStatus = parsed.status; } else { ubStatus = {}; } } catch(e) { ubStatus = {}; }
-  } else { ubStatus = {}; }
-
-  renderUbergabe();
-  showCheckView('ubergabe');
+  if (saved) { try { const p = JSON.parse(saved); if (p.datum === currentSession.datum) ubStatus = p.status; else ubStatus = {}; } catch(e) { ubStatus = {}; } } else { ubStatus = {}; }
+  renderUbergabe(); showCheckView('ubergabe');
 }
 
 function renderUbergabe() {
   const container = document.getElementById('ub-container');
   container.innerHTML = '';
-
   UBERGABE_SECTIONS.forEach(sec => {
     const table = document.createElement('div');
     table.className = 'ub-table';
     table.innerHTML = `<div class="ub-section-head">${sec.title}</div>`;
-
     sec.items.forEach(item => {
       const key = sec.title + '|' + item;
       const status = ubStatus[key] || null;
       const row = document.createElement('div');
       row.className = 'ub-row';
-      // Use data attributes to avoid any quote/apostrophe issues in item names
-      row.innerHTML = `
-        <div class="ub-name">${item}</div>
-        <div class="ub-btn-group">
-          <button class="ub-btn ${status==='da'?'da':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="da" onclick="setUbStatus(this.dataset.key,'da',this)">✓ Da</button>
-          <button class="ub-btn ${status==='nachf'?'nachf':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="nachf" onclick="setUbStatus(this.dataset.key,'nachf',this)">⚠ Nachfüllen</button>
-          <button class="ub-btn ${status==='best'?'best':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="best" onclick="setUbStatus(this.dataset.key,'best',this)">🛒 Bestellen</button>
-        </div>`;
+      row.innerHTML = `<div class="ub-name">${item}</div><div class="ub-btn-group"><button class="ub-btn ${status==='da'?'da':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="da" onclick="setUbStatus(this.dataset.key,'da',this)">✓ Da</button><button class="ub-btn ${status==='nachf'?'nachf':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="nachf" onclick="setUbStatus(this.dataset.key,'nachf',this)">⚠ Nachfüllen</button><button class="ub-btn ${status==='best'?'best':''}" data-key="${key.replace(/"/g,'&quot;')}" data-status="best" onclick="setUbStatus(this.dataset.key,'best',this)">Bestellen</button></div>`;
       table.appendChild(row);
     });
     container.appendChild(table);
@@ -1344,19 +1695,10 @@ function renderUbergabe() {
 }
 
 function setUbStatus(key, status, btn) {
-  // Toggle off if already selected
-  if (ubStatus[key] === status) {
-    ubStatus[key] = null;
-  } else {
-    ubStatus[key] = status;
-  }
-  // Update button styles in this row
+  ubStatus[key] = ubStatus[key] === status ? null : status;
   const row = btn.closest('.ub-row');
   row.querySelectorAll('.ub-btn').forEach(b => b.classList.remove('da','nachf','best'));
-  if (ubStatus[key]) {
-    btn.classList.add(ubStatus[key]);
-  }
-  // Autosave
+  if (ubStatus[key]) btn.classList.add(ubStatus[key]);
   localStorage.setItem('bar_ubergabe_state', JSON.stringify({ datum: currentSession.datum, status: ubStatus, kuerzel: currentSession.kuerzel, zeitstempel: new Date().toLocaleString('de-CH') }));
   updateUbProgress();
 }
@@ -1367,146 +1709,58 @@ function updateUbProgress() {
   const pct = total ? Math.round(done / total * 100) : 0;
   document.getElementById('ub-prog-fill').style.width = pct + '%';
   document.getElementById('ub-prog-text').textContent = done + ' / ' + total + ' kontrolliert';
-  updateNavBadge();
-}
-
-function updateNavBadge() {
-  // Show badge on check nav if there are pending items
-  const saved = localStorage.getItem('bar_ubergabe_state');
-  const navBtn = document.getElementById('nav-check');
-  if (!navBtn) return;
-  const existing = navBtn.querySelector('.ub-badge');
-  if (existing) existing.remove();
-
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      const pending = Object.values(parsed.status || {}).filter(v => v === 'nachf' || v === 'best').length;
-      if (pending > 0) {
-        const badge = document.createElement('span');
-        badge.className = 'ub-badge';
-        badge.textContent = pending;
-        navBtn.appendChild(badge);
-      }
-    } catch(e) {}
-  }
-}
-
-function checkUbergabeBanner() {
-  const saved = localStorage.getItem('bar_ubergabe_state');
-  if (!saved) return;
-  try {
-    const parsed = JSON.parse(saved);
-    const today = new Date().toLocaleDateString('de-CH', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-    if (parsed.datum !== today) return; // Old data
-    const nachf = [], best = [];
-    Object.entries(parsed.status || {}).forEach(([key, val]) => {
-      const name = key.split('|')[1];
-      if (val === 'nachf') nachf.push(name);
-      if (val === 'best') best.push(name);
-    });
-    if (nachf.length === 0 && best.length === 0) return;
-
-    // Show banner in setup view
-    const setupWrap = document.querySelector('#view-setup .wrap');
-    if (!setupWrap) return;
-    const existing = document.getElementById('ub-notif');
-    if (existing) existing.remove();
-
-    const banner = document.createElement('div');
-    banner.id = 'ub-notif';
-    banner.className = 'notif-banner';
-    banner.style.marginTop = '1rem';
-    let html = `<div style="flex:1;">
-      <div class="notif-banner-count">⚠ Offene Bar-Übergabe von ${parsed.kuerzel} (${parsed.datum.split(',')[0]})</div>`;
-    if (nachf.length) html += `<div class="notif-banner-text" style="margin-top:4px;">Nachfüllen: ${nachf.join(', ')}</div>`;
-    if (best.length) html += `<div class="notif-banner-text" style="margin-top:2px;">Bestellen: ${best.join(', ')}</div>`;
-    html += `</div><button onclick="dismissUbNotif()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0;">×</button>`;
-    banner.innerHTML = html;
-    setupWrap.appendChild(banner);
-  } catch(e) {}
-}
-
-function dismissUbNotif() {
-  const el = document.getElementById('ub-notif');
-  if (el) el.remove();
 }
 
 async function submitUbergabe() {
   const msg = document.getElementById('ub-saving-msg');
   msg.textContent = 'Wird gespeichert…';
   const now = new Date().toLocaleString('de-CH');
-
   const rows = [];
   UBERGABE_SECTIONS.forEach(sec => {
     sec.items.forEach(item => {
       const key = sec.title + '|' + item;
       const status = ubStatus[key];
-      if (status) {
-        rows.push({ datum: currentSession.datum, schicht: 'Bar Übergabe', section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: item, erledigt: status === 'da' ? 'Da' : status === 'nachf' ? 'Nachfüllen' : 'Bestellen', notiz: '', zeitstempel: now });
-      }
+      if (status) rows.push({ datum: currentSession.datum, schicht: 'Bar Übergabe', section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: item, erledigt: status === 'da' ? 'Da' : status === 'nachf' ? 'Nachfüllen' : 'Bestellen', notiz: '', zeitstempel: now });
     });
   });
-
   try { await saveToSheets(rows); msg.textContent = '✓ Gespeichert'; } catch(e) { msg.textContent = 'Lokal gespeichert'; }
-
   setTimeout(() => {
     const bestCount = Object.values(ubStatus).filter(v => v === 'best').length;
     const nachfCount = Object.values(ubStatus).filter(v => v === 'nachf').length;
-    document.getElementById('success-text').textContent = 
-      `Übergabe abgeschlossen — ${nachfCount} nachfüllen, ${bestCount} bestellen · ${currentSession.kuerzel}`;
+    document.getElementById('success-text').textContent = `Übergabe abgeschlossen — ${nachfCount} nachfüllen, ${bestCount} bestellen · ${currentSession.kuerzel}`;
     showCheckView('success');
   }, 700);
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
-  // Splash screen
   const splash = document.getElementById('splash');
-  if (splash) {
-    setTimeout(() => {
-      splash.style.opacity = '0';
-      setTimeout(() => splash.style.display = 'none', 800);
-    }, 1400);
-  }
+  if (splash) { setTimeout(() => { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 800); }, 1400); }
   initLogin();
   const now = new Date();
   document.getElementById('header-date').textContent = now.toLocaleDateString('de-CH', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
   const datum = document.getElementById('inp-datum');
-  if (datum) {
-    // Set today as default in YYYY-MM-DD format for date input
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    datum.value = y+'-'+m+'-'+d;
-  }
+  if (datum) { const y = now.getFullYear(); const m = String(now.getMonth()+1).padStart(2,'0'); const d = String(now.getDate()).padStart(2,'0'); datum.value = y+'-'+m+'-'+d; }
   document.getElementById('inp-kuerzel').addEventListener('input', validateSetup);
-  validateSetup();
-  checkResumeBanner();
-  checkUbergabeBanner();
-  updateNavBadge();
-  renderRezepte();
-  renderAllergene();
-  renderCocktails();
+  validateSetup(); checkResumeBanner();
+  renderRezepte(); renderAllergene(); renderCocktails();
 });
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
+  // FIX 5: Nav-Buttons — nur die 4 Haupt-Buttons, "mehr" bleibt unmarkiert
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navEl = document.getElementById('nav-' + name);
   if (navEl) navEl.classList.add('active');
-  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', cocktails: 'Cocktails', allergene: 'Allergene', guidelines: 'Guidelines', reglement: 'Reglement' };
+  const subs = { check: 'Schichtcheckliste', rezepte: 'Rezepte', cocktails: 'Cocktails', allergene: 'Allergene', reglement: 'Reglement' };
   document.getElementById('header-sub').textContent = subs[name] || '';
+  closeDrawer();
 }
 
-// *** FIX: Added 'ubergabe' to the list of views that get hidden ***
 function showCheckView(name) {
-  ['setup','checklist','temp','ubergabe','success','history'].forEach(v => {
-    const el = document.getElementById('view-' + v);
-    if (el) el.style.display = 'none';
-  });
+  ['setup','checklist','temp','ubergabe','success','history'].forEach(v => { const el = document.getElementById('view-' + v); if (el) el.style.display = 'none'; });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
   if (name === 'history') loadHistoryFromSheet();
@@ -1525,6 +1779,13 @@ function validateSetup() {
   btn.style.color = ok ? 'var(--gold)' : 'var(--dim)';
 }
 
+function selectSchicht(btn) {
+  document.querySelectorAll('.schicht-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('inp-schicht').value = btn.dataset.value;
+  validateSetup();
+}
+
 function startChecklist() {
   const k = document.getElementById('inp-kuerzel').value.trim().toUpperCase();
   const s = document.getElementById('inp-schicht').value;
@@ -1539,9 +1800,7 @@ function startChecklist() {
   if (s === 'Bar Übergabe') { startUbergabe(); return; }
   document.getElementById('sess-name').textContent = k + ' – ' + s;
   document.getElementById('sess-info').textContent = datum;
-  renderTasks();
-  updateProgress();
-  showCheckView('checklist');
+  renderTasks(); updateProgress(); showCheckView('checklist');
 }
 
 function renderTasks() {
@@ -1561,31 +1820,37 @@ function renderTasks() {
       if (taskNotes[i] === undefined) taskNotes[i] = '';
       const card = document.createElement('div');
       card.className = 'task-card'; card.id = 'task-' + i;
-      card.innerHTML = `<div class="task-main" onclick="toggleTask(${i})"><div class="task-check" id="chk-${i}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><span class="task-text">${text}</span><button class="note-btn" id="note-btn-${i}" onclick="event.stopPropagation();toggleNote(${i})">+ Notiz</button></div><div class="note-wrap" id="note-wrap-${i}"><textarea class="note-input" id="note-inp-${i}" placeholder="Notiz…" rows="2" oninput="saveNote(${i},this.value)"></textarea></div>`;
+      card.innerHTML = `<div class="task-main" onclick="toggleTask(${i})">
+        <div class="task-check" id="chk-${i}">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <span class="task-text">${text}</span>
+        <button class="note-btn" id="note-btn-${i}" onclick="event.stopPropagation();toggleNote(${i})">+ Notiz</button>
+      </div>
+      <div class="note-wrap" id="note-wrap-${i}">
+        <textarea class="note-input" id="note-inp-${i}" placeholder="Notiz…" rows="2" oninput="saveNote(${i},this.value)"></textarea>
+      </div>`;
       container.appendChild(card);
     });
   });
 }
 
+// FIX 4: toggleTask mit Tap-Animation
 function toggleTask(i) {
   taskStates[i] = !taskStates[i];
   document.getElementById('task-' + i).classList.toggle('done', taskStates[i]);
+  // Tap-Animation
+  const chk = document.getElementById('chk-' + i);
+  chk.classList.add('tapping');
+  setTimeout(() => { chk.classList.remove('tapping'); chk.classList.add('tapped'); }, 80);
+  setTimeout(() => { chk.classList.remove('tapped'); }, 200);
   updateProgress(); saveProgress();
 }
 
-function toggleNote(i) {
-  const w = document.getElementById('note-wrap-' + i);
-  w.classList.toggle('open');
-  if (w.classList.contains('open')) document.getElementById('note-inp-' + i).focus();
-}
-
-function saveNote(i, v) {
-  taskNotes[i] = v;
-  const b = document.getElementById('note-btn-' + i);
-  b.classList.toggle('has-note', v.trim().length > 0);
-  b.textContent = v.trim().length > 0 ? '✓ Notiz' : '+ Notiz';
-  saveProgress();
-}
+function toggleNote(i) { const w = document.getElementById('note-wrap-' + i); w.classList.toggle('open'); if (w.classList.contains('open')) document.getElementById('note-inp-' + i).focus(); }
+function saveNote(i, v) { taskNotes[i] = v; const b = document.getElementById('note-btn-' + i); b.classList.toggle('has-note', v.trim().length > 0); b.textContent = v.trim().length > 0 ? '✓ Notiz' : '+ Notiz'; saveProgress(); }
 
 function updateProgress() {
   const total = Object.keys(taskStates).length;
@@ -1601,12 +1866,7 @@ async function submitChecklist() {
   const now = new Date().toLocaleString('de-CH');
   const data = CHECKLISTEN[currentSession.schicht];
   const rows = []; let idx = 0;
-  data.sections.forEach(sec => {
-    sec.tasks.forEach(text => {
-      rows.push({ datum: currentSession.datum, schicht: currentSession.schicht, section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: text, erledigt: taskStates[idx] ? 'Ja' : 'Nein', notiz: taskNotes[idx] || '', zeitstempel: now });
-      idx++;
-    });
-  });
+  data.sections.forEach(sec => { sec.tasks.forEach(text => { rows.push({ datum: currentSession.datum, schicht: currentSession.schicht, section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: text, erledigt: taskStates[idx] ? 'Ja' : 'Nein', notiz: taskNotes[idx] || '', zeitstempel: now }); idx++; }); });
   const done = rows.filter(r => r.erledigt === 'Ja').length;
   history.unshift({ datum: currentSession.datum, schicht: currentSession.schicht, kuerzel: currentSession.kuerzel, zeitstempel: now, rows, done, total: rows.length });
   localStorage.setItem('checkliste_history', JSON.stringify(history.slice(0, 200)));
@@ -1614,11 +1874,7 @@ async function submitChecklist() {
   setTimeout(() => { clearDraft(); document.getElementById('success-text').textContent = done + ' von ' + rows.length + ' Aufgaben erledigt — ' + currentSession.kuerzel + ', ' + currentSession.datum; showCheckView('success'); }, 800);
 }
 
-async function saveToSheets(rows) {
-  const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ rows }) });
-  if (!r.ok) throw new Error('err');
-}
-
+async function saveToSheets(rows) { const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ rows }) }); if (!r.ok) throw new Error('err'); }
 function resetToSetup() { currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); showCheckView('setup'); }
 
 // ─── PAUSE / RESUME ───────────────────────────────────────────────────────────
@@ -1652,7 +1908,7 @@ const TEMP_ZELLEN = [
 ];
 function startTempControl() {
   tempValues={};
-  [0,1,2,3].forEach(i=>{const inp=document.getElementById('t'+i);if(inp){inp.value='';inp.className='temp-inp';}const s=document.getElementById('ts'+i);if(s){s.textContent='';s.className='temp-status';}});
+  [0,1,2,3].forEach(i=>{ const inp=document.getElementById('t'+i); if(inp){inp.value='';inp.className='temp-inp';} const s=document.getElementById('ts'+i); if(s){s.textContent='';s.className='temp-status';} });
   document.getElementById('temp-notiz').value='';
   document.getElementById('temp-prog-text').textContent='0 / 4 eingetragen';
   document.getElementById('temp-prog-fill').style.width='0%';
@@ -1686,14 +1942,8 @@ async function submitTemp() {
 function formatDatum(raw) {
   if (!raw) return '';
   const iso = String(raw);
-  if (iso.includes('T')) {
-    const d = new Date(iso);
-    if (!isNaN(d)) return d.toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-  }
-  if (iso.includes('-') && !iso.includes('T')) {
-    const [y,m,d] = iso.split('-');
-    return new Date(y,m-1,d).toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
-  }
+  if (iso.includes('T')) { const d = new Date(iso); if (!isNaN(d)) return d.toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' }); }
+  if (iso.includes('-') && !iso.includes('T')) { const [y,m,d] = iso.split('-'); return new Date(y,m-1,d).toLocaleDateString('de-CH', { weekday:'short', day:'numeric', month:'short', year:'numeric' }); }
   return iso;
 }
 
@@ -1716,58 +1966,43 @@ function renderHistory() {
     return true;
   });
   if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Noch keine Einträge vorhanden.</div>'; return; }
-
   list.innerHTML = filtered.map((e, i) => {
     const datum = formatDatum(e.datum);
     const done = e.rows.filter(r => r.erledigt==='Ja'||r.erledigt==='OK').length;
     const total = e.rows.length;
     const pct = total ? Math.round(done/total*100) : 0;
-    const pctColor = pct===100 ? 'var(--success)' : pct>=70 ? 'var(--gold)' : 'var(--warn)';
-
-    // Group tasks by section
+    const pctColor = pct===100 ? 'var(--success)' : pct>=70 ? 'var(--gold)' : 'var(--warn-text)';
     const sections = {};
-    e.rows.forEach(r => {
-      const sec = r.section || 'Aufgaben';
-      if (!sections[sec]) sections[sec] = [];
-      sections[sec].push(r);
-    });
-
+    e.rows.forEach(r => { const sec = r.section || 'Aufgaben'; if (!sections[sec]) sections[sec] = []; sections[sec].push(r); });
     const sectionHtml = Object.entries(sections).map(([sec, tasks]) => {
       const taskRows = tasks.map(r => {
         const ok = r.erledigt==='Ja'||r.erledigt==='OK';
-        return `<div style="display:flex;align-items:baseline;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
-          <span style="color:${ok?'var(--success)':'var(--dim)'};font-size:0.62rem;flex-shrink:0;">${ok?'●':'○'}</span>
+        return `<div style="display:flex;align-items:baseline;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.84rem;font-family:var(--body);">
+          <span style="color:${ok?'var(--success)':'var(--dim)'};font-size:0.6rem;flex-shrink:0;">${ok?'●':'○'}</span>
           <span style="color:${ok?'var(--text)':'var(--muted)'};${ok?'':'text-decoration:line-through;text-decoration-color:var(--dim)'}">${r.aufgabe}</span>
-          ${r.notiz?`<span style="color:var(--muted);font-size:0.72rem;font-style:italic;">↳ ${r.notiz}</span>`:''}
+          ${r.notiz?`<span style="color:var(--muted);font-size:0.74rem;font-style:italic;">↳ ${r.notiz}</span>`:''}
         </div>`;
       }).join('');
-      return `<div style="margin-bottom:0.75rem;">
-        <div style="font-family:var(--font);font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold-dim);padding:0.5rem 0 0.35rem;border-bottom:1px solid var(--border);">${sec}</div>
-        ${taskRows}
-      </div>`;
+      return `<div style="margin-bottom:var(--sp-2);"><div style="font-family:var(--font);font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold-dim);padding:var(--sp-1) 0 6px;border-bottom:1px solid var(--border);">${sec}</div>${taskRows}</div>`;
     }).join('');
-
     const schichtLabel = e.schicht === 'Spätdienst Service' ? 'Service' : e.schicht;
-
-    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:3px;margin-bottom:0.5rem;overflow:hidden;">
-      <div onclick="toggleHistEntry(${i})" style="padding:0.8rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:0.75rem;">
+    return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:6px;overflow:hidden;">
+      <div onclick="toggleHistEntry(${i})" style="padding:var(--sp-2);display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:12px;">
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="font-family:var(--font);font-size:0.72rem;letter-spacing:0.06em;color:var(--gold);">${e.kuerzel}</span>
-            <span style="font-size:0.7rem;color:var(--muted);">·</span>
-            <span style="font-size:0.78rem;color:var(--text);">${schichtLabel}</span>
+            <span style="font-size:0.7rem;color:var(--dim);">·</span>
+            <span style="font-size:0.82rem;color:var(--text);font-family:var(--body);">${schichtLabel}</span>
           </div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;font-style:italic;">${datum}</div>
+          <div style="font-size:0.74rem;color:var(--muted);margin-top:3px;font-style:italic;font-family:var(--body);">${datum}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:0.6rem;flex-shrink:0;">
-          <span style="font-size:0.72rem;color:${pctColor};font-family:var(--ui);">${done}/${total}</span>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <span style="font-size:0.74rem;color:${pctColor};font-family:var(--ui);">${done}/${total}</span>
           <span id="hc-${i}" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
         </div>
       </div>
-      <div id="hd-${i}" style="display:none;padding:0 1rem 0.75rem;border-top:1px solid var(--border);">
-        <div style="margin-top:0.75rem;">
-          ${sectionHtml}
-        </div>
+      <div id="hd-${i}" style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
+        <div style="margin-top:var(--sp-2);">${sectionHtml}</div>
       </div>
     </div>`;
   }).join('');
@@ -1787,7 +2022,7 @@ function renderRezepte() {
     const tagHtml = [...r.tags.map(t => `<span class="tag tag-${t}">${t === 'vegan' ? '🌱 Vegan' : t}</span>`), `<span class="tag tag-${r.kat}">${{hauptgang:'Hauptgang',beilage:'Beilage',sauce:'Sauce & Dip',dessert:'Dessert',backen:'Backen'}[r.kat]||r.kat}</span>`].join('');
     const ingList = r.zutaten.map(z => `<li>${z}</li>`).join('');
     const notizHtml = r.notiz ? `<div class="recipe-note">${r.notiz}</div>` : '';
-    return `<div class="recipe-card" id="rc-${i}"><div class="recipe-head" onclick="toggleRecipe(${i})"><div><div class="recipe-name">${r.name}</div><div class="recipe-tags" style="margin-top:5px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${r.zubereitung}</p>${notizHtml}</div></div>`;
+    return `<div class="recipe-card" id="rc-${i}"><div class="recipe-head" onclick="toggleRecipe(${i})"><div><div class="recipe-name">${r.name}</div><div class="recipe-tags" style="margin-top:6px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${r.zubereitung}</p>${notizHtml}</div></div>`;
   }).join('');
 }
 
@@ -1807,14 +2042,12 @@ function renderAllergene() {
     const gridHtml = ALLERGENE_FELDER.filter(f => d[f.toLowerCase()] === 1).map(f => `<div class="ag-item yes"><div class="ag-dot"></div>${f}</div>`).join('');
     const notizHtml = d.notiz ? `<div class="dish-notiz">${d.notiz}</div>` : '';
     const veganBadge = d.vegan ? '<div class="dish-vegan">🌱 Vegan</div>' : '';
-    return `<div class="dish-card" id="dc-${i}"><div class="dish-head" onclick="toggleDish(${i})"><div><div class="dish-name">${d.name}</div>${veganBadge}</div><div class="allergen-pills">${pillsHtml || '<span style="font-size:0.72rem;color:var(--muted)">Keine</span>'}</div></div><div class="dish-detail"><div class="allergen-grid">${gridHtml || '<span style="font-size:0.8rem;color:var(--muted);font-style:italic;">Keine Allergene vorhanden</span>'}</div>${notizHtml}</div></div>`;
+    return `<div class="dish-card" id="dc-${i}"><div class="dish-head" onclick="toggleDish(${i})"><div><div class="dish-name">${d.name}</div>${veganBadge}</div><div class="allergen-pills">${pillsHtml || '<span style="font-size:0.74rem;color:var(--muted)">Keine</span>'}</div></div><div class="dish-detail"><div class="allergen-grid">${gridHtml || '<span style="font-size:0.82rem;color:var(--muted);font-style:italic;">Keine Allergene vorhanden</span>'}</div>${notizHtml}</div></div>`;
   }).join('');
 }
 
 function toggleDish(i) { const c = document.getElementById('dc-' + i); c.classList.toggle('open'); }
 function filterAllergene() { renderAllergene(); }
-
-// ─── GUIDELINES ───────────────────────────────────────────────────────────────
 </script>
 </body>
 </html>
