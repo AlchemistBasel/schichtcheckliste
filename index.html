@@ -794,6 +794,47 @@ select option { background: #111110; }
   transition: border-color 0.15s;
 }
 .guide-accordion:hover { border-color: var(--border3); }
+
+/* PASSWORD SCREEN */
+#pw-screen {
+  position: fixed; inset: 0; background: var(--bg-solid);
+  z-index: 9998; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: var(--sp-4);
+}
+.pw-box {
+  width: 100%; max-width: 340px;
+  display: flex; flex-direction: column; align-items: center; gap: var(--sp-3);
+}
+.pw-input {
+  width: 100%; padding: var(--sp-2) var(--sp-3);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); color: var(--text);
+  font-size: 1rem; font-family: var(--body);
+  text-align: center; letter-spacing: 0.1em;
+  transition: border-color 0.2s;
+}
+.pw-input:focus { outline: none; border-color: var(--gold-dim); box-shadow: 0 0 0 3px var(--gold-glow); }
+.pw-input.error { border-color: var(--crimson-text); animation: shake 0.3s ease; }
+.pw-btn {
+  width: 100%; padding: var(--sp-2);
+  background: transparent; border: 1px solid var(--gold-dim);
+  border-radius: var(--r-sm); color: var(--gold);
+  font-family: var(--font); font-size: 0.68rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.18s;
+}
+.pw-btn:hover { background: var(--gold-glow2); }
+.pw-error {
+  font-size: 0.8rem; color: var(--crimson-text);
+  font-style: italic; font-family: var(--body);
+  min-height: 1.2em; text-align: center;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
 /* ICON */
 .ika line { stroke: #c9a84c; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .ika polygon { fill: #c9a84c; fill-opacity: 0.05; stroke: none; }
@@ -830,6 +871,43 @@ select option { background: #111110; }
   <div style="font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:0.28em;color:#c9a84c;opacity:0.9;">ALCHEMIST</div>
   <div style="font-size:0.72rem;color:#6a6860;letter-spacing:0.2em;font-family:system-ui;">PORTAL</div>
 </div>
+
+<!-- PASSWORD SCREEN -->
+<div id="pw-screen" style="display:none;">
+  <div class="pw-box">
+    <svg class="ika" width="64" height="64" viewBox="-110 -120 220 240">
+      <polygon points="0,-108 -62,-52 62,-52" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+      <polygon points="-38,70 38,70 0,108" fill="#c9a84c" fill-opacity="0.08" stroke="none"/>
+      <line x1="0" y1="-108" x2="-62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="0" y1="-108" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="62" y2="-52" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="-95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="62" y1="-52" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="95" y2="18" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="-38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="95" y1="18" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-62" y1="-52" x2="38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <line x1="62" y1="-52" x2="-38" y2="70" stroke="#8a6e28" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <line x1="-38" y1="70" x2="38" y2="70" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="38" y1="70" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="-95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="95" y1="18" x2="0" y2="108" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div style="text-align:center;">
+      <div style="font-family:var(--font);font-size:1.1rem;letter-spacing:0.22em;color:var(--gold);">ALCHEMIST</div>
+      <div style="font-size:0.8rem;color:var(--muted);font-style:italic;font-family:var(--body);margin-top:4px;">Internes Mitarbeiterportal</div>
+    </div>
+    <div style="width:100%;">
+      <input class="pw-input" type="password" id="pw-input" placeholder="Passwort" onkeydown="if(event.key==='Enter')checkPassword()">
+      <div class="pw-error" id="pw-error"></div>
+    </div>
+    <button class="pw-btn" onclick="checkPassword()">Einloggen</button>
+  </div>
+</div>
+
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
@@ -1928,7 +2006,7 @@ async function submitUbergabe() {
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', function() {
   const splash = document.getElementById('splash');
-  if (splash) { setTimeout(() => { splash.style.opacity = '0'; setTimeout(() => splash.style.display = 'none', 800); }, 1400); }
+  if (splash) { setTimeout(() => { splash.style.opacity = '0'; setTimeout(() => { splash.style.display = 'none'; checkAuth(); }, 800); }, 1400); }
   initLogin();
   const now = new Date();
   document.getElementById('header-date').textContent = now.toLocaleDateString('de-CH', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
@@ -3664,6 +3742,33 @@ function renderGoogle() {
 
 function gPrev() { if (googlePage > 0) { googlePage--; renderGoogle(); window.scrollTo(0,0); } }
 function gNext(t) { if (googlePage < t-1) { googlePage++; renderGoogle(); window.scrollTo(0,0); } }
+
+
+// ─── PASSWORD ────────────────────────────────────────────────────────────────
+const PW_HASH = 'e8b1d44b8e21a64af5b5b7de68bf7e81'; // md5 placeholder - using simple check
+
+function checkPassword() {
+  const val = document.getElementById('pw-input').value;
+  const inp = document.getElementById('pw-input');
+  const err = document.getElementById('pw-error');
+  // Simple obfuscated check
+  if (btoa(val) === 'V2lubmluZ3RlYW1hbGNoZW1pc3Q=') {
+    sessionStorage.setItem('alchemist_auth', '1');
+    document.getElementById('pw-screen').style.display = 'none';
+    err.textContent = '';
+  } else {
+    inp.classList.add('error');
+    err.textContent = 'Falsches Passwort.';
+    inp.value = '';
+    setTimeout(() => inp.classList.remove('error'), 400);
+  }
+}
+
+function checkAuth() {
+  if (!sessionStorage.getItem('alchemist_auth')) {
+    document.getElementById('pw-screen').style.display = 'flex';
+  }
+}
 
 </script>
 </body>
