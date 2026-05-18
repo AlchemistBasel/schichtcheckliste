@@ -541,6 +541,7 @@ select option { background: #111110; }
 .ub-alert-title { font-size: 0.88rem; color: var(--warn-text); font-family: var(--body); font-weight: 600; }
 .ub-alert-sub { font-size: 0.78rem; color: var(--warn-text); opacity: 0.75; margin-top: 2px; font-family: var(--ui); }
 .ub-alert-arrow { color: var(--warn-text); opacity: 0.6; font-size: 0.9rem; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* CHECKLISTE */
 .sess-bar {
@@ -3923,17 +3924,76 @@ function gNext(t) { if (googlePage < t-1) { googlePage++; renderGoogle(); window
 
 
 // ─── ÜBERGABE BANNER & SHEET ─────────────────────────────────────────────────
+// Cached data fetched from Sheet (shared across all devices)
+let _ubSheetData = null; // { rows, kuerzel, datum, zeitstempel } | null | 'loading'
+
 function checkUbergabeBanner() {
-  const saved = localStorage.getItem('bar_ubergabe_state');
   const wrap = document.getElementById('ub-alert-wrap');
-  if (!saved) { if (wrap) wrap.style.display = 'none'; return; }
-  let data;
-  try { data = JSON.parse(saved); } catch(e) { if (wrap) wrap.style.display = 'none'; return; }
-  const status = data.status || {};
-  const nachf = Object.entries(status).filter(([,v]) => v === 'nachf');
-  const best  = Object.entries(status).filter(([,v]) => v === 'best');
+  if (wrap) wrap.style.display = 'none'; // hide while loading
+  _ubSheetData = 'loading';
+  _fetchLatestUbergabe((data) => {
+    _ubSheetData = data;
+    _renderUbergabeBanner(data);
+  });
+}
+
+function _fetchLatestUbergabe(callback) {
+  const cbName = 'ubCallback_' + Date.now();
+  const script = document.createElement('script');
+  const timeout = setTimeout(() => {
+    delete window[cbName]; script.remove();
+    // Fallback: try localStorage for offline/error cases
+    try {
+      const saved = localStorage.getItem('bar_ubergabe_state');
+      if (saved) {
+        const local = JSON.parse(saved);
+        const status = local.status || {};
+        const rows = [];
+        Object.entries(status).forEach(([key, st]) => {
+          if (st === 'nachf' || st === 'best') {
+            const [section, aufgabe] = key.split('|');
+            rows.push({ section, aufgabe, erledigt: st === 'nachf' ? 'Nachfüllen' : 'Bestellen' });
+          }
+        });
+        callback({ rows, kuerzel: local.kuerzel || '', datum: local.datum || '', zeitstempel: local.zeitstempel || '' });
+      } else { callback(null); }
+    } catch(e) { callback(null); }
+  }, 8000);
+
+  window[cbName] = (json) => {
+    clearTimeout(timeout); delete window[cbName]; script.remove();
+    if (!json.ok || !json.rows || !json.rows.length) { callback(null); return; }
+    // Find the most recent "Bar Übergabe" session
+    const ubRows = json.rows.filter(r => (r['Schicht'] || '') === 'Bar Übergabe');
+    if (!ubRows.length) { callback(null); return; }
+    // Get the latest timestamp group
+    ubRows.sort((a, b) => {
+      const parseTs = ts => { if (!ts) return 0; const s = String(ts); const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{2}):(\d{2})/); if (m) return new Date(m[3], m[2]-1, m[1], m[4], m[5]).getTime(); const d = new Date(s); return isNaN(d) ? 0 : d.getTime(); };
+      return parseTs(b['Zeitstempel']) - parseTs(a['Zeitstempel']);
+    });
+    const latestTs = ubRows[0]['Zeitstempel'] || '';
+    const latestKuerzel = ubRows[0]['Kürzel'] || '';
+    const latestDatum = ubRows[0]['Datum'] || '';
+    // Collect all rows from the same session (same Zeitstempel + Kürzel)
+    const sessionRows = ubRows.filter(r => r['Zeitstempel'] === latestTs && r['Kürzel'] === latestKuerzel);
+    // Only keep Nachfüllen / Bestellen rows
+    const openRows = sessionRows
+      .filter(r => r['Erledigt'] === 'Nachfüllen' || r['Erledigt'] === 'Bestellen')
+      .map(r => ({ section: r['Bereich'] || r['Section'] || '', aufgabe: r['Aufgabe'] || '', erledigt: r['Erledigt'] }));
+    if (!openRows.length) { callback(null); return; }
+    callback({ rows: openRows, kuerzel: latestKuerzel, datum: latestDatum, zeitstempel: latestTs });
+  };
+  script.src = WEBHOOK_URL + '?callback=' + cbName;
+  script.onerror = () => { clearTimeout(timeout); delete window[cbName]; script.remove(); callback(null); };
+  document.head.appendChild(script);
+}
+
+function _renderUbergabeBanner(data) {
+  const wrap = document.getElementById('ub-alert-wrap');
+  if (!data || !data.rows || !data.rows.length) { if (wrap) wrap.style.display = 'none'; return; }
+  const nachf = data.rows.filter(r => r.erledigt === 'Nachfüllen');
+  const best  = data.rows.filter(r => r.erledigt === 'Bestellen');
   if (!nachf.length && !best.length) { if (wrap) wrap.style.display = 'none'; return; }
-  // Show banner
   if (wrap) wrap.style.display = 'block';
   const parts = [];
   if (nachf.length) parts.push(nachf.length + ' nachfüllen');
@@ -3945,63 +4005,55 @@ function checkUbergabeBanner() {
 }
 
 function showUbergabeSheet() {
-  const saved = localStorage.getItem('bar_ubergabe_state');
-  if (!saved) return;
-  let data;
-  try { data = JSON.parse(saved); } catch(e) { return; }
-  const status = data.status || {};
-  // Build meta line
-  const metaEl = document.getElementById('ub-sheet-meta');
-  if (metaEl) metaEl.textContent = (data.kuerzel || '') + (data.datum ? ' · ' + data.datum : '') + (data.zeitstempel ? ' · ' + data.zeitstempel : '');
-  // Build body
-  const bodyEl = document.getElementById('ub-sheet-body');
-  if (!bodyEl) return;
-  // Group by section (key format: "SectionTitle|ItemName")
-  const sectionMap = {};
-  UBERGABE_SECTIONS.forEach(sec => {
-    sec.items.forEach(item => {
-      const key = sec.title + '|' + item;
-      const st = status[key];
-      if (st === 'nachf' || st === 'best') {
-        if (!sectionMap[sec.title]) sectionMap[sec.title] = [];
-        sectionMap[sec.title].push({ item, st });
-      }
+  // Open sheet immediately with a loading state, then fill in data
+  const overlay = document.getElementById('ub-sheet-overlay');
+  const bodyEl  = document.getElementById('ub-sheet-body');
+  const metaEl  = document.getElementById('ub-sheet-meta');
+  if (!overlay || !bodyEl) return;
+  if (bodyEl) bodyEl.innerHTML = '<div class="ub-sheet-empty" style="padding:var(--sp-4) 0;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:block;margin:0 auto 10px;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>Wird geladen…</div>';
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('open'));
+
+  const render = (data) => {
+    if (metaEl) metaEl.textContent = data ? ((data.kuerzel || '') + (data.datum ? ' · ' + data.datum : '') + (data.zeitstempel ? ' · ' + data.zeitstempel : '')) : '';
+    if (!data || !data.rows || !data.rows.length) {
+      bodyEl.innerHTML = '<div class="ub-sheet-empty">Keine offenen Punkte — alles in Ordnung ✓</div>';
+      return;
+    }
+    // Group by section
+    const sectionMap = {};
+    data.rows.forEach(({section, aufgabe, erledigt}) => {
+      const sec = section || 'Sonstiges';
+      if (!sectionMap[sec]) sectionMap[sec] = [];
+      const st = erledigt === 'Nachfüllen' ? 'nachf' : 'best';
+      sectionMap[sec].push({ item: aufgabe, st });
     });
-  });
-  const sectionKeys = Object.keys(sectionMap);
-  if (!sectionKeys.length) {
-    bodyEl.innerHTML = '<div class="ub-sheet-empty">Keine offenen Punkte — alles erledigt ✓</div>';
-  } else {
-    // Summary counts
-    const allItems = Object.values(sectionMap).flat();
-    const nachfTotal = allItems.filter(x => x.st === 'nachf').length;
-    const bestTotal  = allItems.filter(x => x.st === 'best').length;
+    const nachfTotal = data.rows.filter(r => r.erledigt === 'Nachfüllen').length;
+    const bestTotal  = data.rows.filter(r => r.erledigt === 'Bestellen').length;
     const summaryParts = [];
     if (nachfTotal) summaryParts.push(`<span style="color:var(--gold);font-family:var(--font);font-size:0.78rem;">${nachfTotal}× nachfüllen</span>`);
     if (bestTotal)  summaryParts.push(`<span style="color:var(--warn-text);font-family:var(--font);font-size:0.78rem;">${bestTotal}× bestellen</span>`);
-    const summary = `<div style="display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) 0 var(--sp-2);border-bottom:1px solid var(--border);margin-bottom:var(--sp-2);">${summaryParts.join('<span style="color:var(--border3);margin:0 4px;">·</span>')}</div>`;
-    const sectionsHtml = sectionKeys.map(sec => {
-      const items = sectionMap[sec];
+    const summary = `<div style="display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border);margin-bottom:var(--sp-2);">${summaryParts.join('<span style="color:var(--border3);margin:0 4px;">·</span>')}</div>`;
+    const sectionsHtml = Object.entries(sectionMap).map(([sec, items]) => {
       const rows = items.map(({item, st}) => {
         const label = st === 'nachf' ? 'Nachfüllen' : 'Bestellen';
-        return `<div class="ub-sheet-item">
-          <div class="ub-sheet-dot ${st}"></div>
-          <div class="ub-sheet-label">${item}</div>
-          <div class="ub-sheet-tag ${st}">${label}</div>
-        </div>`;
+        return `<div class="ub-sheet-item"><div class="ub-sheet-dot ${st}"></div><div class="ub-sheet-label">${item}</div><div class="ub-sheet-tag ${st}">${label}</div></div>`;
       }).join('');
-      return `<div class="ub-sheet-section">
-        <div class="ub-sheet-section-title">${sec}</div>
-        ${rows}
-      </div>`;
+      return `<div class="ub-sheet-section"><div class="ub-sheet-section-title">${sec}</div>${rows}</div>`;
     }).join('');
     bodyEl.innerHTML = summary + sectionsHtml;
-  }
-  // Open the overlay with animation
-  const overlay = document.getElementById('ub-sheet-overlay');
-  if (overlay) {
-    overlay.style.display = 'flex';
-    requestAnimationFrame(() => overlay.classList.add('open'));
+  };
+
+  // If we already have cached data, render immediately
+  if (_ubSheetData && _ubSheetData !== 'loading') {
+    render(_ubSheetData);
+  } else {
+    // Fetch fresh from sheet
+    _fetchLatestUbergabe((data) => {
+      _ubSheetData = data;
+      _renderUbergabeBanner(data);
+      render(data);
+    });
   }
 }
 
