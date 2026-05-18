@@ -1204,10 +1204,16 @@ select option { background: #111110; }
       <div class="temp-table">
         <div class="temp-head"><span>Kühlzelle</span><span>Nummer</span><span>Soll</span><span>Ist (°C)</span></div>
         <div class="temp-row">
-          <div><div class="temp-name">Bar</div><div class="temp-nr">EG 05/06</div></div>
+          <div><div class="temp-name">Bar 1</div><div class="temp-nr">EG 05/06</div></div>
           <div class="temp-nr" style="align-self:center;">EG 05/06</div>
           <div class="temp-soll">+6–10°C</div>
           <div><input class="temp-inp" type="number" step="0.1" placeholder="°C" id="t0" data-min="6" data-max="10" oninput="checkTemp(this,0)"><div class="temp-status" id="ts0"></div></div>
+        </div>
+        <div class="temp-row">
+          <div><div class="temp-name">Bar 2</div><div class="temp-nr">EG 05/06</div></div>
+          <div class="temp-nr" style="align-self:center;">EG 05/06</div>
+          <div class="temp-soll">+6–10°C</div>
+          <div><input class="temp-inp" type="number" step="0.1" placeholder="°C" id="t4" data-min="6" data-max="10" oninput="checkTemp(this,4)"><div class="temp-status" id="ts4"></div></div>
         </div>
         <div class="temp-row">
           <div><div class="temp-name">Tiefkühler</div><div class="temp-nr">EG 07</div></div>
@@ -1218,8 +1224,13 @@ select option { background: #111110; }
         <div class="temp-row">
           <div><div class="temp-name">Eismaschine</div><div class="temp-nr">UG 31/32</div></div>
           <div class="temp-nr" style="align-self:center;">UG 31/32</div>
-          <div class="temp-soll">−20°C</div>
-          <div><input class="temp-inp" type="number" step="0.1" placeholder="°C" id="t2" data-min="-23" data-max="-17" oninput="checkTemp(this,2)"><div class="temp-status" id="ts2"></div></div>
+          <div class="temp-soll">gecheckt</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div id="eis-check" onclick="toggleEisCheck()" style="width:28px;height:28px;border:1.5px solid var(--border3);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.18s;">
+              <svg id="eis-check-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--success)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;transition:opacity 0.15s;"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <div class="temp-status" id="ts2"></div>
+          </div>
         </div>
         <div class="temp-row">
           <div><div class="temp-name">Bier</div><div class="temp-nr">UG 35</div></div>
@@ -2172,20 +2183,54 @@ function resumeChecklist() {
 
 // ─── TEMPERATUR ───────────────────────────────────────────────────────────────
 const TEMP_ZELLEN = [
-  {name:'Bar',nr:'EG 05/06',soll:'+6–10',min:6,max:10},
+  {name:'Bar 1',nr:'EG 05/06',soll:'+6–10',min:6,max:10},
+  {name:'Bar 2',nr:'EG 05/06',soll:'+6–10',min:6,max:10},
   {name:'Tiefkühler',nr:'EG 07',soll:'−18',min:-21,max:-15},
-  {name:'Eismaschine',nr:'UG 31/32',soll:'−20',min:-23,max:-17},
+  {name:'Eismaschine',nr:'UG 31/32',soll:'gecheckt',checkbox:true},
   {name:'Bier',nr:'UG 35',soll:'+6–7',min:6,max:7},
 ];
 function startTempControl() {
   tempValues={};
-  [0,1,2,3].forEach(i=>{ const inp=document.getElementById('t'+i); if(inp){inp.value='';inp.className='temp-inp';} const s=document.getElementById('ts'+i); if(s){s.textContent='';s.className='temp-status';} });
+  [0,1,3,4].forEach(i=>{ const inp=document.getElementById('t'+i); if(inp){inp.value='';inp.className='temp-inp';} const s=document.getElementById('ts'+i); if(s){s.textContent='';s.className='temp-status';} });
+  // Reset Eismaschine checkbox
+  const eisCheck = document.getElementById('eis-check');
+  const eisIcon  = document.getElementById('eis-check-icon');
+  if(eisCheck){ eisCheck.style.borderColor='var(--border3)'; eisCheck.style.background=''; }
+  if(eisIcon) eisIcon.style.opacity='0';
+  tempValues['eis'] = false;
+  const s2 = document.getElementById('ts2'); if(s2){s2.textContent='';s2.className='temp-status';}
   document.getElementById('temp-notiz').value='';
-  document.getElementById('temp-prog-text').textContent='0 / 4 eingetragen';
-  document.getElementById('temp-prog-fill').style.width='0%';
+  updateTempProgress();
   document.getElementById('temp-sess-name').textContent=currentSession.kuerzel+' – Temperaturkontrolle Bar';
   document.getElementById('temp-sess-info').textContent=currentSession.datum;
   showCheckView('temp');
+}
+
+function toggleEisCheck() {
+  tempValues['eis'] = !tempValues['eis'];
+  const eisCheck = document.getElementById('eis-check');
+  const eisIcon  = document.getElementById('eis-check-icon');
+  const s2 = document.getElementById('ts2');
+  if(tempValues['eis']) {
+    eisCheck.style.borderColor='var(--success)';
+    eisCheck.style.background='rgba(74,154,106,0.12)';
+    eisIcon.style.opacity='1';
+    s2.textContent='✓ OK'; s2.className='temp-status ok';
+  } else {
+    eisCheck.style.borderColor='var(--border3)';
+    eisCheck.style.background='';
+    eisIcon.style.opacity='0';
+    s2.textContent=''; s2.className='temp-status';
+  }
+  updateTempProgress();
+}
+
+function updateTempProgress() {
+  const numFilled = [0,1,3,4].filter(i=>{ const v=tempValues[i]; return v!==null&&v!==undefined&&!isNaN(v); }).length;
+  const eisDone = tempValues['eis'] ? 1 : 0;
+  const filled = numFilled + eisDone;
+  document.getElementById('temp-prog-text').textContent=filled+' / 5 eingetragen';
+  document.getElementById('temp-prog-fill').style.width=(filled/5*100)+'%';
 }
 function checkTemp(inp, i) {
   const val=parseFloat(inp.value); const min=parseFloat(inp.dataset.min); const max=parseFloat(inp.dataset.max);
@@ -2194,19 +2239,26 @@ function checkTemp(inp, i) {
   if(inp.value===''||isNaN(val)){inp.className='temp-inp';s.textContent='';s.className='temp-status';}
   else if(val>=min&&val<=max){inp.className='temp-inp ok';s.textContent='✓ OK';s.className='temp-status ok';}
   else{inp.className='temp-inp warn';s.textContent='⚠ Ausserhalb';s.className='temp-status warn';}
-  const filled=Object.values(tempValues).filter(v=>v!==null).length;
-  document.getElementById('temp-prog-text').textContent=filled+' / 4 eingetragen';
-  document.getElementById('temp-prog-fill').style.width=(filled/4*100)+'%';
+  updateTempProgress();
 }
 async function submitTemp() {
   const msg=document.getElementById('temp-saving-msg'); msg.textContent='Wird gespeichert…';
   const now=new Date().toLocaleString('de-CH'); const notiz=document.getElementById('temp-notiz').value;
-  const rows=TEMP_ZELLEN.map((z,i)=>{const val=tempValues[i];const hatWert=val!==null&&val!==undefined&&!isNaN(val);const inRange=hatWert&&parseFloat(val)>=z.min&&parseFloat(val)<=z.max;return{datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:z.name+' ('+z.nr+') Soll: '+z.soll+'°C',erledigt:hatWert?(inRange?'OK':'⚠ AUSSERHALB'):'Nicht gemessen',notiz:hatWert?parseFloat(val)+'°C'+(notiz&&i===0?' | '+notiz:''):(notiz&&i===0?notiz:''),zeitstempel:now};});
+  const rows=[];
+  // Number inputs: Bar1(t0), Bar2(t4), Tiefkühler(t1), Bier(t3)
+  [{z:TEMP_ZELLEN[0],i:0},{z:TEMP_ZELLEN[1],i:4},{z:TEMP_ZELLEN[2],i:1},{z:TEMP_ZELLEN[4],i:3}].forEach(({z,i})=>{
+    const val=tempValues[i];const hatWert=val!==null&&val!==undefined&&!isNaN(val);const inRange=hatWert&&parseFloat(val)>=z.min&&parseFloat(val)<=z.max;
+    rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:z.name+' ('+z.nr+') Soll: '+z.soll+'°C',erledigt:hatWert?(inRange?'OK':'⚠ AUSSERHALB'):'Nicht gemessen',notiz:hatWert?parseFloat(val)+'°C':(notiz&&i===0?notiz:''),zeitstempel:now});
+  });
+  // Eismaschine checkbox
+  const eisOk = tempValues['eis'] === true;
+  rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:'Eismaschine (UG 31/32) — gecheckt',erledigt:eisOk?'OK':'Nicht gecheckt',notiz:notiz||'',zeitstempel:now});
+
   const ok=rows.filter(r=>r.erledigt==='OK').length;
-  history.unshift({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',kuerzel:currentSession.kuerzel,zeitstempel:now,rows,done:ok,total:4});
+  history.unshift({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',kuerzel:currentSession.kuerzel,zeitstempel:now,rows,done:ok,total:5});
   localStorage.setItem('checkliste_history',JSON.stringify(history.slice(0,200)));
   try{await saveToSheets(rows);msg.textContent='✓ In Google Sheets gespeichert';}catch(e){msg.textContent='Lokal gespeichert';}
-  setTimeout(()=>{document.getElementById('success-text').textContent=ok+' von 4 Kühlzellen im Sollbereich — '+currentSession.kuerzel+', '+currentSession.datum;showCheckView('success');},800);
+  setTimeout(()=>{document.getElementById('success-text').textContent=ok+' von 5 Einträgen OK — '+currentSession.kuerzel+', '+currentSession.datum;showCheckView('success');},800);
 }
 
 // ─── HISTORY ──────────────────────────────────────────────────────────────────
