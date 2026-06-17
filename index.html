@@ -447,102 +447,6 @@ select option { background: #111110; }
 .notif-banner-text { font-size: 0.85rem; color: var(--warn-text); font-family: var(--body); }
 .notif-banner-count { font-family: var(--font); font-size: 0.7rem; color: var(--warn-text); }
 
-/* ÜBERGABE SHEET MODAL */
-#ub-sheet-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(4px);
-  display: none; align-items: flex-end;
-  transition: opacity 0.25s;
-}
-#ub-sheet-overlay.open { display: flex; }
-#ub-sheet {
-  width: 100%; max-width: 600px; margin: 0 auto;
-  background: var(--surface);
-  border-top: 1px solid var(--border2);
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-  max-height: 82vh; overflow-y: auto;
-  padding-bottom: 32px;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
-}
-#ub-sheet-overlay.open #ub-sheet { transform: translateY(0); }
-.ub-sheet-handle {
-  width: 36px; height: 4px; background: var(--border3);
-  border-radius: 2px; margin: 12px auto 0;
-}
-.ub-sheet-header {
-  padding: var(--sp-2) var(--sp-3) var(--sp-2);
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.ub-sheet-close {
-  background: none; border: none; cursor: pointer;
-  color: var(--muted); font-size: 1.1rem; line-height: 1;
-  padding: 2px 4px; flex-shrink: 0; margin-top: 2px;
-}
-.ub-sheet-close:hover { color: var(--text); }
-.ub-sheet-body { padding: var(--sp-2) var(--sp-3); }
-
-/* Section blocks inside the sheet */
-.ub-sheet-section { margin-bottom: var(--sp-3); }
-.ub-sheet-section-title {
-  font-family: var(--font); font-size: 0.52rem; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--gold-dim);
-  padding-bottom: 6px; margin-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-.ub-sheet-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 7px 0; border-bottom: 1px solid var(--border);
-  font-size: 0.9rem; font-family: var(--body);
-}
-.ub-sheet-item:last-child { border-bottom: none; }
-.ub-sheet-dot {
-  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-}
-.ub-sheet-dot.nachf { background: var(--gold); }
-.ub-sheet-dot.best  { background: var(--warn-text); }
-.ub-sheet-label { flex: 1; }
-.ub-sheet-tag {
-  font-size: 0.6rem; font-family: var(--ui); letter-spacing: 0.04em;
-  padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0;
-}
-.ub-sheet-tag.nachf {
-  background: var(--gold-glow); border: 1px solid var(--gold-dim); color: var(--gold);
-}
-.ub-sheet-tag.best {
-  background: var(--warn-dim); border: 1px solid var(--warn-border); color: var(--warn-text);
-}
-.ub-sheet-empty {
-  text-align: center; color: var(--muted);
-  font-size: 0.88rem; font-style: italic; font-family: var(--body);
-  padding: var(--sp-4) 0;
-}
-/* The clickable banner in setup */
-.ub-alert-banner {
-  background: var(--warn-dim); border: 1px solid var(--warn-border);
-  border-radius: var(--r-md); padding: 12px var(--sp-2);
-  margin-bottom: var(--sp-2);
-  display: flex; align-items: center; gap: 12px;
-  cursor: pointer; transition: background 0.15s, border-color 0.15s;
-  text-decoration: none;
-}
-.ub-alert-banner:hover {
-  background: rgba(184,90,30,0.18); border-color: rgba(184,90,30,0.55);
-}
-.ub-alert-icon {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--warn-dim); border: 1px solid var(--warn-border);
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.ub-alert-content { flex: 1; min-width: 0; }
-.ub-alert-title { font-size: 0.88rem; color: var(--warn-text); font-family: var(--body); font-weight: 600; }
-.ub-alert-sub { font-size: 0.78rem; color: var(--warn-text); opacity: 0.75; margin-top: 2px; font-family: var(--ui); }
-.ub-alert-arrow { color: var(--warn-text); opacity: 0.6; font-size: 0.9rem; flex-shrink: 0; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
 /* CHECKLISTE */
 .sess-bar {
   background: var(--surface); border: 1px solid var(--border);
@@ -931,6 +835,51 @@ select option { background: #111110; }
   25% { transform: translateX(-8px); }
   75% { transform: translateX(8px); }
 }
+
+/* ÜBERGABE MODAL */
+#ub-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 500; display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(4px);
+}
+#ub-modal-overlay.open { display: flex; }
+#ub-modal {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  width: 100%; max-width: 600px; max-height: 80vh;
+  overflow-y: auto; padding: var(--sp-3) var(--sp-3) var(--sp-4);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+.ub-modal-handle {
+  width: 36px; height: 4px; background: var(--border3);
+  border-radius: 2px; margin: 0 auto var(--sp-3);
+}
+.ub-section-title {
+  font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.14em;
+  text-transform: uppercase; margin-bottom: var(--sp-1);
+  display: flex; align-items: center; gap: var(--sp-1);
+}
+.ub-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.ub-item-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px var(--sp-1); border-bottom: 1px solid var(--border);
+  font-size: 0.9rem; font-family: var(--body); color: var(--text);
+}
+.ub-item-row:last-child { border-bottom: none; }
+.ub-dot-nachf { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.ub-dot-best  { width: 8px; height: 8px; border-radius: 50%; background: var(--crimson-text); flex-shrink: 0; }
+
+.karte-tab {
+  flex: 1; padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-md); cursor: pointer;
+  font-family: var(--font); font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: all 0.15s;
+}
 /* ICON */
 .ika line { stroke: #c9a84c; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .ika polygon { fill: #c9a84c; fill-opacity: 0.05; stroke: none; }
@@ -966,21 +915,6 @@ select option { background: #111110; }
   </svg>
   <div style="font-family:'Cinzel',serif;font-size:1.1rem;letter-spacing:0.28em;color:#c9a84c;opacity:0.9;">ALCHEMIST</div>
   <div style="font-size:0.72rem;color:#6a6860;letter-spacing:0.2em;font-family:system-ui;">PORTAL</div>
-</div>
-
-<!-- ÜBERGABE SHEET MODAL -->
-<div id="ub-sheet-overlay" onclick="handleSheetOverlayClick(event)">
-  <div id="ub-sheet">
-    <div class="ub-sheet-handle"></div>
-    <div class="ub-sheet-header">
-      <div>
-        <div style="font-family:var(--font);font-size:0.78rem;letter-spacing:0.1em;color:var(--warn-text);">Übergabe der letzten Schicht</div>
-        <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;font-style:italic;font-family:var(--body);" id="ub-sheet-meta"></div>
-      </div>
-      <button class="ub-sheet-close" onclick="closeUbergabeSheet()">✕</button>
-    </div>
-    <div class="ub-sheet-body" id="ub-sheet-body"></div>
-  </div>
 </div>
 
 <!-- PASSWORD SCREEN -->
@@ -1125,21 +1059,6 @@ select option { background: #111110; }
   <!-- SETUP -->
   <div id="view-setup">
     <div class="wrap">
-
-      <!-- ÜBERGABE-BANNER (wird per JS ein/ausgeblendet) -->
-      <div id="ub-alert-wrap" style="display:none;">
-        <div class="ub-alert-banner" onclick="showUbergabeSheet()">
-          <div class="ub-alert-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--warn-text)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div class="ub-alert-content">
-            <div class="ub-alert-title" id="ub-alert-title">Offene Punkte aus letzter Übergabe</div>
-            <div class="ub-alert-sub" id="ub-alert-sub">Tippen für Details →</div>
-          </div>
-          <div class="ub-alert-arrow">›</div>
-        </div>
-      </div>
-
       <div class="ornament">— ✦ —</div>
       <p class="page-title">Neue Schicht</p>
       <p class="page-sub">Bitte alle Felder ausfüllen um zu beginnen</p>
@@ -1448,7 +1367,11 @@ select option { background: #111110; }
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Rezepte</p>
-    <p class="page-sub">Frühlingskarte Alchemist — alle Rezepte auf einen Blick</p>
+    <p class="page-sub" id="rezepte-sub">Frühlingskarte — alle Rezepte auf einen Blick</p>
+    <div style="display:flex;gap:6px;margin-bottom:var(--sp-3);">
+      <button class="karte-tab" id="kt-fruehling-r" onclick="switchKarte('fruehling',this)" style="background:var(--gold-glow2);border:1px solid var(--gold);color:var(--gold);">🌸 Frühlingskarte</button>
+      <button class="karte-tab" id="kt-sommer-r" onclick="switchKarte('sommer',this)" style="background:transparent;border:1px solid var(--border);color:var(--muted);">☀️ Sommerkarte</button>
+    </div>
     <div class="search-box">
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="rezept-search" placeholder="Rezept suchen…" oninput="filterRezepte()">
@@ -1471,7 +1394,11 @@ select option { background: #111110; }
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Cocktails</p>
-    <p class="page-sub">REBIS — von uns kreiert, mit oder ohne Alkohol · CHF 19.–</p>
+    <p class="page-sub" id="cocktails-sub">REBIS — von uns kreiert, mit oder ohne Alkohol · CHF 19.–</p>
+    <div style="display:flex;gap:6px;margin-bottom:var(--sp-3);">
+      <button class="karte-tab" id="kt-fruehling-c" onclick="switchKarteC('fruehling',this)" style="background:var(--gold-glow2);border:1px solid var(--gold);color:var(--gold);">🌸 Frühlingskarte</button>
+      <button class="karte-tab" id="kt-sommer-c" onclick="switchKarteC('sommer',this)" style="background:transparent;border:1px solid var(--border);color:var(--muted);">☀️ Sommerkarte</button>
+    </div>
     <div class="search-box">
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="cocktail-search" placeholder="Cocktail suchen…" oninput="filterCocktails()">
@@ -1871,7 +1798,7 @@ const CHECKLISTEN = {
 };
 
 // ─── REZEPTE DATA ─────────────────────────────────────────────────────────────
-const REZEPTE = [
+const REZEPTE_FRUEHLING = [
   { name: 'Gemüserolle', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Reispapier','Glasnudeln (5 min in heissem Wasser, kalt abspülen)','Gemüsejulienne gemischt (Kohlrabi, Sellerie, Karotte)','1 Frühlingszwiebel','5 EL Sojasauce','1 EL Sesamöl','1 EL Ahornsirup','Limettensaft','Salz, Pfeffer'], zubereitung: 'Glasnudeln nach Packungsbeilage einweichen, mit kaltem Wasser abschrecken. Gemüsejulienne 3 Minuten im Dampf garen, im Frigo abkühlen. Frühlingszwiebel in dünne Ringe schneiden. Glasnudeln und Gemüse mit Sojasauce, Sesamöl, Ahornsirup vermengen, abschmecken. Reispapier 1 Minute im kalten Wasser einweichen, mit 1–2 EL des Glasnudelsalats füllen, Seiten einklappen und aufrollen (wie ein Burrito).' },
   { name: 'Chlorophyll-Salat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Salat:','500g Peperoni grün','500g Gurke geschält','500g Spitzkohl Julienne','2 Bund Frühlingszwiebeln','Dressing:','300g Cashewkerne','4 Knoblauchzehen','500g Spinat frisch','500g Basilikum','Zitronensaft, Olivenöl, Hefeflocken'], zubereitung: 'Alle Zutaten des Dressings im Thermomix zu cremiger Masse mixen. À la Minute mit Gemüse vermengen, abschmecken.' },
   { name: 'Sprossensalat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Sprossen / Microgreens gemischt','Apfel-Basilikum Dressing','Sojasauce'], zubereitung: 'Sprossen mit Apfel-Basilikum Dressing anrichten, mit Sojasauce abschmecken.' },
@@ -1884,7 +1811,7 @@ const REZEPTE = [
 ];
 
 // ─── COCKTAIL REZEPTE ─────────────────────────────────────────────────────────
-const COCKTAIL_REZEPTE = [
+const COCKTAILS_FRUEHLING = [
   { name: 'Genesis', zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'], zubereitung: 'Alle Zutaten mixen und servieren.', notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–' },
   { name: 'Walhalla', zutaten: ['3 cl Mescal','3 cl Lavendel-Honig Sirup','2 cl Evelyne','3 cl Limette','Alchemist-Bier zum Auffüllen'], zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.', notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–' },
   { name: 'Das Elixir der Aphrodite', zutaten: ['Rosé','Wassermelone-Granatapfel Sirup','Kräuter'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Leicht, fruchtig, betörend. CHF 19.–' },
@@ -1900,6 +1827,7 @@ function renderCocktails() {
   const search = (document.getElementById('cocktail-search')?.value || '').toLowerCase();
   const list = document.getElementById('cocktails-list');
   if (!list) return;
+  const COCKTAIL_REZEPTE = getActiveCocktails();
   const filtered = COCKTAIL_REZEPTE.filter(c => !search || c.name.toLowerCase().includes(search) || c.zutaten.join(' ').toLowerCase().includes(search));
   if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Kein Cocktail gefunden.</div>'; return; }
   list.innerHTML = filtered.map((c, i) => {
@@ -2041,6 +1969,39 @@ async function loadHistoryFromSheet() {
   } catch(e) { history = JSON.parse(localStorage.getItem('checkliste_history') || '[]'); renderHistory(); }
 }
 
+
+// ─── SOMMERKARTE (wird ergänzt) ───────────────────────────────────────────────
+const REZEPTE_SOMMER = [
+  // Wird ergänzt sobald die neue Karte steht
+];
+const COCKTAILS_SOMMER = [
+  // Wird ergänzt sobald die neue Karte steht
+];
+
+// ─── AKTIVE KARTE ─────────────────────────────────────────────────────────────
+let activeKarte = 'fruehling'; // 'fruehling' | 'sommer'
+function getActiveRezepte()  { return activeKarte === 'sommer' ? REZEPTE_SOMMER  : REZEPTE_FRUEHLING;  }
+function getActiveCocktails(){ return activeKarte === 'sommer' ? COCKTAILS_SOMMER : COCKTAILS_FRUEHLING; }
+
+function switchKarte(karte, btn) {
+  activeKarte = karte;
+  // Sync all karte-tabs
+  ['kt-fruehling-r','kt-sommer-r','kt-fruehling-c','kt-sommer-c'].forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    const isActive = (karte === 'fruehling' && id.includes('fruehling')) || (karte === 'sommer' && id.includes('sommer'));
+    b.style.background = isActive ? 'var(--gold-glow2)' : 'transparent';
+    b.style.borderColor = isActive ? 'var(--gold)' : 'var(--border)';
+    b.style.color = isActive ? 'var(--gold)' : 'var(--muted)';
+  });
+  activeFilter = 'alle';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('#filter-bar .filter-btn');
+  if (allBtn) allBtn.classList.add('active');
+  renderRezepte();
+  renderCocktails();
+}
+
 let activeFilter = 'alle';
 
 // ─── MITARBEITER & LOGIN ──────────────────────────────────────────────────────
@@ -2136,7 +2097,6 @@ async function submitUbergabe() {
     const bestCount = Object.values(ubStatus).filter(v => v === 'best').length;
     const nachfCount = Object.values(ubStatus).filter(v => v === 'nachf').length;
     document.getElementById('success-text').textContent = `Übergabe abgeschlossen — ${nachfCount} nachfüllen, ${bestCount} bestellen · ${currentSession.kuerzel}`;
-    checkUbergabeBanner();
     showCheckView('success');
   }, 700);
 }
@@ -2151,8 +2111,8 @@ window.addEventListener('load', function() {
   const datum = document.getElementById('inp-datum');
   if (datum) { const y = now.getFullYear(); const m = String(now.getMonth()+1).padStart(2,'0'); const d = String(now.getDate()).padStart(2,'0'); datum.value = y+'-'+m+'-'+d; }
   document.getElementById('inp-kuerzel').addEventListener('input', validateSetup);
-  validateSetup(); checkResumeBanner(); checkUbergabeBanner();
-  renderRezepte(); renderAllergene(); renderCocktails(); renderFeedback();
+  validateSetup(); checkResumeBanner();
+  renderRezepte(); renderAllergene(); renderCocktails(); renderFeedback(); checkUbergabeBanner();
 });
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
@@ -2284,7 +2244,7 @@ async function submitChecklist() {
 }
 
 async function saveToSheets(rows) { const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ rows }) }); if (!r.ok) throw new Error('err'); }
-function resetToSetup() { currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); checkUbergabeBanner(); showCheckView('setup'); }
+function resetToSetup() { currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); showCheckView('setup'); }
 
 // ─── PAUSE / RESUME ───────────────────────────────────────────────────────────
 function saveProgress() { if (!currentSession) return; localStorage.setItem('checkliste_draft', JSON.stringify({ session: currentSession, taskStates, taskNotes })); }
@@ -2462,6 +2422,7 @@ function renderHistory() {
 function renderRezepte() {
   const search = (document.getElementById('rezept-search')?.value || '').toLowerCase();
   const list = document.getElementById('rezepte-list');
+  const REZEPTE = getActiveRezepte();
   const filtered = REZEPTE.filter(r => {
     if (activeFilter !== 'alle') { if (activeFilter === 'vegan' && !r.tags.includes('vegan')) return false; else if (activeFilter !== 'vegan' && r.kat !== activeFilter) return false; }
     if (search && !r.name.toLowerCase().includes(search) && !r.zutaten.join(' ').toLowerCase().includes(search)) return false;
@@ -3923,151 +3884,6 @@ function gPrev() { if (googlePage > 0) { googlePage--; renderGoogle(); window.sc
 function gNext(t) { if (googlePage < t-1) { googlePage++; renderGoogle(); window.scrollTo(0,0); } }
 
 
-// ─── ÜBERGABE BANNER & SHEET ─────────────────────────────────────────────────
-// Cached data fetched from Sheet (shared across all devices)
-let _ubSheetData = null; // { rows, kuerzel, datum, zeitstempel } | null | 'loading'
-
-function checkUbergabeBanner() {
-  const wrap = document.getElementById('ub-alert-wrap');
-  if (wrap) wrap.style.display = 'none'; // hide while loading
-  _ubSheetData = 'loading';
-  _fetchLatestUbergabe((data) => {
-    _ubSheetData = data;
-    _renderUbergabeBanner(data);
-  });
-}
-
-function _fetchLatestUbergabe(callback) {
-  const cbName = 'ubCallback_' + Date.now();
-  const script = document.createElement('script');
-  const timeout = setTimeout(() => {
-    delete window[cbName]; script.remove();
-    // Fallback: try localStorage for offline/error cases
-    try {
-      const saved = localStorage.getItem('bar_ubergabe_state');
-      if (saved) {
-        const local = JSON.parse(saved);
-        const status = local.status || {};
-        const rows = [];
-        Object.entries(status).forEach(([key, st]) => {
-          if (st === 'nachf' || st === 'best') {
-            const [section, aufgabe] = key.split('|');
-            rows.push({ section, aufgabe, erledigt: st === 'nachf' ? 'Nachfüllen' : 'Bestellen' });
-          }
-        });
-        callback({ rows, kuerzel: local.kuerzel || '', datum: local.datum || '', zeitstempel: local.zeitstempel || '' });
-      } else { callback(null); }
-    } catch(e) { callback(null); }
-  }, 8000);
-
-  window[cbName] = (json) => {
-    clearTimeout(timeout); delete window[cbName]; script.remove();
-    if (!json.ok || !json.rows || !json.rows.length) { callback(null); return; }
-    // Find the most recent "Bar Übergabe" session
-    const ubRows = json.rows.filter(r => (r['Schicht'] || '') === 'Bar Übergabe');
-    if (!ubRows.length) { callback(null); return; }
-    // Get the latest timestamp group
-    ubRows.sort((a, b) => {
-      const parseTs = ts => { if (!ts) return 0; const s = String(ts); const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{2}):(\d{2})/); if (m) return new Date(m[3], m[2]-1, m[1], m[4], m[5]).getTime(); const d = new Date(s); return isNaN(d) ? 0 : d.getTime(); };
-      return parseTs(b['Zeitstempel']) - parseTs(a['Zeitstempel']);
-    });
-    const latestTs = ubRows[0]['Zeitstempel'] || '';
-    const latestKuerzel = ubRows[0]['Kürzel'] || '';
-    const latestDatum = ubRows[0]['Datum'] || '';
-    // Collect all rows from the same session (same Zeitstempel + Kürzel)
-    const sessionRows = ubRows.filter(r => r['Zeitstempel'] === latestTs && r['Kürzel'] === latestKuerzel);
-    // Only keep Nachfüllen / Bestellen rows
-    const openRows = sessionRows
-      .filter(r => r['Erledigt'] === 'Nachfüllen' || r['Erledigt'] === 'Bestellen')
-      .map(r => ({ section: r['Bereich'] || r['Section'] || '', aufgabe: r['Aufgabe'] || '', erledigt: r['Erledigt'] }));
-    if (!openRows.length) { callback(null); return; }
-    callback({ rows: openRows, kuerzel: latestKuerzel, datum: latestDatum, zeitstempel: latestTs });
-  };
-  script.src = WEBHOOK_URL + '?callback=' + cbName;
-  script.onerror = () => { clearTimeout(timeout); delete window[cbName]; script.remove(); callback(null); };
-  document.head.appendChild(script);
-}
-
-function _renderUbergabeBanner(data) {
-  const wrap = document.getElementById('ub-alert-wrap');
-  if (!data || !data.rows || !data.rows.length) { if (wrap) wrap.style.display = 'none'; return; }
-  const nachf = data.rows.filter(r => r.erledigt === 'Nachfüllen');
-  const best  = data.rows.filter(r => r.erledigt === 'Bestellen');
-  if (!nachf.length && !best.length) { if (wrap) wrap.style.display = 'none'; return; }
-  if (wrap) wrap.style.display = 'block';
-  const parts = [];
-  if (nachf.length) parts.push(nachf.length + ' nachfüllen');
-  if (best.length)  parts.push(best.length + ' bestellen');
-  const title = document.getElementById('ub-alert-title');
-  const sub   = document.getElementById('ub-alert-sub');
-  if (title) title.textContent = parts.join(' · ') + ' — Bar Übergabe';
-  if (sub)   sub.textContent   = (data.kuerzel ? data.kuerzel + ' · ' : '') + (data.datum || '') + ' · Tippen für Details →';
-}
-
-function showUbergabeSheet() {
-  // Open sheet immediately with a loading state, then fill in data
-  const overlay = document.getElementById('ub-sheet-overlay');
-  const bodyEl  = document.getElementById('ub-sheet-body');
-  const metaEl  = document.getElementById('ub-sheet-meta');
-  if (!overlay || !bodyEl) return;
-  if (bodyEl) bodyEl.innerHTML = '<div class="ub-sheet-empty" style="padding:var(--sp-4) 0;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-linecap="round" style="animation:spin 1s linear infinite;display:block;margin:0 auto 10px;"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>Wird geladen…</div>';
-  overlay.style.display = 'flex';
-  requestAnimationFrame(() => overlay.classList.add('open'));
-
-  const render = (data) => {
-    if (metaEl) metaEl.textContent = data ? ((data.kuerzel || '') + (data.datum ? ' · ' + data.datum : '') + (data.zeitstempel ? ' · ' + data.zeitstempel : '')) : '';
-    if (!data || !data.rows || !data.rows.length) {
-      bodyEl.innerHTML = '<div class="ub-sheet-empty">Keine offenen Punkte — alles in Ordnung ✓</div>';
-      return;
-    }
-    // Group by section
-    const sectionMap = {};
-    data.rows.forEach(({section, aufgabe, erledigt}) => {
-      const sec = section || 'Sonstiges';
-      if (!sectionMap[sec]) sectionMap[sec] = [];
-      const st = erledigt === 'Nachfüllen' ? 'nachf' : 'best';
-      sectionMap[sec].push({ item: aufgabe, st });
-    });
-    const nachfTotal = data.rows.filter(r => r.erledigt === 'Nachfüllen').length;
-    const bestTotal  = data.rows.filter(r => r.erledigt === 'Bestellen').length;
-    const summaryParts = [];
-    if (nachfTotal) summaryParts.push(`<span style="color:var(--gold);font-family:var(--font);font-size:0.78rem;">${nachfTotal}× nachfüllen</span>`);
-    if (bestTotal)  summaryParts.push(`<span style="color:var(--warn-text);font-family:var(--font);font-size:0.78rem;">${bestTotal}× bestellen</span>`);
-    const summary = `<div style="display:flex;gap:var(--sp-2);align-items:center;padding:var(--sp-2) 0;border-bottom:1px solid var(--border);margin-bottom:var(--sp-2);">${summaryParts.join('<span style="color:var(--border3);margin:0 4px;">·</span>')}</div>`;
-    const sectionsHtml = Object.entries(sectionMap).map(([sec, items]) => {
-      const rows = items.map(({item, st}) => {
-        const label = st === 'nachf' ? 'Nachfüllen' : 'Bestellen';
-        return `<div class="ub-sheet-item"><div class="ub-sheet-dot ${st}"></div><div class="ub-sheet-label">${item}</div><div class="ub-sheet-tag ${st}">${label}</div></div>`;
-      }).join('');
-      return `<div class="ub-sheet-section"><div class="ub-sheet-section-title">${sec}</div>${rows}</div>`;
-    }).join('');
-    bodyEl.innerHTML = summary + sectionsHtml;
-  };
-
-  // If we already have cached data, render immediately
-  if (_ubSheetData && _ubSheetData !== 'loading') {
-    render(_ubSheetData);
-  } else {
-    // Fetch fresh from sheet
-    _fetchLatestUbergabe((data) => {
-      _ubSheetData = data;
-      _renderUbergabeBanner(data);
-      render(data);
-    });
-  }
-}
-
-function closeUbergabeSheet() {
-  const overlay = document.getElementById('ub-sheet-overlay');
-  if (!overlay) return;
-  overlay.classList.remove('open');
-  setTimeout(() => { overlay.style.display = 'none'; }, 300);
-}
-
-function handleSheetOverlayClick(e) {
-  if (e.target === document.getElementById('ub-sheet-overlay')) closeUbergabeSheet();
-}
-
 // ─── PASSWORD ────────────────────────────────────────────────────────────────
 const PW_HASH = 'e8b1d44b8e21a64af5b5b7de68bf7e81'; // md5 placeholder - using simple check
 
@@ -4094,6 +3910,244 @@ function checkAuth() {
   }
 }
 
+
+// ─── ÜBERGABE BANNER & MODAL ──────────────────────────────────────────────────
+
+// Robust date formatter: handles ISO strings ("2026-06-01T07:00:00.000Z"),
+// Swiss locale strings ("1.6.2026, 09:00:00"), Date objects and timestamps.
+// Returns format like "Montag, 1. Juni · 09:00"
+function formatHandoverDate(input) {
+  if (!input) return '';
+  let d;
+  if (input instanceof Date) {
+    d = input;
+  } else if (typeof input === 'number') {
+    d = new Date(input);
+  } else if (typeof input === 'string') {
+    d = new Date(input);
+    if (isNaN(d.getTime())) {
+      // Try Swiss format like "1.6.2026, 09:00:00" or "01.06.2026 09:00"
+      const m = input.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})[,\s]+(\d{1,2}):(\d{2})/);
+      if (m) d = new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5]);
+    }
+  }
+  if (!d || isNaN(d.getTime())) return String(input);
+  const date = d.toLocaleDateString('de-CH', { weekday:'long', day:'numeric', month:'long' });
+  const time = d.toLocaleTimeString('de-CH', { hour:'2-digit', minute:'2-digit' });
+  return `${date} · ${time}`;
+}
+
+// Escape a key for safe embedding into onclick="..."
+function escapeUbKey(key) {
+  return String(key).split('\\').join('\\\\').split("'").join("\\'").split('"').join('&quot;');
+}
+
+function checkUbergabeBanner() {
+  const saved = localStorage.getItem('bar_ubergabe_state');
+  if (!saved) return;
+  let parsed;
+  try { parsed = JSON.parse(saved); } catch(e) { return; }
+
+  const nachf = [], best = [];
+  Object.entries(parsed.status || {}).forEach(([key, val]) => {
+    const name = key.split('|')[1];
+    if (val === 'nachf') nachf.push({ key, name });
+    if (val === 'best')  best.push({ key, name });
+  });
+  if (nachf.length === 0 && best.length === 0) return;
+
+  // Remove old banner if exists
+  const old = document.getElementById('ub-banner');
+  if (old) old.remove();
+
+  const setupWrap = document.querySelector('#view-setup .wrap');
+  if (!setupWrap) return;
+
+  const datumLabel = formatHandoverDate(parsed.zeitstempel || parsed.datum);
+
+  const banner = document.createElement('div');
+  banner.id = 'ub-banner';
+  banner.onclick = () => openUbModal(parsed, nachf, best);
+  banner.style.cssText = 'background:var(--warn-dim);border:1px solid var(--warn-border);border-radius:var(--r-md);padding:var(--sp-2);margin-bottom:var(--sp-2);cursor:pointer;transition:background 0.15s;';
+  banner.onmouseover = () => banner.style.background = 'rgba(184,90,30,0.18)';
+  banner.onmouseout  = () => banner.style.background = 'var(--warn-dim)';
+  banner.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--warn-text)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div>
+          <div style="font-family:var(--font);font-size:0.7rem;letter-spacing:0.06em;color:var(--warn-text);">Offene Bar-Übergabe · ${parsed.kuerzel}</div>
+          <div style="font-size:0.78rem;color:var(--warn-text);opacity:0.85;margin-top:2px;font-family:var(--body);">${datumLabel}</div>
+          <div style="font-size:0.72rem;color:var(--warn-text);opacity:0.65;margin-top:1px;font-family:var(--body);">${nachf.length > 0 ? nachf.length + '× Nachfüllen' : ''}${nachf.length && best.length ? ' · ' : ''}${best.length > 0 ? best.length + '× Bestellen' : ''}</div>
+        </div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--warn-text);font-family:var(--ui);opacity:0.7;flex-shrink:0;">Details →</div>
+    </div>`;
+
+  // Insert at top of wrap, before first child
+  setupWrap.insertBefore(banner, setupWrap.firstChild);
+}
+
+function openUbModal(parsed, nachf, best) {
+  // Backwards-compat: callers might still pass arrays of strings (old format).
+  const normalize = arr => (arr || []).map(x => typeof x === 'string' ? { key: '?|' + x, name: x } : x);
+  nachf = normalize(nachf);
+  best  = normalize(best);
+
+  const meta = document.getElementById('ub-modal-meta');
+  const con  = document.getElementById('ub-modal-content');
+  if (meta) meta.textContent = parsed.kuerzel + ' · ' + formatHandoverDate(parsed.zeitstempel || parsed.datum);
+
+  const doneBtn = (key) => `<button onclick="markUbItemDone('${escapeUbKey(key)}', this)" style="background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:var(--font);font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding:5px 11px;border-radius:var(--r-sm);cursor:pointer;flex-shrink:0;white-space:nowrap;">✓ Erledigt</button>`;
+
+  const itemRow = (it, dotClass) => `<div class="ub-item-row" data-key="${escapeUbKey(it.key)}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);"><div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1;"><div class="${dotClass}"></div><span style="font-family:var(--body);font-size:0.92rem;color:var(--ink);">${it.name}</span></div>${doneBtn(it.key)}</div>`;
+
+  let html = '';
+  if (nachf.length > 0) {
+    html += `<div class="ub-section-title" style="color:var(--gold-dim);">Nachfüllen (${nachf.length})</div>
+      <div style="margin-bottom:var(--sp-3);">${nachf.map(n => itemRow(n, 'ub-dot-nachf')).join('')}</div>`;
+  }
+  if (best.length > 0) {
+    html += `<div class="ub-section-title" style="color:var(--crimson-text);">Bestellen (${best.length})</div>
+      <div style="margin-bottom:var(--sp-3);">${best.map(n => itemRow(n, 'ub-dot-best')).join('')}</div>`;
+  }
+
+  html += `<button onclick="dismissUbBanner()" style="width:100%;padding:var(--sp-2);background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);color:var(--muted);font-family:var(--font);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;margin-top:var(--sp-1);">Alle als erledigt markieren & schliessen</button>`;
+
+  if (con) con.innerHTML = html;
+  document.getElementById('ub-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// Mark a single item as done: remove from localStorage, log to Google Sheets,
+// fade the row out, refresh banner & modal. When nothing remains → clear everything.
+async function markUbItemDone(key, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+
+  const saved = localStorage.getItem('bar_ubergabe_state');
+  if (!saved) return;
+  let parsed;
+  try { parsed = JSON.parse(saved); } catch(e) { return; }
+
+  if (parsed.status) delete parsed.status[key];
+
+  const sep = key.indexOf('|');
+  const section = sep >= 0 ? key.slice(0, sep) : '';
+  const item    = sep >= 0 ? key.slice(sep + 1) : key;
+  const now = new Date().toLocaleString('de-CH');
+  const doneBy = (typeof currentSession !== 'undefined' && currentSession && currentSession.kuerzel)
+    ? currentSession.kuerzel
+    : (parsed.kuerzel || '');
+
+  // Best-effort sheet sync (fire and forget — do not block the UI)
+  try {
+    saveToSheets([{
+      datum: parsed.datum,
+      schicht: 'Bar Übergabe',
+      section: section,
+      kuerzel: doneBy,
+      aufgabe: item,
+      erledigt: 'Erledigt',
+      notiz: 'Erledigt durch ' + doneBy,
+      zeitstempel: now
+    }]).catch(() => {});
+  } catch(e) {}
+
+  // Recalculate what's left
+  const nachf = [], best = [];
+  Object.entries(parsed.status || {}).forEach(([k, v]) => {
+    const name = k.split('|')[1];
+    if (v === 'nachf') nachf.push({ key: k, name });
+    if (v === 'best')  best.push({ key: k, name });
+  });
+
+  if (nachf.length === 0 && best.length === 0) {
+    // Everything done — clean up
+    localStorage.removeItem('bar_ubergabe_state');
+    const overlay = document.getElementById('ub-modal-overlay');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    const b = document.getElementById('ub-banner');
+    if (b) b.remove();
+    return;
+  }
+
+  localStorage.setItem('bar_ubergabe_state', JSON.stringify(parsed));
+
+  // Animate the row out, then re-render modal with updated counts and refresh banner
+  const row = btn ? btn.closest('.ub-item-row') : null;
+  const rerender = () => { openUbModal(parsed, nachf, best); refreshUbBanner(); };
+  if (row) {
+    row.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(20px)';
+    setTimeout(rerender, 250);
+  } else {
+    rerender();
+  }
+}
+
+function refreshUbBanner() {
+  const b = document.getElementById('ub-banner');
+  if (b) b.remove();
+  checkUbergabeBanner();
+}
+
+function closeUbModal(e) {
+  if (e && e.target !== document.getElementById('ub-modal-overlay')) return;
+  document.getElementById('ub-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function dismissUbBanner() {
+  localStorage.removeItem('bar_ubergabe_state');
+  document.getElementById('ub-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  const b = document.getElementById('ub-banner');
+  if (b) b.remove();
+}
+
+
+function switchKarteC(karte, btn) {
+  activeKarte = karte;
+  ['kt-fruehling-c','kt-sommer-c'].forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    b.style.background = 'transparent';
+    b.style.borderColor = 'var(--border)';
+    b.style.color = 'var(--muted)';
+  });
+  btn.style.background = 'var(--gold-glow2)';
+  btn.style.borderColor = 'var(--gold)';
+  btn.style.color = 'var(--gold)';
+  // Sync Rezepte tabs too
+  ['kt-fruehling-r','kt-sommer-r'].forEach(id => {
+    const b = document.getElementById(id);
+    if (!b) return;
+    const isActive = (karte === 'fruehling' && id === 'kt-fruehling-r') || (karte === 'sommer' && id === 'kt-sommer-r');
+    b.style.background = isActive ? 'var(--gold-glow2)' : 'transparent';
+    b.style.borderColor = isActive ? 'var(--gold)' : 'var(--border)';
+    b.style.color = isActive ? 'var(--gold)' : 'var(--muted)';
+  });
+  renderCocktails();
+}
+
 </script>
+
+<!-- ÜBERGABE MODAL -->
+<div id="ub-modal-overlay" onclick="closeUbModal(event)">
+  <div id="ub-modal">
+    <div class="ub-modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-3);">
+      <div>
+        <div style="font-family:var(--font);font-size:0.9rem;letter-spacing:0.06em;color:var(--gold);">Bar Übergabe</div>
+        <div id="ub-modal-meta" style="font-size:0.78rem;color:var(--muted);font-style:italic;font-family:var(--body);margin-top:2px;"></div>
+      </div>
+      <button onclick="closeUbModal()" style="background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;padding:0 4px;">×</button>
+    </div>
+    <div id="ub-modal-content"></div>
+  </div>
+</div>
+
 </body>
 </html>
