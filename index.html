@@ -10,7 +10,7 @@
    FIX 1 — TYPOGRAFIE-SYSTEM (4 Stufen, konsequent)
    Display:  Cinzel 400, gold,       für Seitentitel / Splash
    Label:    Cinzel 400, 0.58rem, 0.12em tracking, 65% opacity → Sections
-   Body:     Crimson Text 400, 1rem, 90% white        → Fliesstext
+   Body:     Crimson Text 400, 1rem, 90% white        → Fliesstexta
    Meta:     system-ui 0.72rem, 50% white             → Hints, Datum
    ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -663,6 +663,9 @@ select option { background: #111110; }
 .recipe-ing { font-size: 0.9rem; color: var(--text); line-height: 1.65; padding-left: var(--sp-2); font-family: var(--body); }
 .recipe-ing li { margin-bottom: 1px; }
 .recipe-steps { font-size: 0.9rem; color: var(--text); line-height: 1.7; font-family: var(--body); }
+.recipe-subhead { font-family: var(--ui); font-size: 0.72rem; color: var(--gold-dim); margin: var(--sp-1) 0 2px; font-style: italic; }
+.recipe-ol { padding-left: var(--sp-3); }
+.recipe-ol li { margin-bottom: 4px; }
 .recipe-note { font-size: 0.84rem; color: var(--muted); font-style: italic; margin-top: var(--sp-1); padding: var(--sp-1) var(--sp-2); border-left: 2px solid var(--gold-dim); font-family: var(--body); }
 
 /* ALLERGENE */
@@ -884,6 +887,75 @@ select option { background: #111110; }
 .ika line { stroke: #c9a84c; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .ika polygon { fill: #c9a84c; fill-opacity: 0.05; stroke: none; }
 .ika .dim { stroke: #8a6e28 !important; stroke-width: 0.5; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MONATSBERICHT — Selbstkontrolle für die Lebensmittelkontrolle
+   ═══════════════════════════════════════════════════════════════════════════ */
+.rep-link {
+  width: 100%; margin-bottom: var(--sp-2);
+  background: var(--gold-glow); border: 1px solid var(--gold-dim); border-radius: var(--r-md);
+  padding: 12px var(--sp-2); cursor: pointer; color: var(--gold);
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+}
+.rep-link:hover { background: var(--gold-glow2); border-color: var(--gold); }
+.rep-link-title { font-family: var(--font); font-size: 0.7rem; letter-spacing: 0.08em; }
+.rep-link-sub { font-size: 0.8rem; color: var(--muted); font-style: italic; font-family: var(--body); margin-top: 2px; }
+.rep-toggle {
+  display: flex; align-items: center; gap: var(--sp-1);
+  font-family: var(--body); font-size: 0.9rem; letter-spacing: 0; text-transform: none;
+  color: var(--text-sec); cursor: pointer; margin-bottom: var(--sp-3);
+}
+.rep-toggle input { width: 18px; height: 18px; accent-color: var(--gold); flex-shrink: 0; }
+.rep-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-1); }
+.rep-actions .btn-gold { padding: 14px var(--sp-1); }
+@media (max-width: 400px) { .rep-actions { grid-template-columns: 1fr; } }
+.rep-preview-wrap { margin-top: var(--sp-3); border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--border2); }
+
+/* Papier-Optik: gleich auf dem Bildschirm (Vorschau) und im Druck */
+.rp-paper { background: #fff; color: #1c1b18; font-family: var(--body); padding: var(--sp-3) var(--sp-2); line-height: 1.45; }
+.rp-head { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--sp-2); flex-wrap: wrap; border-bottom: 2px solid #1c1b18; padding-bottom: var(--sp-1); margin-bottom: var(--sp-2); }
+.rp-brand { font-family: var(--font); font-size: 1.05rem; letter-spacing: 0.22em; color: #7a6228; }
+.rp-brand-sub { font-size: 0.8rem; color: #555; font-style: italic; }
+.rp-title { font-family: var(--font); font-size: 0.95rem; letter-spacing: 0.06em; text-align: right; }
+.rp-meta { font-family: var(--ui); font-size: 0.68rem; color: #666; text-align: right; }
+.rp-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sp-1); margin-bottom: var(--sp-3); }
+.rp-stat { border: 1px solid #d8d2c2; border-radius: 3px; padding: 6px 10px; }
+.rp-stat-num { font-family: var(--font); font-size: 1.05rem; color: #1c1b18; }
+.rp-stat-num.bad { color: #a01818; }
+.rp-stat-lbl { font-family: var(--ui); font-size: 0.64rem; color: #666; text-transform: uppercase; letter-spacing: 0.04em; hyphens: manual; overflow-wrap: anywhere; }
+.rp-h2 { font-family: var(--font); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: #1c1b18; margin: var(--sp-3) 0 4px; }
+.rp-soll { font-family: var(--ui); font-size: 0.7rem; color: #555; margin-bottom: var(--sp-1); }
+.rp-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.rp-table { width: 100%; min-width: 560px; border-collapse: collapse; font-family: var(--ui); font-size: 0.74rem; }
+.rp-table th { background: #f1ede2; text-align: left; font-weight: 600; padding: 5px 6px; border: 1px solid #d8d2c2; white-space: nowrap; }
+.rp-table td { padding: 4px 6px; border: 1px solid #e2ddd0; vertical-align: top; }
+.rp-table td.num { text-align: center; white-space: nowrap; }
+.rp-table tr:nth-child(even) td { background: #faf8f3; }
+.rp-ok { color: #2d6a45; }
+.rp-abw { color: #a01818 !important; font-weight: 700; background: #fbeaea !important; }
+.rp-missing td { color: #9a958a; font-style: italic; }
+.rp-warn-note { color: #a01818; font-style: italic; }
+.rp-empty { font-style: italic; color: #777; padding: var(--sp-1) 0; }
+.rp-foot { margin-top: var(--sp-4); display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); font-family: var(--ui); font-size: 0.7rem; color: #444; }
+.rp-sign { border-top: 1px solid #1c1b18; padding-top: 4px; }
+.rp-source { margin-top: var(--sp-2); font-family: var(--ui); font-size: 0.62rem; color: #888; }
+
+#print-area { display: none; }
+@media print {
+  @page { size: A4; margin: 12mm; }
+  html, body { background: #fff !important; }
+  body.printing-report { padding: 0 !important; min-height: 0 !important; }
+  body.printing-report > *:not(#print-area) { display: none !important; }
+  body.printing-report #print-area { display: block !important; }
+  #print-area .rp-paper { padding: 0; }
+  #print-area .rp-scroll { overflow: visible; }
+  #print-area .rp-table { min-width: 0; font-size: 8pt; }
+  #print-area thead { display: table-header-group; }
+  #print-area tr { break-inside: avoid; page-break-inside: avoid; }
+  #print-area .rp-foot { break-inside: avoid; }
+  #print-area * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 </style>
 </head>
 <body>
@@ -1072,8 +1144,8 @@ select option { background: #111110; }
 
     <div class="section-label">Aktuelle Karte</div>
     <div class="reg-card" style="margin-bottom:var(--sp-3);">
-      <div style="font-family:var(--font);font-size:0.9rem;letter-spacing:0.08em;color:var(--gold);">☀️ Sommerkarte 26</div>
-      <p class="t-secondary" style="margin-top:6px;">Die neue Speise- und Getränkekarte ist aktiv — Rezepte, Cocktails und Allergene sind aktualisiert. Die Frühlingskarte bleibt als Archiv verfügbar. Snacks von 17.00 bis 22.00, am Wochenende bis 23.00. WLAN für Gäste: Paracelsus.</p>
+      <div style="font-family:var(--font);font-size:0.9rem;letter-spacing:0.08em;color:var(--gold);">🍂 Herbstkarte 26</div>
+      <p class="t-secondary" style="margin-top:6px;">Die Herbstkarte ist aktiv — Rezepte und Allergene sind aktualisiert. Die Cocktails der Sommerkarte bleiben. Snacks von 17.00 bis 22.00, am Wochenende bis 23.00. WLAN für Gäste: Paracelsus.</p>
     </div>
 
     <div class="section-label">Alchemist-Bao · 7.–/Stk · Harem: wähle 4 für 25.–</div>
@@ -1083,7 +1155,7 @@ select option { background: #111110; }
         <li class="reg-item">Kamasutra — Poulet, Yuzu-Wasabi-Mayo</li>
         <li class="reg-item">Geisha — Rind, BBQ</li>
         <li class="reg-item">Cleopatra — Falafel, Aubergine-Tomate</li>
-        <li class="reg-item">Mulan — Ente, Erdbeer-Hoisin</li>
+        <li class="reg-item">Artemis — Reh, Zwetschgen-Balsamico</li>
         <li class="reg-item">Walpurga — Pilz, Teriyaki</li>
         <li class="reg-item" style="border-left-color:var(--gold-dim);">Dazu: Kartoffelstäbchen 9.– · Gemüse im Kräuter-Bierteig 12.–</li>
       </ul>
@@ -1210,7 +1282,7 @@ select option { background: #111110; }
           <span id="gc-abr" style="color:var(--muted);font-size:0.8rem;transition:transform 0.2s;">▾</span>
         </div>
         <div id="gb-abr" style="display:none;padding:0 var(--sp-2) var(--sp-2);border-top:1px solid var(--border);">
-          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);"><div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--crimson-bg);border:1px solid var(--crimson-border);border-radius:var(--r-sm);font-size:0.84rem;color:var(--crimson-text);font-family:var(--body);">Nur in Abwesenheit von Mark oder Julian. IMMER erst starten wenn alle Tische abgeschlossen sind.</div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Vorbereitung</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Alle iPads abmelden</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Stornos immer begründen und visieren</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);"><strong style="color:var(--text)">Alles immer auf Bar abschliessen</strong> — Ausnahme: VeloGourmet und Debitor</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Umbuchung Bar → Kreditkarte</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → Minus tippen → auf Bar abschliessen</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → auf Kreditkarte abschliessen</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Tagesabschluss</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Mit Managercode in Kasse einloggen: <strong style="color:var(--gold)">0000</strong></span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Links unten auf Icon → Berichte anwählen</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);">„X Financial" — prüfen ob alles auf Bar. Falls nicht: Betrag auf Bar umbuchen.</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span><span style="color:var(--text);">„Z Financial" → rechts oben Drucker-Symbol</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span><span style="color:var(--text);">Bei allen Terminals Tagesabschluss ziehen (Punkt 4). Summe beider zusammenzählen.</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Stockkontrolle</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Beide Portemonnaies auf CHF 300.– Stock bringen, Rest ins Abrechnungscouvert</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Im Chat melden, falls Stockgeld benötigt wird</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Ins Abrechnungsmäppli</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-2);display:flex;flex-direction:column;gap:5px;margin-top:4px;"><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Terminalabschlüsse</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Financial Z</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Gutscheine</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Stornos</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Debitor Belege</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Einkaufsbelege über Kasse (Jumbo, Migros etc.)</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Restliches Geld</div></div><div style="font-size:0.84rem;color:var(--muted);font-family:var(--body);font-style:italic;margin-top:6px;">Zusammenheften → Abrechnungscouvert → Servicefach ablegen.</div><div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:var(--r-sm);font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">Bei Problemen immer Mark oder Julian Bescheid geben.</div></div>
+          <div style="display:flex;flex-direction:column;gap:var(--sp-1);margin-top:var(--sp-2);"><div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--crimson-bg);border:1px solid var(--crimson-border);border-radius:var(--r-sm);font-size:0.84rem;color:var(--crimson-text);font-family:var(--body);">Nur in Abwesenheit von Mark oder Julian. IMMER erst starten wenn alle Tische abgeschlossen sind.</div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Vorbereitung</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Alle iPads abmelden</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Stornos immer begründen und visieren</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);"><strong style="color:var(--text)">Alles immer auf Bar abschliessen</strong> — Ausnahme: VeloGourmet und Debitor</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Umbuchung Bar → Kreditkarte</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → Minus tippen → auf Bar abschliessen</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">„Zahlart geändert" → Summe eintippen → auf Kreditkarte abschliessen</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Tagesabschluss</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Mit dem Managercode in der Kasse einloggen (Code bei Mark oder Julian)</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Links unten auf Icon → Berichte anwählen</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">3</span><span style="color:var(--text);">„X Financial" — prüfen ob alles auf Bar. Falls nicht: Betrag auf Bar umbuchen.</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">4</span><span style="color:var(--text);">„Z Financial" → rechts oben Drucker-Symbol</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">5</span><span style="color:var(--text);">Bei allen Terminals Tagesabschluss ziehen (Punkt 4). Summe beider zusammenzählen.</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Stockkontrolle</div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">1</span><span style="color:var(--text);">Beide Portemonnaies auf CHF 300.– Stock bringen, Rest ins Abrechnungscouvert</span></div><div style="display:flex;gap:12px;font-size:0.9rem;line-height:1.6;font-family:var(--body);"><span style="font-family:var(--font);font-size:0.65rem;color:var(--gold-dim);flex-shrink:0;margin-top:3px;">2</span><span style="color:var(--text);">Im Chat melden, falls Stockgeld benötigt wird</span></div><div style="font-family:var(--font);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold-dim);margin-top:var(--sp-2);margin-bottom:4px;">Ins Abrechnungsmäppli</div><div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-2);display:flex;flex-direction:column;gap:5px;margin-top:4px;"><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Terminalabschlüsse</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Financial Z</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Gutscheine</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Stornos</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Debitor Belege</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Einkaufsbelege über Kasse (Jumbo, Migros etc.)</div><div style="font-size:0.88rem;color:var(--text);font-family:var(--body);display:flex;gap:8px;"><span style="color:var(--gold-dim);">·</span>Restliches Geld</div></div><div style="font-size:0.84rem;color:var(--muted);font-family:var(--body);font-style:italic;margin-top:6px;">Zusammenheften → Abrechnungscouvert → Servicefach ablegen.</div><div style="margin-top:var(--sp-1);padding:var(--sp-1) var(--sp-2);background:var(--gold-glow);border:1px solid var(--gold-dim);border-radius:var(--r-sm);font-size:0.84rem;color:var(--muted);font-style:italic;font-family:var(--body);">Bei Problemen immer Mark oder Julian Bescheid geben.</div></div>
         </div>
       </div>
       </div>
@@ -1280,8 +1352,9 @@ select option { background: #111110; }
           <div class="sess-info" id="temp-sess-info"></div>
         </div>
         <div style="text-align:right;">
-          <div class="prog-text" id="temp-prog-text">0 / 4 eingetragen</div>
+          <div class="prog-text" id="temp-prog-text">0 / 5 eingetragen</div>
           <div class="prog-bar" style="width:96px;margin-left:auto;margin-top:6px;"><div class="prog-fill" id="temp-prog-fill" style="width:0%"></div></div>
+          <div class="autosave">wird automatisch gespeichert</div>
         </div>
       </div>
       <div class="temp-table">
@@ -1324,7 +1397,7 @@ select option { background: #111110; }
       </div>
       <div class="card" style="padding:var(--sp-2);margin-bottom:var(--sp-2);">
         <label>Notizen (optional)</label>
-        <textarea class="note-input" id="temp-notiz" placeholder="Auffälligkeiten, Bemerkungen…" rows="2" style="width:100%;"></textarea>
+        <textarea class="note-input" id="temp-notiz" placeholder="Auffälligkeiten, Bemerkungen…" rows="2" style="width:100%;" oninput="saveTempDraft()"></textarea>
       </div>
       <div class="submit-area">
         <p class="submit-note">Alle Temperaturen werden mit Datum, Uhrzeit und Kürzel gespeichert.</p>
@@ -1384,6 +1457,14 @@ select option { background: #111110; }
           Aktualisieren
         </button>
       </div>
+      <button class="rep-link" onclick="showCheckView('report')">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><path d="M9 15l2 2 4-4"/></svg>
+        <span style="flex:1;display:block;">
+          <span class="rep-link-title" style="display:block;">Monatsbericht für die Kontrolle</span>
+          <span class="rep-link-sub" style="display:block;">Temperaturen &amp; Reinigung pro Monat — drucken, PDF oder CSV</span>
+        </span>
+        <span style="color:var(--gold-dim);font-size:0.9rem;">→</span>
+      </button>
       <div class="hist-filters">
         <select id="hist-schicht" onchange="renderHistory()">
           <option value="">Alle Schichten</option>
@@ -1398,6 +1479,38 @@ select option { background: #111110; }
       <div id="hist-list"></div>
     </div>
   </div>
+
+  <!-- MONATSBERICHT -->
+  <div id="view-report" style="display:none;">
+    <div class="wrap">
+      <button class="back-btn" onclick="showCheckView('history')">← Zurück zum Verlauf</button>
+      <div class="ornament">— ✦ —</div>
+      <p class="page-title">Monatsbericht</p>
+      <p class="page-sub">Selbstkontrolle für die Lebensmittelkontrolle</p>
+      <div class="card" style="padding:var(--sp-3);">
+        <div class="field-group">
+          <label for="rep-month">Monat</label>
+          <select id="rep-month" onchange="renderReport()"></select>
+        </div>
+        <div class="field-group">
+          <label for="rep-type">Inhalt</label>
+          <select id="rep-type" onchange="renderReport()">
+            <option value="alle">Temperatur & Reinigung</option>
+            <option value="temp">Nur Temperaturkontrolle</option>
+            <option value="clean">Nur Reinigung & Checklisten</option>
+          </select>
+        </div>
+        <label class="rep-toggle"><input type="checkbox" id="rep-empty" onchange="renderReport()"> Tage ohne Temperatur-Eintrag auflisten</label>
+        <div class="rep-actions">
+          <button class="btn-gold" onclick="printReport()">Drucken / PDF</button>
+          <button class="btn-gold" onclick="downloadReportCsv()">CSV herunterladen</button>
+        </div>
+        <p class="hint" style="text-align:center;">Für ein PDF im Druckdialog «Als PDF sichern» wählen.</p>
+        <div class="saving-msg" id="rep-status"></div>
+      </div>
+      <div class="rep-preview-wrap"><div id="rep-preview" class="rp-paper"></div></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══ PAGE: REZEPTE & ALLERGENE ═══ -->
@@ -1405,33 +1518,28 @@ select option { background: #111110; }
   <div class="wrap">
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Rezepte</p>
-    <p class="page-sub" id="rezepte-sub">Sommerkarte 26 — alle Rezepte auf einen Blick</p>
+    <p class="page-sub" id="rezepte-sub">Herbstkarte 26 — Mise en Place</p>
     <div style="display:flex;gap:6px;margin-bottom:var(--sp-2);">
       <button class="karte-tab" id="mode-rezepte" onclick="switchRezepteMode('rezepte')" style="background:var(--gold-glow2);border:1px solid var(--gold);color:var(--gold);">Rezepte</button>
       <button class="karte-tab" id="mode-allergene" onclick="switchRezepteMode('allergene')" style="background:transparent;border:1px solid var(--border);color:var(--muted);">⚠ Allergene</button>
     </div>
     <div id="rezepte-mode-wrap">
-    <div style="display:flex;gap:6px;margin-bottom:var(--sp-3);">
-      <button class="karte-tab" id="kt-sommer-r" onclick="switchKarte('sommer',this)" style="background:var(--gold-glow2);border:1px solid var(--gold);color:var(--gold);">☀️ Sommerkarte 26</button>
-      <button class="karte-tab" id="kt-fruehling-r" onclick="switchKarte('fruehling',this)" style="background:transparent;border:1px solid var(--border);color:var(--muted);">🌸 Frühling (Archiv)</button>
-    </div>
+    
     <div class="search-box">
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="rezept-search" placeholder="Rezept suchen…" oninput="filterRezepte()">
     </div>
     <div class="filter-bar" id="filter-bar">
       <button class="filter-btn active" onclick="setFilter('alle',this)">Alle</button>
-      <button class="filter-btn" onclick="setFilter('hauptgang',this)">Hauptgang</button>
-      <button class="filter-btn" onclick="setFilter('beilage',this)">Beilage</button>
+      <button class="filter-btn" onclick="setFilter('hauptgang',this)">Gerichte</button>
       <button class="filter-btn" onclick="setFilter('sauce',this)">Saucen & Dips</button>
       <button class="filter-btn" onclick="setFilter('dessert',this)">Dessert</button>
-      <button class="filter-btn" onclick="setFilter('backen',this)">Backen</button>
       <button class="filter-btn" onclick="setFilter('vegan',this)">Vegan ✓</button>
     </div>
     <div id="rezepte-list"></div>
     </div>
     <div id="allergene-mode-wrap" style="display:none;">
-      <p class="t-meta" style="margin-bottom:var(--sp-2);">Sommer- & Frühlingskarte · CH-Deklaration (14 Hauptallergene)</p>
+      <p class="t-meta" style="margin-bottom:var(--sp-2);">Herbstkarte · CH-Deklaration · Stand: Allergen-Übersicht Herbst (korrigiert). Fisch, Krebstiere, Weichtiere, Erdnüsse und Lupinen sind in der Übersicht nicht aufgeführt — bei Gastfragen in der Küche nachfragen.</p>
       <div class="allergen-search field-group">
         <input type="text" id="allerg-search" placeholder="Gericht suchen…" oninput="filterAllergene()">
       </div>
@@ -1446,10 +1554,7 @@ select option { background: #111110; }
     <div class="ornament">— ✦ —</div>
     <p class="page-title">Cocktails</p>
     <p class="page-sub" id="cocktails-sub">Sommerkarte 26 — von uns kreiert · mit oder ohne Alkohol, auch Frozen · CHF 19.–</p>
-    <div style="display:flex;gap:6px;margin-bottom:var(--sp-3);">
-      <button class="karte-tab" id="kt-sommer-c" onclick="switchKarteC('sommer',this)" style="background:var(--gold-glow2);border:1px solid var(--gold);color:var(--gold);">☀️ Sommerkarte 26</button>
-      <button class="karte-tab" id="kt-fruehling-c" onclick="switchKarteC('fruehling',this)" style="background:transparent;border:1px solid var(--border);color:var(--muted);">🌸 Frühling (Archiv)</button>
-    </div>
+    
     <div class="search-box">
       <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <input type="text" id="cocktail-search" placeholder="Cocktail suchen…" oninput="filterCocktails()">
@@ -1595,6 +1700,10 @@ select option { background: #111110; }
   <div class="nav-drawer-item" onclick="showPage('check');showCheckView('history');closeDrawer()">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Verlauf
+  </div>
+  <div class="nav-drawer-item" onclick="showPage('check');showCheckView('report');closeDrawer()">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><path d="M9 15l2 2 4-4"/></svg>
+    Monatsbericht
   </div>
   <div class="nav-drawer-item" onclick="showPage('reglement');closeDrawer()">
     <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
@@ -1742,32 +1851,22 @@ const CHECKLISTEN = {
   }
 };
 
-// ─── REZEPTE DATA ─────────────────────────────────────────────────────────────
-const REZEPTE_FRUEHLING = [
-  { name: 'Gemüserolle', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Reispapier','Glasnudeln (5 min in heissem Wasser, kalt abspülen)','Gemüsejulienne gemischt (Kohlrabi, Sellerie, Karotte)','1 Frühlingszwiebel','5 EL Sojasauce','1 EL Sesamöl','1 EL Ahornsirup','Limettensaft','Salz, Pfeffer'], zubereitung: 'Glasnudeln nach Packungsbeilage einweichen, mit kaltem Wasser abschrecken. Gemüsejulienne 3 Minuten im Dampf garen, im Frigo abkühlen. Frühlingszwiebel in dünne Ringe schneiden. Glasnudeln und Gemüse mit Sojasauce, Sesamöl, Ahornsirup vermengen, abschmecken. Reispapier 1 Minute im kalten Wasser einweichen, mit 1–2 EL des Glasnudelsalats füllen, Seiten einklappen und aufrollen (wie ein Burrito).' },
-  { name: 'Chlorophyll-Salat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Salat:','500g Peperoni grün','500g Gurke geschält','500g Spitzkohl Julienne','2 Bund Frühlingszwiebeln','Dressing:','300g Cashewkerne','4 Knoblauchzehen','500g Spinat frisch','500g Basilikum','Zitronensaft, Olivenöl, Hefeflocken'], zubereitung: 'Alle Zutaten des Dressings im Thermomix zu cremiger Masse mixen. À la Minute mit Gemüse vermengen, abschmecken.' },
-  { name: 'Sprossensalat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Sprossen / Microgreens gemischt','Apfel-Basilikum Dressing','Sojasauce'], zubereitung: 'Sprossen mit Apfel-Basilikum Dressing anrichten, mit Sojasauce abschmecken.' },
-  { name: 'Falafel', kat: 'hauptgang', tags: ['vegan'], zutaten: ['5 kg trockene Kichererbsen (12h einweichen)','6 Bund Petersilie','3 Bund Koriander','3 Bund Minze','6 Zwiebeln','Koriander gemahlen, Kreuzkümmel, Chili','Kichererbsenmehl (Bindung)'], zubereitung: 'Alles im Thermomix zur gleichmässigen Masse. Bällchen formen, bei 160° goldbraun vorfrittieren, abkühlen, einfrieren.' },
-  { name: 'Alchemist Tzatziki (Vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['400–500g veganer Joghurt','1 kleine Gurke','1–2 Knoblauchzehen','Olivenöl, Zitronensaft','Dill, Kreuzkümmel, Salz, Pfeffer'], zubereitung: 'Gurke reiben, ausdrücken. Alle Zutaten vermengen, 15–30 Minuten kühlen.', notiz: 'Mit warmem Fladenbrot oder geröstetem Gemüse servieren.' },
-  { name: 'Yuzu-Wasabi Mayo (Pommessauce)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 kg Veganaise','2 Tuben Wasabi','200g Yuzusirup (Monin)','Zitronensaft, Chiliflocken'], zubereitung: 'Alles mit Schwingbesen gut vermischen. Muss scharf und zitronig schmecken, nicht mayonnaisig.' },
-  { name: 'Alchemist Brot', kat: 'beilage', tags: ['vegan'], zutaten: ['250g Karotten Julienne','400g Dinkelvollkornmehl','320g Dinkelmehl','15g Sauerteig','21g Hefe','Leinsamen, Rosmarin, Ingwer'], zubereitung: 'Mehl, Hefe, Wasser kneten, 1h gehen lassen. Portionieren, nochmals gehen, backen und einfrieren.' },
-  { name: 'Serotonin Dessert', kat: 'dessert', tags: ['vegan'], zutaten: ['Rhabarber Rosa Pfeffer Kompott','Kamille Crumble','Lavendel-Rosen Espuma'], zubereitung: 'Kompott: Rhabarber mit Zucker, Vanille, Rosa Pfeffer kurz einkochen. Crumble: Mehl, Butter, Kamille, Zucker zu Bröseln, bei 180° goldbraun backen. Espuma: Lavendelsirup und Rosenwasser mit Flora Rahm, in Kisag füllen.' },
-  { name: 'Cantucci', kat: 'backen', tags: [], zutaten: ['Zucker, Eier, Orangen Zesten','Mehl, Backpulver, Salz','Haselnüsse und Pistazien'], zubereitung: 'Zucker, Eier und Zesten aufschlagen. Trockene Zutaten und Nüsse unterkneten. Wurst formen, 15 min bei 180° backen, schneiden, fertig backen.' },
+// ─── HERBSTKARTE — Rezepte (Quelle: Rezeptsammlung Herbstkarte, Mise en Place) ─
+// zutaten: Strings; { h: 'Titel' } = Zwischentitel. zubereitung: Array = nummerierte Schritte.
+const REZEPTE_HERBST = [
+  { name: 'Kräuterpesto für Spätzli', kat: 'sauce', tags: ['vegan'], zutaten: ['3 Bund Thymian','3 Bund Rosmarin','2 kg Petersilie','5 Bund Minze','3 Bund Majoran','4 Bund Maggikraut','5 Bund Dill','10 Bund Bohnenkraut','1 kg Basilikum'], notiz: 'Für die Spätzli · In der Rezeptsammlung ist keine Zubereitung hinterlegt.' },
+  { name: 'Feigentajine', kat: 'hauptgang', tags: ['vegan'], zutaten: [{h:'Gemüse'},'5 kg Süsskartoffeln, 14 × 14 mm','5 kg Karottenwürfel, 14 × 14 mm','2 kg Lauch, Paysanne (ca. 10 × 10 mm)','1 kg Pastinakenwürfel, 15 × 15 mm','2 kg Pfälzerkarotten, 14 × 14 mm','1 kg Selleriewürfel, 14 × 14 mm','1 kg Stangensellerie, ca. 10 mm','3 kg Zwiebeln, Paysanne (selber schneiden)',{h:'Sauce'},'1 Sack Trockentomaten','3 kg getrocknete Feigen','Gemüsefond',{h:'Gewürze'},'100 g Salz','60 g Pfeffer','30 g Koriander','30 g Ingwer','15 g Kardamom','15 g Anis','5 g Zimt','5 g Nelke','5 g Chili'], zubereitung: ['Trockentomaten und getrocknete Feigen zusammen mit Gemüsefond weich kochen. Danach etwas vom gebackenen Gemüse dazugeben und fein mixen.','Das Gemüse auf drei flache GN-Behälter verteilen, dabei nicht zu viel auf einmal einfüllen. In mehreren Durchgängen bei 230 °C ca. 15 Minuten backen.','Das gebackene Gemüse jeweils in einen grossen GN-Behälter umleeren und den Vorgang wiederholen, bis alles fertig ist. Anschliessend alles kühlstellen.','Die Sauce sollte etwa 10 Liter ergeben. Dick abbinden und vollständig abkühlen lassen.','Am nächsten Tag Gemüse und Sauce mischen, vakuumieren, datieren und möglichst flach einfrieren.'], notiz: 'Die zugeschnittenen Gemüseprodukte bei Safruit bestellen; Zwiebeln selber schneiden.' },
+  { name: 'Randensuppe', kat: 'hauptgang', tags: ['vegan'], zutaten: ['10 kg Randen, roh, grobe Würfel','6 Stück Sellerieknollen, grobe Würfel','9 Stück Lauch, fein geschnitten (wegen der Fasern)','3 kg Zwiebeln, grob','15 l Kokosmilch','6 l Gemüsefond','Flohsamenschalen oder Leinsamen zum Eindicken',{h:'Gewürze — pro Topf'},'70 g Salz','20 g Pfeffer','30 g Ingwer','30 g Koriander','15 g Kardamom','15 g Anis','5 g Muskatnuss','5 g Chili','5 g Zimt','5 g Nelke','10 g Chilis'], zubereitung: ['Alle Zutaten gleichmässig auf drei Töpfe aufteilen und die Gewürze pro Topf zugeben.','Weich kochen, fein mixen und abschmecken.','Nach Bedarf mit Flohsamenschalen oder Leinsamen eindicken.'] },
+  { name: 'Kürbissalat', kat: 'hauptgang', tags: [], zutaten: ['15 kg Kürbis, Rösti-Schnitt','Salz','Pfeffer','Zitronensaft','Apfelessig'], zubereitung: ['Kürbis mit etwas Salz, Pfeffer, Zitronensaft und Apfelessig marinieren.','Anschliessend direkt auf 98 % vakuumieren.'], notiz: 'Kürbis im Rösti-Schnitt bei Safruit bestellen. Serviert mit Feta und Walnüssen.' },
+  { name: 'Birnen-Relish', kat: 'sauce', tags: ['vegan'], zutaten: ['5 kg Birnenwürfel','3 Flaschen Cassissaft','1 × Cassismark, Boiron','Maizena','Zucker','Apfelessig','Leinsamen, geschrotet'], zubereitung: ['Birnenwürfel auf zwei mittlere GN-Behälter verteilen und bei 160 °C ca. 30 Minuten backen.','Birnen abgiessen. Den aufgefangenen Saft zusammen mit Cassissaft und Cassismark in einem Topf aufkochen.','Mit Maizena abbinden, die Birnenwürfel dazugeben, nochmals aufkochen und abschmecken.','Zucker und Apfelessig zugeben, erneut abschmecken und kaltstellen.','Nach Bedarf mit geschroteten Leinsamen eindicken.'], notiz: 'Birnenwürfel und Cassissaft bei Safruit bestellen.' },
+  { name: 'Zwetschgen-Balsamicosauce für Reh', kat: 'sauce', tags: ['vegan'], zutaten: ['10 kg Zwetschgen','6 l dunkler Balsamico','½ grosses Glas Kapern','Rotwein','Thymian','Pfeffer'], zubereitung: ['Zwetschgen in einen Topf geben, knapp mit Wasser bedecken und weich kochen.','Den dunklen Balsamico separat einkochen, bis ungefähr ein Viertel der ursprünglichen Menge übrig ist.','Zwetschgen und reduzierten Balsamico zusammenmischen und fein mixen.','Kapern unter Wasser abspülen, dazugeben und nochmals mixen.','Rotwein zugeben und mit Thymian und Pfeffer abschmecken.'] },
+  { name: 'Vermicelles — Anrichten', kat: 'dessert', tags: [], zutaten: [], zubereitungTitel: 'Anrichten', zubereitung: ['Meringue zuerst','Kirschganache','Kastanieneis','Vanillerahm','Schokostreusel','Dekoblätter + Cracker + Goldperle (Stein der Weisen)'] },
+  { name: 'Gravitation Dessert', kat: 'dessert', tags: ['vegan'], zutaten: [], zubereitungTitel: 'Anrichten', zubereitung: ['Zwetschgenkompott','Kohlencrumble (glutenfrei)','Apfeleis','Bergamotte-Rahm oder Ganache (weisse Schokolade)','Birnen','Dekorfrüchte + Cracker + Goldperle (Stein der Weisen)'] },
+  { name: 'Zwetschgenkompott', kat: 'dessert', tags: ['vegan'], zutaten: ['10 kg Zwetschgen','1 kg Zucker','6 Stangen Zimt','2 EL Kardamom','4 Kaffeelöffel Nelke'], zubereitung: ['Zwetschgen mit Zucker und Gewürzen in einen grossen GN-Behälter geben.','Mit Deckel bei 160 °C ca. 40 Minuten garen.'] },
+  { name: 'Kirschganache', kat: 'dessert', tags: [], zutaten: ['5 kg Süsskirschen (Safruit)','2 l veganer Rahm 15 % (violette Verpackung)','1 kg Zucker','1 kg vegane braune Schokolade, grob gehackt','1 kg dunkle Maracaibo-Schokolade'], zubereitung: ['Süsskirschen, veganen Rahm und Zucker aufkochen und fein mixen. Anschliessend auf ca. 50 °C abkühlen lassen.','Die Schokolade unter die noch warme Frucht-Rahm-Mischung mixen, bis die Schokolade vollständig geschmolzen und die Masse homogen ist.'] },
 ];
 
 // ─── COCKTAIL REZEPTE ─────────────────────────────────────────────────────────
-const COCKTAILS_FRUEHLING = [
-  { name: 'Genesis', zutaten: ['4 cl Obstbrand','3 cl Orange-Mandel Sirup','3 cl Limette'], zubereitung: 'Alle Zutaten mixen und servieren.', notiz: 'GENESIS 1.3 "Und es werde Licht" — belebend, frisch, spritzig. CHF 19.–' },
-  { name: 'Walhalla', zutaten: ['3 cl Mescal','3 cl Lavendel-Honig Sirup','2 cl Evelyne','3 cl Limette','Alchemist-Bier zum Auffüllen'], zubereitung: 'Alle Zutaten (ausser Bier) shaken. Mit Alchemist-Bier auffüllen.', notiz: 'Wilkommen in WALHALLA — vollmundig, herb, rauchig, süss. CHF 19.–' },
-  { name: 'Das Elixir der Aphrodite', zutaten: ['Rosé','Wassermelone-Granatapfel Sirup','Kräuter'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Leicht, fruchtig, betörend. CHF 19.–' },
-  { name: 'Eine Rast an einer Oase', zutaten: ['Zimt-Rum 2–3 cl','Mescal 2 cl (in Spritze)','Kokos 1 Teil','Grapefruit 1 Teil','Passionsfrucht 2 Teile','Limette 4 EL'], zubereitung: 'Rum, Kokos, Grapefruit, Passionsfrucht und Limette mixen. Mescal separat in Spritze servieren und nach Belieben dazugeben.', notiz: 'Kräftig, exotisch, rauchig. CHF 19.–' },
-  { name: 'Das geheimnisvolle Shangri-La', zutaten: ['Sake','Basilikum','Kräuter'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Mild, frisch, ausgewogen. CHF 19.–' },
-  { name: 'RUBEDO — Die letzte Stufe der Alchemie', zutaten: ['Kräuter-Gin','Erdbeere','Ingwer'], zubereitung: 'Zutaten mixen und servieren.', notiz: 'Fruchtig, süss, scharf. CHF 19.–' },
-  { name: 'Ein Tanz in der Walpurgisnacht', zutaten: ['Kräuter-Gin 4 cl','Waldbeeren 4 cl','Zitronenmelisse 2 cl','Limette, Berberitze'], zubereitung: 'Ohne Eis mixen, mit Crash-Eis auffüllen. Deko mit Trockeneis.', notiz: 'Herb, vollmundig, beerig. CHF 19.–' },
-  { name: 'Die Kunst einer Geisha', zutaten: ['Zitronengras-Vodka 4 cl','Apfel-Minze 4 cl','Kokos 2 cl','Limette 2 cl'], zubereitung: 'Im Erlenmeyer mit Eis mixen. Reagensglas mit Trockeneis auffüllen.', notiz: 'Harmonisch, sanft, exotisch. CHF 19.–' },
-  { name: 'Van Gogh', zutaten: ['Absinth','Zuckerwürfel','Soda','Apfelmischung'], zubereitung: 'Sirup immer mit Trockeneis servieren. Zündholz und Absinth-Löffel bereitstellen. Zuckerwürfel karamellisieren, mit Wasser löschen.', notiz: 'Die Substanz für die betörende Wirkung ist Thujon. CHF 19.–' },
-];
-
 function renderCocktails() {
   const search = (document.getElementById('cocktail-search')?.value || '').toLowerCase();
   const list = document.getElementById('cocktails-list');
@@ -1854,32 +1953,46 @@ const UBERGABE_SECTIONS = [
 ];
 // ─── ALLERGENE DATA ────────────────────────────────────────────────────────────
 const ALLERGENE_FELDER = [
-  {l:'Gluten',k:'gluten'},{l:'Schalenfrüchte',k:'schalen'},{l:'Sesam',k:'sesam'},{l:'Soja',k:'soja'},{l:'Sellerie',k:'sellerie'},{l:'Senf',k:'senf'},{l:'Milch',k:'milch'},{l:'Ei',k:'ei'}
+  {l:'Gluten',k:'gluten'},{l:'Schalenfrüchte',k:'schalen'},{l:'Sesam',k:'sesam'},{l:'Soja',k:'soja'},{l:'Sellerie',k:'sellerie'},
+  {l:'Senf',k:'senf'},{l:'Milch',k:'milch'},{l:'Ei',k:'ei'},{l:'Sulfite',k:'sulfite'},{l:'Knoblauch',k:'knoblauch'}
 ];
 const ALLERGENE_DATA = [
-  { name: 'Blumenkohlsalat', vegan:1, schalen:1, sesam:1, notiz:'Sesam (Tahini), Mandeln' },
-  { name: 'Gazpacho mit Kirschen', vegan:1, sellerie:1, notiz:'Sellerie (Stangensellerie), Sulfite (Essig)' },
-  { name: 'Zitronen-Couscous', vegan:1, gluten:1, sellerie:1, notiz:'Gluten; Sellerie (Brühe)' },
-  { name: 'Tajine mit Aprikosen', vegan:1, sellerie:1, notiz:'Sellerie (Brühe), Sulfite (getrocknete Aprikosen)' },
-  { name: 'Harissa-Coleslaw', vegan:1, sellerie:1, senf:1, notiz:'Sellerie (Knolle), Senf (Pommery)' },
-  { name: 'Sprossensalat', vegan:1, gluten:1, soja:1, notiz:'Soja + Gluten (Sojasauce)' },
-  { name: 'Falafel', vegan:1, notiz:'Keine der 14 Hauptallergene' },
-  { name: 'Tzatziki (vegan)', vegan:1, notiz:'Joghurt-Basis prüfen' },
-  { name: 'Yuzu-Wasabi Mayo', vegan:1, senf:1, notiz:'Senf in Wasabi prüfen' },
-  { name: 'Kräuterquark (vegan)', vegan:1, schalen:1, notiz:'Mandeln' },
-  { name: 'Kräuterbutter (vegan)', vegan:1, notiz:'Margarine-Basis prüfen' },
-  { name: 'Alchemist Brot', vegan:1, gluten:1, notiz:'Gluten (Dinkel)' },
-  { name: 'Gemüsepuffer', vegan:1, notiz:'Glutenfreie Mehlmischung' },
-  { name: 'Mais-Miso-Püree', vegan:1, soja:1, notiz:'Soja (Miso); Gluten je nach Miso-Sorte' },
-  { name: 'Kimchi / Pickles', vegan:1, gluten:1, soja:1, notiz:'Soja + Gluten (Sojasauce)' },
-  { name: 'Cantucci', gluten:1, schalen:1, milch:1, ei:1, notiz:'Mehl, Nüsse, Ei, Butter' },
-  { name: 'Ingwer Cookies', gluten:1, milch:1, ei:1, notiz:'Weizen, Ei, Butter' },
+  { name: 'Kürbissalat', schalen:1, milch:1, notiz:'Feta, Walnüsse' },
+  { name: 'Sprossensalat', vegan:1 },
+  { name: 'Krautsalat', vegan:1, sellerie:1, senf:1, sulfite:1, notiz:'Sellerie, Senf, Sherryessig' },
+  { name: 'Randensuppe', vegan:1, sellerie:1, notiz:'Sellerie / Gemüsefond' },
+  { name: 'Kartoffelstäbchen', vegan:1, schalen:1, senf:1, notiz:'Yuzu-Wasabi-Mayo: Senf, Mandeljoghurt' },
+  { name: 'Gemüse-Puffer', vegan:1, schalen:1, senf:1, notiz:'Artischocken-Dip: Mandeljoghurt, Veganaise (Senf)' },
+  { name: 'Falafel', vegan:1, sesam:1, notiz:'Tahini (Sesam); gluten- und laktosefrei' },
+  { name: 'Alchemist-Brot', vegan:1, gluten:1, schalen:1, notiz:'Dinkel; Kräuter-Tomaten-Dip mit Mandeljoghurt' },
+  { name: 'Gemüse-Tajine', vegan:1, sellerie:1, notiz:'Sellerie in Gemüsefond' },
+  { name: 'Hirschragout', sellerie:1, senf:1, sulfite:1, notiz:'Rotwein; Gluten nur mögliche Spuren' },
+  { name: 'Reis', vegan:1 },
+  { name: 'Zitronen-Couscous', vegan:1, gluten:1, sellerie:1, notiz:'Weizen; Sellerie in Gemüsebrühe möglich' },
+  { name: 'Bao Konkubine', gluten:1, sesam:1, notiz:'Pulled Pork; Honig-Sesam' },
+  { name: 'Bao Kamasutra', gluten:1, schalen:1, senf:1, notiz:'Yuzu-Wasabi-Mayo: Senf, Mandeljoghurt' },
+  { name: 'Bao Geisha', gluten:1, soja:1, sellerie:1, senf:1, notiz:'BBQ-Sauce: Senf, Sellerie, Sojasauce' },
+  { name: 'Bao Cleopatra', vegan:1, gluten:1, schalen:1, sesam:1, notiz:'Falafel; Auberginen-Tomaten-Creme/Baba Ganoush mit Mandelquark' },
+  { name: 'Bao Artemis', gluten:1, sulfite:1, notiz:'Zwetschgen-Balsamico mit Rotwein/Balsamico' },
+  { name: 'Bao Walpurga', vegan:1, gluten:1, sesam:1, soja:1, notiz:'Teriyaki: Sesam, Sojasauce, Sake' },
+  { name: 'Spätzli', gluten:1, ei:1, notiz:'Ruchmehl, Ei; Kräuterpesto' },
+  { name: 'Saisonpilze', vegan:1, notiz:'Pilzessenz: keine der abgeklärten Hauptallergene' },
+  { name: 'Kräuter-Ei', ei:1, notiz:'Ei' },
+  { name: 'Kartoffelstock', vegan:1, notiz:'Vegan; keine der abgeklärten Hauptallergene' },
+  { name: 'Alchemist-Spareribs', sesam:1, knoblauch:1, notiz:'Knoblauch; Sesam nur als Deko' },
+  { name: 'Marinierter Tofu', vegan:1, gluten:1, sesam:1, soja:1, notiz:'Teriyaki: Sesam, Sojasauce, Sake' },
+  { name: 'Poulet Loins', notiz:'Sauce enthält Honig; knoblauchfrei' },
+  { name: 'Beef-Meatballs', gluten:1, soja:1, sellerie:1, senf:1, notiz:'Meatballs enthalten Gluten; BBQ-Sauce: Senf, Sellerie, Sojasauce' },
+  { name: 'Rehschnitzel', sulfite:1, notiz:'Zwetschgen-Balsamicosauce mit Rotwein/Balsamico' },
+  { name: 'Dekonstruiertes Vermicelle', ei:1, notiz:'Meringue = Ei; Flora-Rahm ohne deklarationspflichtige Allergene' },
+  { name: 'Gravitations Synthese', vegan:1, notiz:'Kohlencrumble vegan/gluten-/nussfrei; Flora-Rahm ohne deklarationspflichtige Allergene' },
 ];
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let currentSession = null;
 let taskStates = {}, taskNotes = {}, tempValues = {};
 let history = JSON.parse(localStorage.getItem('checkliste_history') || '[]');
+let historySource = 'local'; // 'sheet' sobald der Verlauf aus Google Sheets geladen wurde
 const SHEET_ID = '1y82FbD9LMeGyvr6A-qJn5cXWnd3en4K7zVQZTlkAaG8';
 
 async function loadHistoryFromSheet() {
@@ -1892,6 +2005,7 @@ async function loadHistoryFromSheet() {
       const timeout = setTimeout(() => { delete window[cbName]; script.remove(); reject(new Error('timeout')); }, 10000);
       window[cbName] = (json) => {
         clearTimeout(timeout); delete window[cbName]; script.remove();
+        historySource = 'sheet';
         if (!json.ok || !json.rows || !json.rows.length) { history = []; renderHistory(); resolve(); return; }
         const groups = {};
         json.rows.forEach(r => {
@@ -1913,30 +2027,11 @@ async function loadHistoryFromSheet() {
       script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('script error')); };
       document.head.appendChild(script);
     });
-  } catch(e) { history = JSON.parse(localStorage.getItem('checkliste_history') || '[]'); renderHistory(); }
+  } catch(e) { historySource = 'local'; history = JSON.parse(localStorage.getItem('checkliste_history') || '[]'); renderHistory(); }
 }
 
 
-// ─── SOMMERKARTE 26 ───────────────────────────────────────────────────────────
-const REZEPTE_SOMMER = [
-  { name: 'Blumenkohlsalat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Blumenkohl (mittelgrosse Röschen)','Olivenöl, Ras el Hanout, Salz','1 kg Linsen (gekocht)','Gehobelte Mandeln (geröstet, Deko)','Granatapfelkerne (ausgelöst)','Kichererbsen (gekocht, zu Hummus)','Hummus: Knoblauch, Tahini, Zitronensaft, Pfeffer, Salz, Olivenöl, Pfefferminze'], zubereitung: 'Blumenkohl würzen und bei 180° ca. 10 Min backen, im Kühlhaus auskühlen, in der Box als Mise en Place lagern. Linsen kochen. Mandeln im Ofen anrösten. Granatapfelkerne auslösen. Kichererbsen kochen und im Thermomix zu Hummus verarbeiten.', notiz: 'Allergene: Sesam (Tahini), Schalenfrüchte (Mandeln) · CHF 15.–' },
-  { name: 'Kirschen-Gazpacho', kat: 'hauptgang', tags: ['vegan'], zutaten: ['5 kg Kirschen entsteint (TK)','3 kg Tomaten','4 kg Gurken','10 rote Peperoni','10 rote Zwiebeln','2 Pack Stangensellerie','5 EL Knoblauchpüree','5 Bund Pfefferminze','Geschrotete Leinsamen (Bindung)','Essig, Olivenöl, Schärfe nach Wahl','Salz, Pfeffer, Zitronenschale und -saft'], zubereitung: 'Alle Zutaten fein mixen und mit Essig, Olivenöl, Schärfe, Salz, Pfeffer sowie Zitronenschale und -saft abschmecken. Die Leinsamen sorgen für die Bindung.', notiz: 'Allergene: Sellerie, Sulfite (Essig) · CHF 15.–' },
-  { name: 'Sprossensalat', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Sprossen / Microgreens gemischt','Apfel-Basilikum-Dressing','Sojasauce'], zubereitung: 'Sprossen mit Apfel-Basilikum-Dressing anrichten, mit Sojasauce abschmecken.', notiz: 'Allergene: Soja + Gluten (Sojasauce) · CHF 15.–' },
-  { name: 'Harissa-Coleslaw', kat: 'hauptgang', tags: ['vegan'], zutaten: ['2 kg Rotkohl (feine Julienne)','2 kg Sellerie (Julienne)','1 kg Julienne-Mix (2 Tage vorher bei Safruits bestellen)','Sauce: 2 Gläser Harissa, ½ Tube Tomatenmark, ½ Flasche Sherryessig','8 Limetten + 2 Orangen (Saft und Schale)','Pommery-Senf, 1 Bund Petersilie','4 EL Leinsamen, Sonnenblumenöl','Cayenne, Kreuzkümmel, Pfeffer, Salz'], zubereitung: 'Alle Saucen-Zutaten im 2-Liter-Messbecher mixen, Petersilie und Leinsamen dazugeben, Sonnenblumenöl im dünnen Strahl untermixen. Sauce mit dem Gemüse vermengen.', notiz: 'Allergene: Sellerie (Knolle), Senf, Sulfite (Sherryessig) · CHF 15.–' },
-  { name: 'Tajine mit Aprikosen', kat: 'hauptgang', tags: ['vegan'], zutaten: ['Sauce: 4 l Gemüsebrühe','1 Dose Tomatenmark','2 kg getrocknete Aprikosen','½ Glas Kapern, 8 Salzzitronen','1 Sack Trockentomaten','Ras el Hanout, Cayenne, Koriander, Zimt, Kreuzkümmel, Kurkuma','Gemüse: Karotten, Pfälzerkarotten, Broccoli, Blumenkohl, Topinambur, Pastinaken','Ca. 1 kg Aprikosenstücke (untermischen)'], zubereitung: 'Sauce aufkochen und mixen. Gemüse in mundgerechte Stücke schneiden, würzen (Blumenkohl mit Kurkuma) und bei 220° ca. 15 Min rösten. Abgekühltes Gemüse mit der Sauce und Aprikosenstücken vermischen. Vakuumieren und einfrieren oder max. 5 Tage kühlen.', notiz: 'Wird als Gemüse- oder Lamm-Tajine serviert · Allergene: Sulfite (Aprikosen), Sellerie (Brühe möglich) · CHF 16.–' },
-  { name: 'Falafel', kat: 'hauptgang', tags: ['vegan'], zutaten: ['5 kg trockene Kichererbsen (12 h einweichen)','6 Bund Petersilie','3 Bund Koriander','3 Bund Minze','6 Zwiebeln','Koriander gemahlen, Kreuzkümmel, Chilipulver, Salz, Pfeffer','Kichererbsenmehl (Bindung)'], zubereitung: 'Alles im Thermomix zu einer gleichmässigen Masse verarbeiten. Bällchen (2,5 cm) formen, bei 160° goldbraun vorfrittieren, abkühlen lassen und einfrieren.', notiz: 'Mit Auberginen-Tomaten-Limettensauce · Allergene: keine der 14 Hauptallergene · CHF 12.–' },
-  { name: 'Zitronen-Couscous', kat: 'beilage', tags: ['vegan'], zutaten: ['1 kg Couscous','2,5 l Gemüsebrühe','4 Zwiebeln (Würfel)','8 EL Olivenöl','4 Zitronen (Schale und Saft)','4 Limettenblätter (Tiefkühler unten)','1 Bund Petersilie (gehackt)','Salz, Pfeffer'], zubereitung: 'Zwiebeln in Olivenöl anschwitzen, mit Gemüsebrühe ablöschen, Limettenblätter dazu, abschmecken und aufkochen. Couscous im tiefen GN mit der Brühe übergiessen, abdecken, 10 Min ziehen lassen. Auflockern, Petersilie sowie Zitronensaft und -abrieb zugeben, kaltstellen.', notiz: 'Allergene: Gluten (Weizen), Sellerie (Brühe möglich) · CHF 6.–' },
-  { name: 'Alchemist Brot', kat: 'beilage', tags: ['vegan'], zutaten: ['250 g Karotten-Julienne','400 g Dinkelvollkornmehl','320 g Dinkelmehl','15 g Sauerteig, 21 g Hefe','2 TL Salz','Ingwer, 100 g Leinsamen, Rosmarin, Agavendicksaft','320 ml Wasser (lauwarm)'], zubereitung: 'Mehl, Hefe, Wasser und Sauerteig kneten, 1 Stunde gehen lassen. Übrige Zutaten beigeben, portionieren, nochmals 30 Min gehen lassen, backen und einfrieren.', notiz: 'Mit Kräuterdip serviert · Allergene: Gluten (Dinkel) · CHF 9.–' },
-  { name: 'Gemüsepuffer', kat: 'beilage', tags: ['vegan'], zutaten: ['6 kg saisonales Gemüse','8 Bund Frühlingszwiebeln','Petersilie, Schnittlauch','4 kg glutenfreie Mehlmischung','Salz, Pfeffer, Kurkuma, Kreuzkümmel, Koriander, Chili, Paprika'], zubereitung: 'Gemüse im Thermomix häckseln. Alle Zutaten vermengen, in einen Spritzbeutel füllen und bei 160° kleine Bällchen vorfrittieren. Einfrieren und à la minute fertig frittieren.', notiz: 'Mit Artischocken-Dip · Allergene: keine (glutenfreie Mehlmischung) · CHF 12.–' },
-  { name: 'Mais-Miso-Püree', kat: 'beilage', tags: ['vegan'], zutaten: ['2126 g Mais (Dose)','3 Zwiebeln','200 g vegane Butter','600 ml veganer Rahm','Kartoffelstock-Pulver','Miso hell, Salz, Pfeffer'], zubereitung: 'Zwiebeln andünsten, übrige Zutaten beigeben und weich einkochen. Zu einer homogenen Masse mixen und abschmecken.', notiz: 'Zum Kräuter-Ei · Allergene: Soja (Miso), Gluten möglich je nach Miso-Sorte' },
-  { name: 'Alchemist Kimchi / Pickles', kat: 'beilage', tags: ['vegan'], zutaten: ['2,8 kg Chinakohl','80 g Meersalz','Reispaste: 320 g Wasser/Brühe, 6 EL Reismehl, 6 EL Rohrzucker','400 g Rettich- und Karotten-Julienne','Frühlingszwiebeln, Zwiebeln, Knoblauch, Ingwer','60 ml Sojasauce, 100 g Chiliflocken, 2 Nashibirnen'], zubereitung: 'Chinakohl salzen und 2 Stunden ziehen lassen. Reispaste kochen, Marinade mixen. Kohl abspülen, mit Gemüse und Marinade vermengen. In sterile Form geben, fermentieren lassen, anschliessend kühlen.', notiz: 'Allergene: Soja + Gluten (Sojasauce)' },
-  { name: 'Alchemist Tzatziki (vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['400–500 g veganer Joghurt','1 kleine Gurke','1–2 Knoblauchzehen','Olivenöl, Zitronensaft','1 TL Kreuzkümmel (optional)','1–2 EL frischer Dill','Salz, Pfeffer'], zubereitung: 'Gurke grob reiben und ausdrücken. Alle Zutaten vermengen und 15–30 Minuten kühlen.', notiz: 'Mit warmem Fladenbrot oder geröstetem Gemüse servieren · Allergene: keine (Joghurt-Basis prüfen)' },
-  { name: 'Yuzu-Wasabi Mayo (Pommessauce)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 kg Veganaise','2 Tuben Wasabi','200 g Yuzusirup (Monin)','Zitronensaft, Chiliflocken oder Cayenne'], zubereitung: 'Alles mit dem Schwingbesen gut vermischen. Muss scharf und zitronig schmecken — nicht mayonnaisig.', notiz: 'Zu den Kartoffelstäbchen (CHF 9.–) · Allergene: Senf (in Wasabipaste — Etikett prüfen)' },
-  { name: 'Kräuterquark (vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 Becher Mandeljoghurt','1 Becher Mandel-Crème-fraîche','Zitronensaft','1 Bund Schnittlauch, Dill, Minze','Salz, Pfeffer, Kurkuma'], zubereitung: 'Kräuter fein hacken, mit Zitronensaft und Quark vermengen und abschmecken.', notiz: 'Allergene: Schalenfrüchte (Mandeln)' },
-  { name: 'Kräuterbutter (vegan)', kat: 'sauce', tags: ['vegan'], zutaten: ['1 Dose Tomatenmark','2 Bund Petersilie','2 Bund Schnittlauch','Vegane Butter / Margarine','Olivenöl, Salz, Pfeffer'], zubereitung: 'Tomatenmark im Thermomix bei 60° mit Butter und Olivenöl zu einer homogenen Masse verarbeiten. Würzen, Kräuter unterrühren, in die Box leeren und wiederholen.', notiz: 'Allergene: keine (Margarine-Basis prüfen)' },
-  { name: 'Cantucci', kat: 'backen', tags: [], zutaten: ['Zucker, Eier, Orangenzesten','Mehl, Backpulver, Triebsalz, Salz','Haselnüsse und Pistazien'], zubereitung: 'Zucker, Eier und Zesten aufschlagen. Trockenes und Nüsse unterkneten. Wurst formen, 10–15 Min bei 180° backen, mit Butter bestreichen, zuschneiden und 3–4 Min fertig backen.', notiz: 'Allergene: Gluten, Ei, Schalenfrüchte (Haselnüsse, Pistazien), Milch (Butter)' },
-  { name: 'Ingwer Cookies (Gingerdoodles)', kat: 'backen', tags: [], zutaten: ['300 g Weizenmehl, 1 EL Maizena','2 Päckchen Natron, 1 TL Salz','2 TL Zimt, 1 TL Ingwer, Nelken, Muskat','170 g Butter (weich)','125 g brauner + 65 g feiner Zucker','75 g Zuckerrübensirup','1 Ei (gross), 1 TL Vanille'], zubereitung: 'Ofen auf 175° vorheizen. Mehl, Stärke und Gewürze mischen. Butter mit Zucker schaumig rühren, alles vermengen. Kugeln formen, in Zimt-Zucker wälzen, 10 Min backen. Ergibt 24–28 Cookies — sie werden beim Abkühlen fester, nicht zu lange backen!', notiz: 'Allergene: Gluten (Weizen), Ei, Milch (Butter)' },
-];
+// ─── COCKTAILS (Sommerkarte 26 bleibt aktuell) ─────────────────────────────────
 const COCKTAILS_SOMMER = [
   { name: 'Das Elixir der Aphrodite', zutaten: ['Rosé','Wassermelone','Granatapfel','Kräuter'], zubereitung: 'Leicht, fruchtig, betörend.', notiz: 'Mit oder ohne Alkohol, auch Frozen · CHF 19.–' },
   { name: 'Sonnenwende in den Highlands', zutaten: ['Whiskey','Pfirsich','Basilikum','Pfeffer','Prosecco'], zubereitung: 'Malzig, prickelnd, belebend, fruchtig.', notiz: 'Mit oder ohne Alkohol, auch Frozen · CHF 19.–' },
@@ -1955,29 +2050,8 @@ const COCKTAILS_SOMMER = [
 ];
 
 // ─── AKTIVE KARTE ─────────────────────────────────────────────────────────────
-let activeKarte = 'sommer'; // 'sommer' | 'fruehling' (Archiv)
-function getActiveRezepte()  { return activeKarte === 'sommer' ? REZEPTE_SOMMER  : REZEPTE_FRUEHLING;  }
-function getActiveCocktails(){ return activeKarte === 'sommer' ? COCKTAILS_SOMMER : COCKTAILS_FRUEHLING; }
-
-function switchKarte(karte, btn) {
-  activeKarte = karte;
-  updateKarteSubs();
-  // Sync all karte-tabs
-  ['kt-fruehling-r','kt-sommer-r','kt-fruehling-c','kt-sommer-c'].forEach(id => {
-    const b = document.getElementById(id);
-    if (!b) return;
-    const isActive = (karte === 'fruehling' && id.includes('fruehling')) || (karte === 'sommer' && id.includes('sommer'));
-    b.style.background = isActive ? 'var(--gold-glow2)' : 'transparent';
-    b.style.borderColor = isActive ? 'var(--gold)' : 'var(--border)';
-    b.style.color = isActive ? 'var(--gold)' : 'var(--muted)';
-  });
-  activeFilter = 'alle';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  const allBtn = document.querySelector('#filter-bar .filter-btn');
-  if (allBtn) allBtn.classList.add('active');
-  renderRezepte();
-  renderCocktails();
-}
+function getActiveRezepte()  { return REZEPTE_HERBST; }
+function getActiveCocktails(){ return COCKTAILS_SOMMER; }
 
 let activeFilter = 'alle';
 
@@ -2005,6 +2079,8 @@ const MITARBEITER = [
   { name: 'Federica Duca', rolle: 'Service', kuerzel: 'FD' },
   { name: 'Lucca Alt', rolle: 'Bar', kuerzel: 'LA' },
   { name: 'Julia Wagner', rolle: 'K\u00fcche', kuerzel: 'JW' },
+  { name: 'Alena Breitenstein', rolle: 'Service', kuerzel: 'AB' },
+  { name: 'Alena Breitenstein', rolle: 'Bar', kuerzel: 'AB' },
 ];
 
 const ROLLE_STYLE = { 'Leitung': 'av-leitung', 'Service': 'av-service', 'Bar': 'av-bar', 'Küche': 'av-kueche', 'Reinigung': 'av-reinigung' };
@@ -2091,6 +2167,7 @@ window.addEventListener('load', function() {
   document.getElementById('inp-kuerzel').addEventListener('input', validateSetup);
   validateSetup(); checkResumeBanner();
   renderRezepte(); renderAllergene(); renderCocktails(); checkUbergabeBanner();
+  loadHistoryFromSheet().then(checkUbergabeBanner);
 });
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
@@ -2107,10 +2184,11 @@ function showPage(name) {
 }
 
 function showCheckView(name) {
-  ['setup','checklist','temp','ubergabe','success','history'].forEach(v => { const el = document.getElementById('view-' + v); if (el) el.style.display = 'none'; });
+  ['setup','checklist','temp','ubergabe','success','history','report'].forEach(v => { const el = document.getElementById('view-' + v); if (el) el.style.display = 'none'; });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
   if (name === 'history') loadHistoryFromSheet();
+  if (name === 'report') initReport();
   window.scrollTo(0, 0);
 }
 
@@ -2222,7 +2300,7 @@ async function submitChecklist() {
 }
 
 async function saveToSheets(rows) { const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ rows }) }); if (!r.ok) throw new Error('err'); }
-function resetToSetup() { currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); showCheckView('setup'); }
+function resetToSetup() { checkUbergabeBanner(); currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); showCheckView('setup'); }
 
 // ─── PAUSE / RESUME ───────────────────────────────────────────────────────────
 function saveProgress() { if (!currentSession) return; localStorage.setItem('checkliste_draft', JSON.stringify({ session: currentSession, taskStates, taskNotes })); }
@@ -2265,6 +2343,7 @@ function startTempControl() {
   tempValues['eis'] = false;
   const s2 = document.getElementById('ts2'); if(s2){s2.textContent='';s2.className='temp-status';}
   document.getElementById('temp-notiz').value='';
+  restoreTempDraft();
   updateTempProgress();
   document.getElementById('temp-sess-name').textContent=currentSession.kuerzel+' – Temperaturkontrolle Bar';
   document.getElementById('temp-sess-info').textContent=currentSession.datum;
@@ -2288,6 +2367,7 @@ function toggleEisCheck() {
     s2.textContent=''; s2.className='temp-status';
   }
   updateTempProgress();
+  saveTempDraft();
 }
 
 function updateTempProgress() {
@@ -2305,6 +2385,27 @@ function checkTemp(inp, i) {
   else if(val>=min&&val<=max){inp.className='temp-inp ok';s.textContent='✓ OK';s.className='temp-status ok';}
   else{inp.className='temp-inp warn';s.textContent='⚠ Ausserhalb';s.className='temp-status warn';}
   updateTempProgress();
+  saveTempDraft();
+}
+
+// Entwurf der Temperaturkontrolle: Werte bleiben erhalten, wenn man die Seite verlässt
+let tempRestoring = false;
+function saveTempDraft() {
+  if (!currentSession || tempRestoring) return;
+  const vals = {};
+  [0,1,3,4].forEach(i => { const el = document.getElementById('t' + i); vals[i] = el ? el.value : ''; });
+  try { localStorage.setItem('temp_draft', JSON.stringify({ datum: currentSession.datum, kuerzel: currentSession.kuerzel, vals, eis: !!tempValues['eis'], notiz: document.getElementById('temp-notiz').value })); } catch(e) {}
+}
+function clearTempDraft() { try { localStorage.removeItem('temp_draft'); } catch(e) {} }
+function restoreTempDraft() {
+  let d = null;
+  try { d = JSON.parse(localStorage.getItem('temp_draft') || 'null'); } catch(e) {}
+  if (!d || d.datum !== currentSession.datum || d.kuerzel !== currentSession.kuerzel) return;
+  tempRestoring = true;
+  document.getElementById('temp-notiz').value = d.notiz || '';
+  [0,1,3,4].forEach(i => { const el = document.getElementById('t' + i); const v = d.vals && d.vals[i]; if (el && v !== undefined && v !== '') { el.value = v; checkTemp(el, i); } });
+  if (d.eis && !tempValues['eis']) toggleEisCheck();
+  tempRestoring = false;
 }
 async function submitTemp() {
   const msg=document.getElementById('temp-saving-msg'); msg.textContent='Wird gespeichert…';
@@ -2323,6 +2424,7 @@ async function submitTemp() {
   history.unshift({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',kuerzel:currentSession.kuerzel,zeitstempel:now,rows,done:ok,total:5});
   localStorage.setItem('checkliste_history',JSON.stringify(history.slice(0,200)));
   try{await saveToSheets(rows);msg.textContent='✓ In Google Sheets gespeichert';}catch(e){msg.textContent='Lokal gespeichert';}
+  clearTempDraft();
   setTimeout(()=>{document.getElementById('success-text').textContent=ok+' von 5 Einträgen OK — '+currentSession.kuerzel+', '+currentSession.datum;showCheckView('success');},800);
 }
 
@@ -2403,15 +2505,20 @@ function renderRezepte() {
   const REZEPTE = getActiveRezepte();
   const filtered = REZEPTE.filter(r => {
     if (activeFilter !== 'alle') { if (activeFilter === 'vegan' && !r.tags.includes('vegan')) return false; else if (activeFilter !== 'vegan' && r.kat !== activeFilter) return false; }
-    if (search && !r.name.toLowerCase().includes(search) && !r.zutaten.join(' ').toLowerCase().includes(search)) return false;
+    if (search && !r.name.toLowerCase().includes(search) && !r.zutaten.map(z => z.h || z).join(' ').toLowerCase().includes(search)) return false;
     return true;
   });
   if (!filtered.length) { list.innerHTML = '<div class="hist-empty">Keine Rezepte gefunden.</div>'; return; }
   list.innerHTML = filtered.map((r, i) => {
-    const tagHtml = [...r.tags.map(t => `<span class="tag tag-${t}">${t === 'vegan' ? '🌱 Vegan' : t}</span>`), `<span class="tag tag-${r.kat}">${{hauptgang:'Hauptgang',beilage:'Beilage',sauce:'Sauce & Dip',dessert:'Dessert',backen:'Backen'}[r.kat]||r.kat}</span>`].join('');
-    const ingList = r.zutaten.map(z => `<li>${z}</li>`).join('');
+    const tagHtml = [...r.tags.map(t => `<span class="tag tag-${t}">${t === 'vegan' ? '🌱 Vegan' : t}</span>`), `<span class="tag tag-${r.kat}">${{hauptgang:'Gericht',beilage:'Beilage',sauce:'Sauce & Dip',dessert:'Dessert',backen:'Backen'}[r.kat]||r.kat}</span>`].join('');
+    const ingList = r.zutaten.map(z => z.h ? `</ul><div class="recipe-subhead">${z.h}</div><ul class="recipe-ing">` : `<li>${z}</li>`).join('');
+    const zutatenHtml = r.zutaten.length ? `<div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul>` : '';
+    const steps = Array.isArray(r.zubereitung)
+      ? `<ol class="recipe-steps recipe-ol">${r.zubereitung.map(s => `<li>${s}</li>`).join('')}</ol>`
+      : (r.zubereitung ? `<p class="recipe-steps">${r.zubereitung}</p>` : '');
+    const stepsHtml = steps ? `<div class="recipe-section">${r.zubereitungTitel || 'Zubereitung'}</div>${steps}` : '';
     const notizHtml = r.notiz ? `<div class="recipe-note">${r.notiz}</div>` : '';
-    return `<div class="recipe-card" id="rc-${i}"><div class="recipe-head" onclick="toggleRecipe(${i})"><div><div class="recipe-name">${r.name}</div><div class="recipe-tags" style="margin-top:6px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body"><div class="recipe-section">Zutaten</div><ul class="recipe-ing">${ingList}</ul><div class="recipe-section">Zubereitung</div><p class="recipe-steps">${r.zubereitung}</p>${notizHtml}</div></div>`;
+    return `<div class="recipe-card" id="rc-${i}"><div class="recipe-head" onclick="toggleRecipe(${i})"><div><div class="recipe-name">${r.name}</div><div class="recipe-tags" style="margin-top:6px;">${tagHtml}</div></div><span class="recipe-chevron">▾</span></div><div class="recipe-body">${zutatenHtml}${stepsHtml}${notizHtml}</div></div>`;
   }).join('');
 }
 
@@ -2466,14 +2573,8 @@ function switchRezepteMode(mode) {
   }
 }
 
-const KARTE_SUBS = {
-  sommer:    { r: 'Sommerkarte 26 — alle Rezepte auf einen Blick', c: 'Sommerkarte 26 — von uns kreiert · mit oder ohne Alkohol, auch Frozen · CHF 19.–' },
-  fruehling: { r: 'Frühlingskarte (Archiv) — alle Rezepte auf einen Blick', c: 'REBIS (Archiv) — Frühlingskarte · CHF 19.–' }
-};
 function updateKarteSubs() {
-  const t = KARTE_SUBS[activeKarte];
-  const r = document.getElementById('rezepte-sub'); if (r) r.textContent = t.r;
-  const c = document.getElementById('cocktails-sub'); if (c) c.textContent = t.c;
+  const r = document.getElementById('rezepte-sub'); if (r) r.textContent = 'Herbstkarte 26 — Mise en Place';
 }
 
 function filterWeine() {
@@ -2520,11 +2621,50 @@ function checkAuth() {
 
 
 // ─── ÜBERGABE BANNER & MODAL ──────────────────────────────────────────────────
-function checkUbergabeBanner() {
-  const saved = localStorage.getItem('bar_ubergabe_state');
-  if (!saved) return;
+function ubTs(ts) {
+  if (!ts) return 0;
+  const s = String(ts);
+  const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{1,2}):(\d{2})/);
+  if (m) return new Date(+m[3], +m[2] - 1, +m[1], +m[4], +m[5]).getTime();
+  const d = new Date(s);
+  return isNaN(d) ? 0 : d.getTime();
+}
+function ubFmtTs(ts) {
+  const v = ubTs(ts);
+  return v ? new Date(v).toLocaleString('de-CH', { weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : String(ts || '');
+}
+let ubBannerId = null;
+
+// Sucht die neueste Bar-Übergabe: aus Google Sheets (für alle Geräte) oder,
+// falls neuer bzw. offline, den lokal auf diesem Gerät gespeicherten Stand.
+function getLatestUbergabe() {
+  let src = null;
+  if (historySource === 'sheet') {
+    const e = history.filter(x => x.schicht === 'Bar Übergabe').sort((a, b) => ubTs(b.zeitstempel) - ubTs(a.zeitstempel))[0];
+    if (e) {
+      const status = {};
+      e.rows.forEach(r => {
+        const v = r.erledigt === 'Nachfüllen' ? 'nachf' : r.erledigt === 'Bestellen' ? 'best' : r.erledigt === 'Da' ? 'da' : null;
+        if (v) status[(r.section || '') + '|' + r.aufgabe] = v;
+      });
+      src = { kuerzel: e.kuerzel, zeitstempel: e.zeitstempel, status };
+    }
+  }
   try {
-    const parsed = JSON.parse(saved);
+    const loc = JSON.parse(localStorage.getItem('bar_ubergabe_state') || 'null');
+    if (loc && loc.status && (!src || ubTs(loc.zeitstempel) > ubTs(src.zeitstempel))) src = loc;
+  } catch(e) {}
+  return src;
+}
+
+function checkUbergabeBanner() {
+  const old = document.getElementById('ub-banner');
+  if (old) old.remove();
+  const parsed = getLatestUbergabe();
+  if (!parsed) return;
+  ubBannerId = (parsed.kuerzel || '') + '|' + (parsed.zeitstempel || '');
+  try { if (localStorage.getItem('ub_dismissed') === ubBannerId) return; } catch(e) {}
+  try {
     const nachf = [], best = [];
     Object.entries(parsed.status || {}).forEach(([key, val]) => {
       const name = key.split('|')[1];
@@ -2532,10 +2672,6 @@ function checkUbergabeBanner() {
       if (val === 'best')  best.push(name);
     });
     if (nachf.length === 0 && best.length === 0) return;
-
-    // Remove old banner if exists
-    const old = document.getElementById('ub-banner');
-    if (old) old.remove();
 
     const setupWrap = document.querySelector('#view-setup .wrap');
     if (!setupWrap) return;
@@ -2552,7 +2688,7 @@ function checkUbergabeBanner() {
         <div style="display:flex;align-items:center;gap:10px;">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--warn-text)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           <div>
-            <div style="font-family:var(--font);font-size:0.7rem;letter-spacing:0.06em;color:var(--warn-text);">Offene Bar-Übergabe · ${parsed.kuerzel}</div>
+            <div style="font-family:var(--font);font-size:0.7rem;letter-spacing:0.06em;color:var(--warn-text);">Offene Bar-Übergabe · ${parsed.kuerzel} · ${ubFmtTs(parsed.zeitstempel)}</div>
             <div style="font-size:0.78rem;color:var(--warn-text);opacity:0.8;margin-top:1px;font-family:var(--body);">${nachf.length > 0 ? nachf.length + '× Nachfüllen' : ''}${nachf.length && best.length ? ' · ' : ''}${best.length > 0 ? best.length + '× Bestellen' : ''}</div>
           </div>
         </div>
@@ -2567,7 +2703,7 @@ function checkUbergabeBanner() {
 function openUbModal(parsed, nachf, best) {
   const meta = document.getElementById('ub-modal-meta');
   const con  = document.getElementById('ub-modal-content');
-  if (meta) meta.textContent = parsed.kuerzel + ' · ' + (parsed.zeitstempel || '');
+  if (meta) meta.textContent = parsed.kuerzel + ' · ' + ubFmtTs(parsed.zeitstempel);
 
   let html = '';
   if (nachf.length > 0) {
@@ -2598,6 +2734,7 @@ function closeUbModal(e) {
 
 function dismissUbBanner() {
   localStorage.removeItem('bar_ubergabe_state');
+  try { if (ubBannerId) localStorage.setItem('ub_dismissed', ubBannerId); } catch(e) {}
   document.getElementById('ub-modal-overlay').classList.remove('open');
   document.body.style.overflow = '';
   const b = document.getElementById('ub-banner');
@@ -2605,32 +2742,247 @@ function dismissUbBanner() {
 }
 
 
-function switchKarteC(karte, btn) {
-  activeKarte = karte;
-  updateKarteSubs();
-  ['kt-fruehling-c','kt-sommer-c'].forEach(id => {
-    const b = document.getElementById(id);
-    if (!b) return;
-    b.style.background = 'transparent';
-    b.style.borderColor = 'var(--border)';
-    b.style.color = 'var(--muted)';
+// ─── MONATSBERICHT (Selbstkontrolle für die Lebensmittelkontrolle) ────────────
+const MONATE = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const REPORT_CLEAN_SCHICHTEN = ['Abend Bar', 'Spätdienst Service', 'Wöchentliche Putzaufgaben Bar'];
+const REPORT_TEMP_SCHICHT = 'Temperaturkontrolle Bar';
+const REPORT_GERAETE = [
+  { key: 'Bar 1',       soll: '+6 bis +10 °C' },
+  { key: 'Bar 2',       soll: '+6 bis +10 °C' },
+  { key: 'Tiefkühler',  soll: '−18 °C (Toleranz −21 bis −15)' },
+  { key: 'Bier',        soll: '+6 bis +7 °C' },
+  { key: 'Eismaschine', soll: 'Sichtkontrolle' },
+];
+
+function repEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+// Datum eines Eintrags robust lesen: Sheets liefert je nach Zelle ISO, den
+// langen deutschen Text («Dienstag, 13. Oktober 2026») oder 13.10.2026.
+function repParseDay(raw) {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  let m;
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) { const d = new Date(s); return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/))) return new Date(+m[1], +m[2] - 1, +m[3]);
+  if ((m = s.match(/(\d{1,2})\.\s*([A-Za-zÄÖÜäöü]+)\s+(\d{4})/))) {
+    const mi = MONATE.findIndex(n => n.toLowerCase() === m[2].toLowerCase());
+    if (mi >= 0) return new Date(+m[3], mi, +m[1]);
+  }
+  if ((m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/))) return new Date(+m[3], +m[2] - 1, +m[1]);
+  const d = new Date(s);
+  return isNaN(d) ? null : new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+function repParseTime(raw) {
+  if (!raw) return '';
+  const s = String(raw);
+  if (/^\d{4}-\d{2}-\d{2}T/.test(s)) { const d = new Date(s); return isNaN(d) ? '' : String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+  const m = s.match(/(\d{1,2}):(\d{2})/);
+  return m ? m[1].padStart(2, '0') + ':' + m[2] : '';
+}
+function repDayStr(d) { return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear(); }
+function repWeekday(d) { return d.toLocaleDateString('de-CH', { weekday: 'short' }); }
+function repMonthKey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); }
+
+function repEntries() {
+  return history.map(e => {
+    const d = repParseDay(e.datum) || repParseDay(e.zeitstempel);
+    return d ? Object.assign({}, e, { _d: d, _t: repParseTime(e.zeitstempel) }) : null;
+  }).filter(Boolean);
+}
+
+async function initReport() {
+  const status = document.getElementById('rep-status');
+  const preview = document.getElementById('rep-preview');
+  status.textContent = 'Lade Daten…';
+  preview.innerHTML = '<p class="rp-empty">Daten werden geladen…</p>';
+  await loadHistoryFromSheet();
+  const sel = document.getElementById('rep-month');
+  const prev = sel.value;
+  const keys = new Set([repMonthKey(new Date())]);
+  repEntries().forEach(e => keys.add(repMonthKey(e._d)));
+  const sorted = [...keys].sort().reverse();
+  sel.innerHTML = sorted.map(k => { const [y, m] = k.split('-'); return `<option value="${k}">${MONATE[+m - 1]} ${y}</option>`; }).join('');
+  if (prev && sorted.includes(prev)) sel.value = prev;
+  renderReport();
+}
+
+function repCollect() {
+  const [y, m] = (document.getElementById('rep-month').value || repMonthKey(new Date())).split('-').map(Number);
+  const type = document.getElementById('rep-type').value;
+  const inMonth = repEntries()
+    .filter(e => e._d.getFullYear() === y && e._d.getMonth() === m - 1)
+    .sort((a, b) => a._d - b._d || String(a._t).localeCompare(String(b._t)));
+  const temp = type === 'clean' ? [] : inMonth.filter(e => e.schicht === REPORT_TEMP_SCHICHT);
+  const clean = type === 'temp' ? [] : inMonth.filter(e => REPORT_CLEAN_SCHICHTEN.includes(e.schicht));
+  return { y, m, type, temp, clean };
+}
+
+// Eine Temperaturkontrolle in Geräte-Werte zerlegen
+function repTempRow(e) {
+  const vals = {}, notes = new Set();
+  let abw = 0;
+  e.rows.forEach(r => {
+    const name = String(r.aufgabe || '').split(' (')[0].replace(/\s+—.*$/, '').trim() || 'Sonstiges';
+    const notiz = String(r.notiz || '').trim();
+    const valMatch = notiz.match(/^(-?\d+(?:[.,]\d+)?)\s*°C$/);
+    const status = String(r.erledigt || '');
+    const isAbw = status.includes('AUSSERHALB');
+    if (isAbw) abw++;
+    if (name === 'Eismaschine') {
+      vals[name] = { text: status === 'OK' ? '✓ OK' : 'nicht geprüft', cls: status === 'OK' ? 'rp-ok' : '' };
+      if (notiz) notes.add(notiz);
+    } else if (valMatch) {
+      vals[name] = { text: valMatch[1].replace('.', ',') + ' °C' + (isAbw ? ' ⚠' : ''), cls: isAbw ? 'rp-abw' : '' };
+    } else {
+      vals[name] = { text: status === 'OK' ? 'OK' : '—', cls: '' };
+      if (notiz) notes.add(notiz);
+    }
   });
-  btn.style.background = 'var(--gold-glow2)';
-  btn.style.borderColor = 'var(--gold)';
-  btn.style.color = 'var(--gold)';
-  // Sync Rezepte tabs too
-  ['kt-fruehling-r','kt-sommer-r'].forEach(id => {
-    const b = document.getElementById(id);
-    if (!b) return;
-    const isActive = (karte === 'fruehling' && id === 'kt-fruehling-r') || (karte === 'sommer' && id === 'kt-sommer-r');
-    b.style.background = isActive ? 'var(--gold-glow2)' : 'transparent';
-    b.style.borderColor = isActive ? 'var(--gold)' : 'var(--border)';
-    b.style.color = isActive ? 'var(--gold)' : 'var(--muted)';
-  });
-  renderCocktails();
+  return { vals, notes: [...notes], abw };
+}
+
+function repBuildHtml(data) {
+  const { y, m, type, temp, clean } = data;
+  const showEmpty = document.getElementById('rep-empty').checked;
+  const monthName = MONATE[m - 1] + ' ' + y;
+  const now = new Date();
+  const titel = type === 'temp' ? 'Temperaturkontrolle' : type === 'clean' ? 'Reinigung & Checklisten' : 'Temperatur & Reinigung';
+
+  // Geräte-Spalten: bekannte zuerst, unbekannte (ältere Einträge) hinten anhängen
+  const parsed = temp.map(e => Object.assign({ e }, repTempRow(e)));
+  const cols = REPORT_GERAETE.map(g => g.key);
+  parsed.forEach(p => Object.keys(p.vals).forEach(k => { if (!cols.includes(k)) cols.push(k); }));
+
+  const tempDays = new Set(temp.map(e => e._d.getDate()));
+  const lastDay = new Date(y, m, 0).getDate();
+  const isCurrent = now.getFullYear() === y && now.getMonth() === m - 1;
+  const daysSoFar = isCurrent ? now.getDate() : (new Date(y, m - 1, 1) > now ? 0 : lastDay);
+  const abwTotal = parsed.reduce((a, p) => a + p.abw, 0);
+  const cleanOpen = clean.reduce((a, e) => a + e.rows.filter(r => r.erledigt !== 'Ja').length, 0);
+
+  let html = `<div class="rp-head">
+      <div><div class="rp-brand">ALCHEMIST</div><div class="rp-brand-sub">Restaurant Alchemist Basel · Selbstkontrolle</div></div>
+      <div><div class="rp-title">${repEsc(titel)} · ${repEsc(monthName)}</div>
+      <div class="rp-meta">Erstellt am ${repDayStr(now)}, ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div></div>
+    </div>`;
+
+  html += '<div class="rp-summary">';
+  if (type !== 'clean') {
+    html += `<div class="rp-stat"><div class="rp-stat-num">${temp.length}</div><div class="rp-stat-lbl">Temperatur&shy;kontrollen</div></div>`;
+    html += `<div class="rp-stat"><div class="rp-stat-num">${tempDays.size} / ${daysSoFar}</div><div class="rp-stat-lbl">Tage mit Kontrolle</div></div>`;
+    html += `<div class="rp-stat"><div class="rp-stat-num${abwTotal ? ' bad' : ''}">${abwTotal}</div><div class="rp-stat-lbl">Abweichungen</div></div>`;
+  }
+  if (type !== 'temp') {
+    html += `<div class="rp-stat"><div class="rp-stat-num">${clean.length}</div><div class="rp-stat-lbl">Reinigungs-Checklisten</div></div>`;
+    html += `<div class="rp-stat"><div class="rp-stat-num">${cleanOpen}</div><div class="rp-stat-lbl">Offene Punkte</div></div>`;
+  }
+  html += '</div>';
+
+  if (type !== 'clean') {
+    html += `<div class="rp-h2">Temperaturkontrolle</div>`;
+    html += `<div class="rp-soll">Sollwerte: ${REPORT_GERAETE.map(g => repEsc(g.key) + ' ' + repEsc(g.soll)).join(' · ')}</div>`;
+    const rowsHtml = [];
+    const byDay = {};
+    parsed.forEach(p => { const k = p.e._d.getDate(); (byDay[k] = byDay[k] || []).push(p); });
+    const dayList = showEmpty ? Array.from({ length: daysSoFar }, (_, i) => i + 1) : Object.keys(byDay).map(Number).sort((a, b) => a - b);
+    dayList.forEach(day => {
+      const d = new Date(y, m - 1, day);
+      const list = byDay[day];
+      if (!list) {
+        rowsHtml.push(`<tr class="rp-missing"><td>${repWeekday(d)} ${repDayStr(d)}</td><td></td><td colspan="${cols.length + 2}">kein Eintrag</td></tr>`);
+        return;
+      }
+      list.forEach(p => {
+        const cells = cols.map(c => { const v = p.vals[c]; return `<td class="num ${v ? v.cls : ''}">${v ? repEsc(v.text) : '—'}</td>`; }).join('');
+        let note = p.notes.map(repEsc).join(' · ');
+        if (p.abw && !note) note = '<span class="rp-warn-note">Abweichung — keine Massnahme notiert</span>';
+        rowsHtml.push(`<tr><td>${repWeekday(d)} ${repDayStr(d)}</td><td class="num">${repEsc(p.e._t)}</td>${cells}<td class="num">${repEsc(p.e.kuerzel)}</td><td>${note}</td></tr>`);
+      });
+    });
+    if (rowsHtml.length) {
+      html += `<div class="rp-scroll"><table class="rp-table"><thead><tr><th>Datum</th><th>Zeit</th>${cols.map(c => `<th>${repEsc(c)}</th>`).join('')}<th>Kürzel</th><th>Bemerkung / Massnahme</th></tr></thead><tbody>${rowsHtml.join('')}</tbody></table></div>`;
+    } else {
+      html += '<p class="rp-empty">Keine Temperaturkontrollen in diesem Monat erfasst.</p>';
+    }
+  }
+
+  if (type !== 'temp') {
+    html += `<div class="rp-h2">Reinigung & Checklisten</div>`;
+    if (clean.length) {
+      const rowsHtml = clean.map(e => {
+        const done = e.rows.filter(r => r.erledigt === 'Ja').length;
+        const offen = e.rows.filter(r => r.erledigt !== 'Ja').map(r => repEsc(r.aufgabe));
+        const notizen = e.rows.filter(r => String(r.notiz || '').trim()).map(r => repEsc(r.aufgabe) + ': <em>' + repEsc(r.notiz) + '</em>');
+        const schicht = e.schicht === 'Spätdienst Service' ? 'Service' : e.schicht;
+        let detail = offen.length ? '<strong>Offen:</strong> ' + offen.join('; ') : '<span class="rp-ok">Alles erledigt</span>';
+        if (notizen.length) detail += '<br><strong>Notizen:</strong> ' + notizen.join('; ');
+        return `<tr><td>${repWeekday(e._d)} ${repDayStr(e._d)}</td><td class="num">${repEsc(e._t)}</td><td>${repEsc(schicht)}</td><td class="num">${repEsc(e.kuerzel)}</td><td class="num ${done === e.rows.length ? 'rp-ok' : ''}">${done} / ${e.rows.length}</td><td>${detail}</td></tr>`;
+      }).join('');
+      html += `<div class="rp-scroll"><table class="rp-table"><thead><tr><th>Datum</th><th>Zeit</th><th>Checkliste</th><th>Kürzel</th><th>Erledigt</th><th>Offene Punkte / Notizen</th></tr></thead><tbody>${rowsHtml}</tbody></table></div>`;
+    } else {
+      html += '<p class="rp-empty">Keine Reinigungs-Checklisten in diesem Monat erfasst.</p>';
+    }
+  }
+
+  html += `<div class="rp-foot"><div class="rp-sign">Verantwortlich</div><div class="rp-sign">Visum</div><div class="rp-sign">Datum</div></div>`;
+  html += `<div class="rp-source">Digital erfasst im Alchemist Mitarbeiterportal · Jeder Eintrag mit Datum, Uhrzeit und Kürzel der ausführenden Person.</div>`;
+  return html;
+}
+
+function renderReport() {
+  const preview = document.getElementById('rep-preview');
+  const status = document.getElementById('rep-status');
+  if (!preview) return;
+  const data = repCollect();
+  preview.innerHTML = repBuildHtml(data);
+  status.textContent = historySource === 'sheet'
+    ? ''
+    : '⚠ Keine Verbindung zu Google Sheets — der Bericht zeigt nur die auf diesem Gerät gespeicherten Einträge.';
+}
+
+function printReport() {
+  const data = repCollect();
+  const area = document.getElementById('print-area');
+  area.innerHTML = '<div class="rp-paper">' + repBuildHtml(data) + '</div>';
+  const oldTitle = document.title;
+  document.title = 'Alchemist Selbstkontrolle ' + MONATE[data.m - 1] + ' ' + data.y;
+  document.body.classList.add('printing-report');
+  const cleanup = () => {
+    document.body.classList.remove('printing-report');
+    document.title = oldTitle;
+    area.innerHTML = '';
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  setTimeout(() => { window.print(); }, 50);
+}
+
+function downloadReportCsv() {
+  const data = repCollect();
+  const q = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = [['Datum', 'Uhrzeit', 'Checkliste', 'Kürzel', 'Bereich', 'Aufgabe / Gerät', 'Status', 'Wert / Notiz'].map(q).join(';')];
+  [...data.temp, ...data.clean]
+    .sort((a, b) => a._d - b._d || String(a._t).localeCompare(String(b._t)))
+    .forEach(e => e.rows.forEach(r => {
+      lines.push([repDayStr(e._d), e._t, e.schicht, e.kuerzel, r.section, r.aufgabe, r.erledigt, r.notiz].map(q).join(';'));
+    }));
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Alchemist_Selbstkontrolle_' + data.y + '-' + String(data.m).padStart(2, '0') + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 </script>
+
+<!-- DRUCKBEREICH (nur beim Drucken des Monatsberichts sichtbar) -->
+<div id="print-area"></div>
 
 <!-- ÜBERGABE MODAL -->
 <div id="ub-modal-overlay" onclick="closeUbModal(event)">
