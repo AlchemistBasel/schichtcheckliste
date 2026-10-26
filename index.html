@@ -739,7 +739,19 @@ select option { background: #111110; }
   color: var(--muted); transition: all 0.18s; text-align: center;
   width: 100%; position: relative;
 }
-.schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: var(--gold-glow); }
+@media (hover: hover) { .schicht-btn:hover { border-color: var(--gold-dim); color: var(--text); background: var(--gold-glow); } }
+.btn-green:disabled { opacity: 0.5; cursor: wait; }
+.heute-box { margin-bottom: var(--sp-2); padding: var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg-solid); }
+.heute-titel { font-family: var(--font); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 8px; }
+.heute-zeile { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; font-size: 0.9rem; font-family: var(--body); color: var(--text); border-top: 1px solid var(--border); }
+.heute-zeile:first-of-type { border-top: 0; }
+.heute-ok { color: var(--success); font-size: 0.8rem; font-family: var(--ui); }
+.heute-offen { color: var(--warn-text); font-size: 0.8rem; font-family: var(--ui); }
+.queue-banner { margin-bottom: var(--sp-2); padding: var(--sp-2); border: 1px solid var(--warn-border); border-radius: var(--r-sm); background: var(--warn-dim); color: var(--warn-text); font-size: 0.86rem; font-family: var(--body); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.queue-banner button { flex-shrink: 0; background: transparent; border: 1px solid var(--warn-border); color: var(--warn-text); border-radius: var(--r-sm); padding: 8px 12px; font-family: var(--ui); font-size: 0.8rem; cursor: pointer; }
+.weiter-btns { display: flex; flex-direction: column; gap: 8px; max-width: 280px; margin: 0 auto var(--sp-2); }
+.kuerzel-anzeige { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: var(--sp-1) var(--sp-2); border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg-solid); font-family: var(--body); color: var(--text); }
+.kuerzel-anzeige b { font-family: var(--font); letter-spacing: 0.08em; color: var(--gold); font-weight: 400; }
 /* FIX 2: Selected-State mit Gold (aktiver State) */
 .schicht-btn.selected {
   border-color: var(--gold);
@@ -1171,12 +1183,15 @@ select option { background: #111110; }
     <div class="wrap">
       <div class="ornament">— ✦ —</div>
       <p class="page-title">Neue Schicht</p>
-      <p class="page-sub">Bitte alle Felder ausfüllen um zu beginnen</p>
+      <p class="page-sub">Checkliste wählen und starten</p>
+      <div id="queue-banner" class="queue-banner" style="display:none;"><span id="queue-text"></span><button onclick="warteschlangeSenden(true)">Jetzt senden</button></div>
+      <div id="heute-box" class="heute-box" style="display:none;"></div>
       <div class="card" style="padding:var(--sp-3);">
         <div class="field-group">
-          <label>Kürzel</label>
-          <input type="text" id="inp-kuerzel" placeholder="z.B. JR" maxlength="4" autocomplete="off" autocorrect="off" autocapitalize="characters">
-          <p class="hint">Dein persönliches Kürzel (2–4 Buchstaben)</p>
+          <label>Wer</label>
+          <div class="kuerzel-anzeige"><span id="wer-name">–</span><b id="wer-kuerzel"></b></div>
+          <input type="hidden" id="inp-kuerzel" value="">
+          <p class="hint">Aus deinem Login. Nicht du? Oben auf «Wechseln».</p>
         </div>
         <div class="field-group">
           <label>Schicht</label>
@@ -1207,7 +1222,7 @@ select option { background: #111110; }
         <div class="field-group">
           <label>Datum</label>
           <input type="date" id="inp-datum" style="color:var(--text);background:var(--bg-solid);border:1px solid var(--border);border-radius:var(--r-sm);padding:var(--sp-1) var(--sp-2);width:100%;font-size:1rem;font-family:var(--body);appearance:none;-webkit-appearance:none;color-scheme:dark;">
-          <p class="hint">Nach Mitternacht: Datum auf den Vortag setzen (Schichtbeginn zählt)</p>
+          <p class="hint">Wird automatisch gesetzt – nach Mitternacht zählt der Vortag. Nur zum Nachtragen ändern.</p>
         </div>
         <button class="btn-gold" id="btn-start" onclick="startChecklist()">Checkliste starten</button>
         <div id="resume-banner" style="display:none;" class="resume-banner">
@@ -1333,7 +1348,7 @@ select option { background: #111110; }
       <div id="tasks-container"></div>
       <div class="submit-area">
         <p class="submit-note">Erledigte Aufgaben werden gespeichert. Nicht abgehakte Punkte als offen markiert.</p>
-        <button class="btn-green" onclick="submitChecklist()">
+        <button class="btn-green" id="btn-submit-check" onclick="submitChecklist()">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
           Schicht abschliessen & speichern
         </button>
@@ -1401,7 +1416,7 @@ select option { background: #111110; }
       </div>
       <div class="submit-area">
         <p class="submit-note">Alle Temperaturen werden mit Datum, Uhrzeit und Kürzel gespeichert.</p>
-        <button class="btn-green" onclick="submitTemp()">
+        <button class="btn-green" id="btn-submit-temp" onclick="submitTemp()">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
           Temperaturkontrolle speichern
         </button>
@@ -1427,7 +1442,7 @@ select option { background: #111110; }
       <div id="ub-container"></div>
       <div class="submit-area" style="margin-top:var(--sp-4);">
         <p class="submit-note">Der Status wird für den nächsten Tag gespeichert. Bar-Team sieht offene Punkte beim Login.</p>
-        <button class="btn-green" onclick="submitUbergabe()">
+        <button class="btn-green" id="btn-submit-ub" onclick="submitUbergabe()">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
           Übergabe abschliessen & speichern
         </button>
@@ -1442,7 +1457,8 @@ select option { background: #111110; }
       <div class="success-orn">— ✦ —</div>
       <p class="success-title">Schicht gespeichert</p>
       <p class="success-text" id="success-text"></p>
-      <button class="btn-gold" onclick="resetToSetup()" style="max-width:280px;margin:0 auto;">Neue Schicht starten</button>
+      <div class="weiter-btns" id="weiter-btns"></div>
+      <button class="btn-gold" onclick="resetToSetup()" style="max-width:280px;margin:0 auto;">Zur Übersicht</button>
     </div>
   </div>
 
@@ -1924,8 +1940,7 @@ function applyLogin() {
   const hour = new Date().getHours();
   const greet = hour < 11 ? 'Guten Morgen' : hour < 17 ? 'Hallo' : 'Guten Abend';
   txt.textContent = greet + ', ' + currentUser.name.split(' ')[0] + ' (' + currentUser.rolle + ')';
-  const kField = document.getElementById('inp-kuerzel');
-  if (kField && !kField.value) kField.value = currentUser.kuerzel.replace('2','');
+  setupVorbereiten();
   const schichtField = document.getElementById('inp-schicht');
   if (schichtField && !schichtField.value) {
     let autoVal = '';
@@ -1933,7 +1948,7 @@ function applyLogin() {
     else if (currentUser.rolle === 'Bar') autoVal = 'Abend Bar';
     if (autoVal) { const btn = document.querySelector(`.schicht-btn[data-value="${autoVal}"]`); if (btn) selectSchicht(btn); }
   }
-  validateSetup();
+  validateSetup(); heuteAnzeigen();
   const ht = document.getElementById('home-title');
   if (ht) ht.textContent = 'Willkommen, ' + currentUser.name.split(' ')[0];
 }
@@ -2063,7 +2078,7 @@ const MITARBEITER = [
   { name: 'Mame N\u2019Diaye', rolle: 'Küche', kuerzel: 'MN' },
   { name: 'Meret Sarasin', rolle: 'Küche', kuerzel: 'MS' },
   { name: 'Elena Lippi', rolle: 'Service', kuerzel: 'EL' },
-  { name: 'Malvina Ferro', rolle: 'Bar', kuerzel: 'MF2' },
+  { name: 'Malvina Ferro', rolle: 'Bar', kuerzel: 'MFE' },
   { name: 'Vera Kaufmann', rolle: 'Bar', kuerzel: 'VK' },
   { name: 'Florence Nydegger', rolle: 'Service', kuerzel: 'FN' },
   { name: 'Finnja Husi', rolle: 'Service', kuerzel: 'FH' },
@@ -2075,7 +2090,7 @@ const MITARBEITER = [
   { name: 'Laura Hauser', rolle: 'Service', kuerzel: 'LH' },
   { name: 'C\u00e9line Bernet', rolle: 'Bar', kuerzel: 'CB' },
   { name: 'Grace W\u00e4lle', rolle: 'Service', kuerzel: 'GW' },
-  { name: 'Lisa Pozgainer', rolle: 'Service', kuerzel: 'LP2' },
+  { name: 'Lisa Pozgainer', rolle: 'Service', kuerzel: 'LPO' },
   { name: 'Federica Duca', rolle: 'Service', kuerzel: 'FD' },
   { name: 'Lucca Alt', rolle: 'Bar', kuerzel: 'LA' },
   { name: 'Julia Wagner', rolle: 'K\u00fcche', kuerzel: 'JW' },
@@ -2134,7 +2149,9 @@ function updateUbProgress() {
 }
 
 async function submitUbergabe() {
+  const btn = document.getElementById('btn-submit-ub'); if (btn && btn.disabled) return;
   const msg = document.getElementById('ub-saving-msg');
+  knopf('btn-submit-ub', false);
   msg.textContent = 'Wird gespeichert…';
   const now = new Date().toLocaleString('de-CH');
   const rows = [];
@@ -2142,11 +2159,15 @@ async function submitUbergabe() {
     sec.items.forEach(item => {
       const key = sec.title + '|' + item;
       const status = ubStatus[key];
-      if (status) rows.push({ datum: currentSession.datum, schicht: 'Bar Übergabe', section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: item, erledigt: status === 'da' ? 'Da' : status === 'nachf' ? 'Nachfüllen' : 'Bestellen', notiz: '', zeitstempel: now });
+      if (status) rows.push({ datum: currentSession.datum, schicht: 'Bar Übergabe', section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: item, erledigt: status === 'da' ? 'Da' : status === 'nachf' ? 'Nachfüllen' : 'Bestellen', notiz: '', zeitstempel: now, name: currentUser ? currentUser.name : '' });
     });
   });
-  try { await saveToSheets(rows); msg.textContent = '✓ Gespeichert'; } catch(e) { msg.textContent = 'Lokal gespeichert'; }
+  const gesendet = rows.length ? await senden(rows) : true;
+  msg.textContent = gesendet ? '✓ Gespeichert' : 'Kein Netz – wird automatisch nachgesendet';
+  if (rows.length) { history.unshift({ datum: currentSession.datum, schicht: 'Bar Übergabe', kuerzel: currentSession.kuerzel, zeitstempel: now, rows: rows.map(r => ({ aufgabe: r.aufgabe, section: r.section, erledigt: r.erledigt, notiz: '' })), done: rows.length, total: rows.length }); localStorage.setItem('checkliste_history', JSON.stringify(history.slice(0, 200))); }
   setTimeout(() => {
+    knopf('btn-submit-ub', true); msg.textContent = '';
+    weiterAnzeigen('Bar Übergabe');
     const bestCount = Object.values(ubStatus).filter(v => v === 'best').length;
     const nachfCount = Object.values(ubStatus).filter(v => v === 'nachf').length;
     document.getElementById('success-text').textContent = `Übergabe abgeschlossen — ${nachfCount} nachfüllen, ${bestCount} bestellen · ${currentSession.kuerzel}`;
@@ -2162,12 +2183,11 @@ window.addEventListener('load', function() {
   const now = new Date();
   document.getElementById('header-date').textContent = now.toLocaleDateString('de-CH', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
   const hd = document.getElementById('home-date'); if (hd) hd.textContent = now.toLocaleDateString('de-CH', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  const datum = document.getElementById('inp-datum');
-  if (datum) { const y = now.getFullYear(); const m = String(now.getMonth()+1).padStart(2,'0'); const d = String(now.getDate()).padStart(2,'0'); datum.value = y+'-'+m+'-'+d; }
-  document.getElementById('inp-kuerzel').addEventListener('input', validateSetup);
+  setupVorbereiten();
   validateSetup(); checkResumeBanner();
   renderRezepte(); renderAllergene(); renderCocktails(); checkUbergabeBanner();
-  loadHistoryFromSheet().then(checkUbergabeBanner);
+  loadHistoryFromSheet().then(() => { checkUbergabeBanner(); heuteAnzeigen(); });
+  warteschlangeAnzeigen(); warteschlangeSenden();
 });
 
 // ─── NAV ──────────────────────────────────────────────────────────────────────
@@ -2187,6 +2207,7 @@ function showCheckView(name) {
   ['setup','checklist','temp','ubergabe','success','history','report'].forEach(v => { const el = document.getElementById('view-' + v); if (el) el.style.display = 'none'; });
   const target = document.getElementById('view-' + name);
   if (target) target.style.display = 'block';
+  if (name === 'setup') { setupVorbereiten(); validateSetup(); checkResumeBanner(); heuteAnzeigen(); warteschlangeAnzeigen(); }
   if (name === 'history') loadHistoryFromSheet();
   if (name === 'report') initReport();
   window.scrollTo(0, 0);
@@ -2197,7 +2218,7 @@ function validateSetup() {
   const k = document.getElementById('inp-kuerzel').value.trim();
   const s = document.getElementById('inp-schicht').value;
   const btn = document.getElementById('btn-start');
-  const ok = k.length >= 2 && s;
+  const ok = k.length >= 1 && s;
   btn.style.opacity = ok ? '1' : '0.4';
   btn.style.cursor = ok ? 'pointer' : 'not-allowed';
   btn.style.borderColor = ok ? 'var(--gold-dim)' : 'var(--border)';
@@ -2214,7 +2235,7 @@ function selectSchicht(btn) {
 function startChecklist() {
   const k = document.getElementById('inp-kuerzel').value.trim().toUpperCase();
   const s = document.getElementById('inp-schicht').value;
-  if (k.length < 2 || !s) return;
+  if (k.length < 1 || !s) return;
   const rawDatum = document.getElementById('inp-datum').value;
   const [y,mo,d] = rawDatum.split('-');
   const dateObj = new Date(parseInt(y), parseInt(mo)-1, parseInt(d));
@@ -2286,21 +2307,121 @@ function updateProgress() {
 }
 
 async function submitChecklist() {
+  const btn = document.getElementById('btn-submit-check');
+  if (btn && btn.disabled) return;
   const msg = document.getElementById('saving-msg');
+  const offen = Object.values(taskStates).filter(v => !v).length;
+  if (offen > 0 && !confirm(offen === 1 ? '1 Punkt ist nicht abgehakt. Trotzdem abschliessen?' : offen + ' Punkte sind nicht abgehakt. Trotzdem abschliessen?')) return;
+  knopf('btn-submit-check', false);
   msg.textContent = 'Wird gespeichert…';
   const now = new Date().toLocaleString('de-CH');
   const data = CHECKLISTEN[currentSession.schicht];
   const rows = []; let idx = 0;
-  data.sections.forEach(sec => { sec.tasks.forEach(text => { rows.push({ datum: currentSession.datum, schicht: currentSession.schicht, section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: text, erledigt: taskStates[idx] ? 'Ja' : 'Nein', notiz: taskNotes[idx] || '', zeitstempel: now }); idx++; }); });
+  data.sections.forEach(sec => { sec.tasks.forEach(text => { rows.push({ datum: currentSession.datum, schicht: currentSession.schicht, section: sec.title, kuerzel: currentSession.kuerzel, aufgabe: text, erledigt: taskStates[idx] ? 'Ja' : 'Nein', notiz: taskNotes[idx] || '', zeitstempel: now, name: currentUser ? currentUser.name : '' }); idx++; }); });
   const done = rows.filter(r => r.erledigt === 'Ja').length;
   history.unshift({ datum: currentSession.datum, schicht: currentSession.schicht, kuerzel: currentSession.kuerzel, zeitstempel: now, rows, done, total: rows.length });
   localStorage.setItem('checkliste_history', JSON.stringify(history.slice(0, 200)));
-  try { await saveToSheets(rows); msg.textContent = '✓ In Google Sheets gespeichert'; } catch(e) { msg.textContent = 'Lokal gespeichert'; }
-  setTimeout(() => { clearDraft(); document.getElementById('success-text').textContent = done + ' von ' + rows.length + ' Aufgaben erledigt — ' + currentSession.kuerzel + ', ' + currentSession.datum; showCheckView('success'); }, 800);
+  const ok = await senden(rows);
+  msg.textContent = ok ? '✓ In Google Sheets gespeichert' : 'Kein Netz – wird automatisch nachgesendet';
+  const schicht = currentSession.schicht;
+  setTimeout(() => { clearDraft(); knopf('btn-submit-check', true); msg.textContent = ''; document.getElementById('success-text').textContent = done + ' von ' + rows.length + ' Aufgaben erledigt — ' + currentSession.kuerzel + ', ' + currentSession.datum + (ok ? '' : ' · wird nachgesendet'); weiterAnzeigen(schicht); showCheckView('success'); }, 800);
 }
 
 async function saveToSheets(rows) { const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({ rows }) }); if (!r.ok) throw new Error('err'); }
-function resetToSetup() { checkUbergabeBanner(); currentSession=null; document.getElementById('inp-kuerzel').value=''; document.getElementById('inp-schicht').value=''; validateSetup(); checkResumeBanner(); showCheckView('setup'); }
+
+// ─── SENDEN MIT WARTESCHLANGE ────────────────────────────────────────────────
+// Schlägt das Senden fehl (kein Netz), bleibt die Checkliste auf dem Handy und wird später automatisch nachgeschickt.
+const QUEUE_KEY = 'sende_warteschlange';
+function warteschlange() { try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch(e) { return []; } }
+function warteschlangeSetzen(q) { try { localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch(e) {} warteschlangeAnzeigen(); }
+async function senden(rows) {
+  try { await saveToSheets(rows); return true; }
+  catch(e) { const q = warteschlange(); q.push({ rows, seit: new Date().toISOString() }); warteschlangeSetzen(q); return false; }
+}
+let queueLaeuft = false;
+async function warteschlangeSenden(manuell) {
+  if (queueLaeuft) return;
+  let q = warteschlange();
+  if (!q.length) return;
+  queueLaeuft = true;
+  const txt = document.getElementById('queue-text');
+  if (manuell && txt) txt.textContent = 'Wird gesendet…';
+  try {
+    while (q.length) {
+      try { await saveToSheets(q[0].rows); } catch(e) { break; }
+      q = warteschlange(); q.shift(); warteschlangeSetzen(q);
+    }
+  } finally { queueLaeuft = false; warteschlangeAnzeigen(); }
+  if (!warteschlange().length && historySource === 'sheet') loadHistoryFromSheet().then(heuteAnzeigen);
+}
+function warteschlangeAnzeigen() {
+  const b = document.getElementById('queue-banner'); if (!b) return;
+  const n = warteschlange().length;
+  b.style.display = n ? 'flex' : 'none';
+  const t = document.getElementById('queue-text');
+  if (t && n) t.textContent = n === 1 ? '1 Checkliste noch nicht übermittelt (kein Netz). Wird automatisch nachgesendet.' : n + ' Checklisten noch nicht übermittelt (kein Netz). Werden automatisch nachgesendet.';
+}
+window.addEventListener('online', () => warteschlangeSenden());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') warteschlangeSenden(); });
+
+// ─── GESCHÄFTSTAG, «WER», HEUTE ERLEDIGT ─────────────────────────────────────
+// Ein Abend zählt bis 5 Uhr früh: Abschlüsse nach Mitternacht gehören zum Vortag.
+function geschaeftstag(d) { const x = new Date(d.getTime() - 5 * 3600 * 1000); return x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0'); }
+function setupVorbereiten() {
+  const k = document.getElementById('inp-kuerzel');
+  if (k) k.value = currentUser ? currentUser.kuerzel : '';
+  const n = document.getElementById('wer-name'); if (n) n.textContent = currentUser ? currentUser.name : '–';
+  const wk = document.getElementById('wer-kuerzel'); if (wk) wk.textContent = currentUser ? currentUser.kuerzel : '';
+  const datum = document.getElementById('inp-datum');
+  if (datum && !currentSession) datum.value = geschaeftstag(new Date());
+}
+const LISTEN_PRO_ROLLE = {
+  Service: ['Spätdienst Service'],
+  Bar: ['Abend Bar', 'Temperaturkontrolle Bar', 'Bar Übergabe'],
+  Leitung: ['Spätdienst Service', 'Abend Bar', 'Temperaturkontrolle Bar', 'Bar Übergabe'],
+};
+const LISTEN_LABEL = { 'Spätdienst Service': 'Service', 'Abend Bar': 'Abend Bar', 'Temperaturkontrolle Bar': 'Temperaturkontrolle', 'Bar Übergabe': 'Bar Übergabe' };
+/** Wer hat die Liste heute (Geschäftstag) schon abgeschickt? Aus dem Verlauf (alle Geräte) und der Warteschlange dieses Handys */
+function heuteErledigt(schicht) {
+  const heute = geschaeftstag(new Date());
+  const treffer = history.filter(h => h.schicht === schicht && ubTs(h.zeitstempel) && geschaeftstag(new Date(ubTs(h.zeitstempel))) === heute);
+  warteschlange().forEach(e => { const r = e.rows && e.rows[0]; if (r && r.schicht === schicht && ubTs(r.zeitstempel) && geschaeftstag(new Date(ubTs(r.zeitstempel))) === heute) treffer.push({ kuerzel: r.kuerzel, zeitstempel: r.zeitstempel }); });
+  return treffer.sort((a, b) => ubTs(a.zeitstempel) - ubTs(b.zeitstempel))[0] || null;
+}
+function heuteAnzeigen() {
+  const box = document.getElementById('heute-box'); if (!box) return;
+  const listen = currentUser ? LISTEN_PRO_ROLLE[currentUser.rolle] : null;
+  if (!listen) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = '<div class="heute-titel">Heute Abend</div>' + listen.map(l => {
+    const e = heuteErledigt(l);
+    const zeit = e ? new Date(ubTs(e.zeitstempel)).toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' }) : '';
+    return `<div class="heute-zeile" data-heute="${l}"><span>${LISTEN_LABEL[l]}</span>${e ? `<span class="heute-ok">✓ ${e.kuerzel} · ${zeit}</span>` : '<span class="heute-offen">offen</span>'}</div>`;
+  }).join('');
+}
+/** Nach dem Abschluss: nächste offene Bar-Liste direkt anbieten */
+function weiterAnzeigen(fertig) {
+  const w = document.getElementById('weiter-btns'); if (!w) return;
+  w.innerHTML = '';
+  const bar = ['Abend Bar', 'Temperaturkontrolle Bar', 'Bar Übergabe'];
+  if (!bar.includes(fertig)) return;
+  const offen = bar.filter(l => l !== fertig && !heuteErledigt(l));
+  offen.forEach((l, i) => {
+    const b = document.createElement('button');
+    b.className = i === 0 ? 'btn-green' : 'btn-gold';
+    b.textContent = 'Weiter: ' + LISTEN_LABEL[l];
+    b.onclick = () => listeStarten(l);
+    w.appendChild(b);
+  });
+}
+function listeStarten(schicht) {
+  setupVorbereiten(); // Datum der eben abgeschlossenen Liste bleibt (currentSession ist noch gesetzt)
+  const btn = document.querySelector(`.schicht-btn[data-value="${schicht}"]`);
+  if (btn) selectSchicht(btn);
+  startChecklist();
+}
+function knopf(id, aktiv) { const b = document.getElementById(id); if (b) b.disabled = !aktiv; }
+function resetToSetup() { checkUbergabeBanner(); currentSession=null; document.getElementById('inp-schicht').value=''; document.querySelectorAll('.schicht-btn').forEach(b => b.classList.remove('selected')); showCheckView('setup'); }
 
 // ─── PAUSE / RESUME ───────────────────────────────────────────────────────────
 function saveProgress() { if (!currentSession) return; localStorage.setItem('checkliste_draft', JSON.stringify({ session: currentSession, taskStates, taskNotes })); }
@@ -2408,24 +2529,29 @@ function restoreTempDraft() {
   tempRestoring = false;
 }
 async function submitTemp() {
+  const btn=document.getElementById('btn-submit-temp'); if(btn&&btn.disabled) return;
+  const fehlend=[0,1,3,4].filter(i=>{const v=tempValues[i];return v===null||v===undefined||isNaN(v);}).length+(tempValues['eis']?0:1);
+  if(fehlend>0&&!confirm(fehlend===1?'1 Feld ist leer. Trotzdem speichern?':fehlend+' Felder sind leer. Trotzdem speichern?')) return;
+  knopf('btn-submit-temp',false);
   const msg=document.getElementById('temp-saving-msg'); msg.textContent='Wird gespeichert…';
   const now=new Date().toLocaleString('de-CH'); const notiz=document.getElementById('temp-notiz').value;
   const rows=[];
   // Number inputs: Bar1(t0), Bar2(t4), Tiefkühler(t1), Bier(t3)
   [{z:TEMP_ZELLEN[0],i:0},{z:TEMP_ZELLEN[1],i:4},{z:TEMP_ZELLEN[2],i:1},{z:TEMP_ZELLEN[4],i:3}].forEach(({z,i})=>{
     const val=tempValues[i];const hatWert=val!==null&&val!==undefined&&!isNaN(val);const inRange=hatWert&&parseFloat(val)>=z.min&&parseFloat(val)<=z.max;
-    rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:z.name+' ('+z.nr+') Soll: '+z.soll+'°C',erledigt:hatWert?(inRange?'OK':'⚠ AUSSERHALB'):'Nicht gemessen',notiz:hatWert?parseFloat(val)+'°C':(notiz&&i===0?notiz:''),zeitstempel:now});
+    rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:z.name+' ('+z.nr+') Soll: '+z.soll+'°C',erledigt:hatWert?(inRange?'OK':'⚠ AUSSERHALB'):'Nicht gemessen',notiz:hatWert?parseFloat(val)+'°C':(notiz&&i===0?notiz:''),zeitstempel:now,name:currentUser?currentUser.name:''});
   });
   // Eismaschine checkbox
   const eisOk = tempValues['eis'] === true;
-  rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:'Eismaschine (UG 31/32) — gecheckt',erledigt:eisOk?'OK':'Nicht gecheckt',notiz:notiz||'',zeitstempel:now});
+  rows.push({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',section:'Temperatur',kuerzel:currentSession.kuerzel,aufgabe:'Eismaschine (UG 31/32) — gecheckt',erledigt:eisOk?'OK':'Nicht gecheckt',notiz:notiz||'',zeitstempel:now,name:currentUser?currentUser.name:''});
 
   const ok=rows.filter(r=>r.erledigt==='OK').length;
   history.unshift({datum:currentSession.datum,schicht:'Temperaturkontrolle Bar',kuerzel:currentSession.kuerzel,zeitstempel:now,rows,done:ok,total:5});
   localStorage.setItem('checkliste_history',JSON.stringify(history.slice(0,200)));
-  try{await saveToSheets(rows);msg.textContent='✓ In Google Sheets gespeichert';}catch(e){msg.textContent='Lokal gespeichert';}
+  const gesendet=await senden(rows);
+  msg.textContent=gesendet?'✓ In Google Sheets gespeichert':'Kein Netz – wird automatisch nachgesendet';
   clearTempDraft();
-  setTimeout(()=>{document.getElementById('success-text').textContent=ok+' von 5 Einträgen OK — '+currentSession.kuerzel+', '+currentSession.datum;showCheckView('success');},800);
+  setTimeout(()=>{knopf('btn-submit-temp',true);msg.textContent='';document.getElementById('success-text').textContent=ok+' von 5 Einträgen OK — '+currentSession.kuerzel+', '+currentSession.datum+(gesendet?'':' · wird nachgesendet');weiterAnzeigen('Temperaturkontrolle Bar');showCheckView('success');},800);
 }
 
 // ─── HISTORY ──────────────────────────────────────────────────────────────────
